@@ -16,7 +16,7 @@ struct coord_t
 }
 ````
 *Note that the position, rotation and scaling of the coordinate system are all defined under its parent coordinate system.*
-## Multiplication
+## Multiplication operation
 ```
 // C1*C2*C3* ... *Cloc * Vloc （transfrom)
 vec3 operator * (crvec v)
@@ -37,6 +37,24 @@ coord_t operator * (coord_t& c)
     rc.o += ux * c.o.x + uy * c.o.y + uz * c.o.z;
     return rc;
 }
+```
+## Division operation
+```
+// Vworld/C1/C2/C3/ ... /Cloc（projection)
+	friend vec3 operator / (crvec v, const coord_t& c)
+	{
+		vec3 dv = v - c.o;
+		return vec3(dv.dot(c.ux), dv.dot(c.uy), dv.dot(c.uz));
+	}
+	coord_t operator / (const coord_t& c)
+	{
+		coord_t rc;
+		rc.ux = vec3(ux.dot(c.ux), ux.dot(c.uy), ux.dot(c.uz));
+		rc.uy = vec3(uy.dot(c.ux), uy.dot(c.uy), uy.dot(c.uz));
+		rc.uz = vec3(uz.dot(c.ux), uz.dot(c.uy), uz.dot(c.uz));
+		rc.o -= c.o;
+		return rc;
+	}
 ```
 
 ## Sample
