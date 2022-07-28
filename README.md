@@ -15,4 +15,4 @@ vec3 ux,uy,uz; // three axial unit vectors
 vec3 scale; // scale transformation
 }
 ````
-*Note that the position, rotation and scaling of the coordinate system are all defined under its parent coordinate system. *
+*Note that the position, rotation and scaling of the coordinate system are all defined under its parent coordinate system.*
