@@ -1,6 +1,6 @@
 # Coordinate System Transformation
 
-*Introduction:*
+###*Introduction:*
 *Coordinate system transformation is often performed using a matrix, but as a mathematical object, the matrix is not customized for coordinate system changes, and the matrix is too mathematical and the meaning is ambiguous.*
 *Tensors are too abstract not only difficult to grasp but also difficult to quantify by computer, and a concept specially designed for coordinate system transformation is required.*
 *This article introduces a simple and easy-to-understand coordinate system object and its algorithm*
@@ -16,6 +16,28 @@ struct coord_t
 }
 ````
 *Note that the position, rotation and scaling of the coordinate system are all defined under its parent coordinate system.*
+## Multiplication
+```
+// C1*C2*C3* ... *Cloc * Vloc （transfrom)
+vec3 operator * (crvec v)
+{
+    return ux * v.x + uy * v.y + uz * v.z + o;
+}
+// V * C1 * C2 ...
+friend vec3 operator * (crvec v, const coord_t& c)
+{
+    return c.ux * v.x + c.uy * v.y + c.uz * v.z + c.o;
+}
+coord_t operator * (coord_t& c)
+{
+    coord_t rc;
+    rc.ux = ux * c.ux.x + uy * c.ux.y + uz * c.ux.z;
+    rc.uy = ux * c.uy.x + uy * c.uy.y + uz * c.uy.z;
+    rc.ux = ux * c.uz.x + uy * c.uz.y + uz * c.uz.z;
+    rc.o += ux * c.o.x + uy * c.o.y + uz * c.o.z;
+    return rc;
+}
+```
 
 ## Sample:
 ### Polar coordinate transformation
