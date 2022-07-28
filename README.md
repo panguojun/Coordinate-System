@@ -28,7 +28,7 @@ void polecoord(coord_t& c1, real x, real y)
     c1.uy = vec3(-c1.o.x * sin(c1.o.y), c1.o.x * cos(c1.o.y), 0);
 }
 ````
-### Sports settings
+### Kinematics settings
 ````
 real w = 2.0f; // angular velocity
 real dt = 0.001; // deta time
