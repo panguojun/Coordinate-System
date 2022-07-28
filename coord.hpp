@@ -67,3 +67,23 @@ struct coord_t
 		PRINT("o: " << uz.x << "," << uz.y << "," << uz.z);
 	}
 };
+inline vec3 coord2eulers(coord_t& rm)
+{
+	float sy = sqrt(rm.ux.x * rm.ux.x + rm.uy.x * rm.uy.x);
+	bool singular = sy < 1e-6;
+
+	float x, y, z;
+	if (!singular)
+	{
+		x = atan2(rm.uz.y, rm.uz.z);
+		y = atan2(-rm.uz.x, sy);
+		z = atan2(rm.uy.x, rm.ux.x);
+	}
+	else
+	{
+		x = atan2(-rm.uy.z, rm.uy.y);
+		y = atan2(-rm.uz.x, sy);
+		z = 0;
+	}
+	return vec3(x, y, z);
+}
