@@ -17,7 +17,7 @@ vec3 scale; // scale transformation
 ````
 *Note that the position, rotation and scaling of the coordinate system are all defined under its parent coordinate system.*
 
-##- Sample
+## Sample:
 ### Polar coordinate transformation
 ````
 void polecoord(coord_t& c1, real x, real y)
