@@ -6,7 +6,6 @@ struct coord_t
 	vec3 ux = vec3::UX;		// three axis
 	vec3 uy = vec3::UY;
 	vec3 uz = vec3::UZ;
-	real ut = 1.0f;			// time axis
 	vec3 scl = vec3::ONE;		// scale	
 	vec3 o;				// origin
 	
@@ -62,7 +61,6 @@ struct coord_t
 		PRINT("ux: " << ux.x << "," << ux.y << "," << ux.z);
 		PRINT("uy: " << uy.x << "," << uy.y << "," << uy.z);
 		PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
-		PRINT("ut: " << ut);
 		PRINT("scl: " << scl.x << "," << scl.y << "," << scl.z);
 		PRINT("o: " << uz.x << "," << uz.y << "," << uz.z);
 	}
