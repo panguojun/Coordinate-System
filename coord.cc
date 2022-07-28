@@ -1,20 +1,19 @@
+/**
+	Coordinate structure define 
+*/
 struct coord_t
 {
-	vec3 o;
-	vec3 ux = vec3::UX;
+	vec3 ux = vec3::UX;		// three axis
 	vec3 uy = vec3::UY;
 	vec3 uz = vec3::UZ;
-	real ut = 1.0f;
-	real scl = 1.0f;
-
+	real ut = 1.0f;			// time axis
+	vec3 scl = vec3::ONE;		// scale	
+	vec3 o;				// origin
+	
 	coord_t() {}
 	coord_t(crvec _ux, crvec _uy, crvec _uz)
 	{
 		ux = _ux; uy = _uy; uz = _uz;
-	}
-	coord_t(const VECLIST& e)
-	{
-		edgeax(e, ux, uy, uz);
 	}
 	void rot(real ang, crvec ax)
 	{
@@ -63,5 +62,8 @@ struct coord_t
 		PRINT("ux: " << ux.x << "," << ux.y << "," << ux.z);
 		PRINT("uy: " << uy.x << "," << uy.y << "," << uy.z);
 		PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
+		PRINT("ut: " << ut);
+		PRINT("scl: " << scl.x << "," << scl.y << "," << scl.z);
+		PRINT("o: " << uz.x << "," << uz.y << "," << uz.z);
 	}
 };
