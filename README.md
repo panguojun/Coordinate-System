@@ -56,6 +56,19 @@ coord_t operator / (const coord_t& c)
 	return rc;
 }
 ```
+## Dot / Cross
+```
+vec3 dot(crvec v)
+{
+	vec3 dv = v - o;
+	return vec3(dv.dot(ux) * scl.x, dv.dot(uy) * scl.y, dv.dot(uz) * scl.z);
+}
+vec3 cross(crvec v)
+{
+	vec3 dv = v - o;
+	return dv.cross(ux) * scl.x + dv.cross(uy) * scl.y + dv.cross(uz) * scl.z;
+}
+```
 
 ## Sample 1: Centripetal force
 ### Polar coordinate transformation
