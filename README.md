@@ -111,7 +111,7 @@ vec3 a = dv / dt; // the time derivative of the vector, the acceleration
 PRINTVEC3(a); // wwr
 ````
 
-## Sample 2: Maxwell ElectromagnetismAPI
+## Sample 2: Maxwell Electromagnetism
 ### Electromagnetic potential
 ```
 auto A = [](crvec p, real t)->vec3 {
