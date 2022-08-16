@@ -1,4 +1,4 @@
-void Maxwell_ElectromagnetismAPI()
+void Maxwell_Electromagnetism()
 {
 	coord_t c;
 	
