@@ -5,7 +5,6 @@
 // **********************************************************************
 // coord_t
 // **********************************************************************
-extern void edgeax(const VECLIST& e, vec& ux, vec& uy, vec& uz);
 struct coord_t
 {
 	vec3 ux = vec3::UX;		// 方向
@@ -22,10 +21,6 @@ struct coord_t
 	coord_t(crvec _ux, crvec _uy, crvec _uz)
 	{
 		ux = _ux; uy = _uy; uz = _uz;
-	}
-	coord_t(const VECLIST& e)
-	{
-		edgeax(e, ux, uy, uz);
 	}
 	void rot(real ang, crvec ax)
 	{
