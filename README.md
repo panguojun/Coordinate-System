@@ -57,7 +57,7 @@ coord_t operator / (const coord_t& c)
 }
 ```
 
-## Sample
+## Sample 1: Centripetal force
 ### Polar coordinate transformation
 ````
 void polecoord(coord_t& c1, real x, real y)
