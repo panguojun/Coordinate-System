@@ -70,10 +70,10 @@ struct coord_t
 		scl.y = uy.len(); uy /= scl.y;
 		scl.z = uz.len(); uz /= scl.z;
 	}
-	vec3 dot(crvec v)
+	real dot(crvec v)
 	{
 		vec3 dv = v - o;
-		return vec3(dv.dot(ux) * scl.x, dv.dot(uy) * scl.y, dv.dot(uz) * scl.z);
+		return (dv.dot(ux) * scl.x + dv.dot(uy) * scl.y + dv.dot(uz) * scl.z;
 	}
 	vec3 cross(crvec v)
 	{
