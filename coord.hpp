@@ -88,7 +88,9 @@ struct coord_t
 	}
 	vec3 cross(const coord_t& c)
 	{
-		return c.ux.cross(ux) * scl.x + c.uy.cross(uy) * scl.y + c.uz.cross(uz) * scl.z;
+		return 	(ux.cross(c.ux) * c.scl.x + ux.dot(c.uy) * c.scl.y + ux.cross(c.uz) * c.scl.z) +
+			(uy.cross(c.ux) * c.scl.x + uy.dot(c.uy) * c.scl.y + uy.cross(c.uz) * c.scl.z) +
+			(uz.cross(c.ux) * c.scl.x + uz.dot(c.uy) * c.scl.y + uz.cross(c.uz) * c.scl.z);
 	}
 	void dump()
 	{
