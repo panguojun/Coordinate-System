@@ -75,10 +75,20 @@ struct coord_t
 		vec3 dv = v - o;
 		return (dv.dot(ux) * scl.x + dv.dot(uy) * scl.y + dv.dot(uz) * scl.z;
 	}
+	real dot(const coord_t& c)
+	{
+		return 	(ux.dot(c.ux) * c.scl.x + ux.dot(c.uy) * c.scl.y + ux.dot(c.uz) * c.scl.z) +
+			(uy.dot(c.ux) * c.scl.x + uy.dot(c.uy) * c.scl.y + uy.dot(c.uz) * c.scl.z) +
+			(uz.dot(c.ux) * c.scl.x + uz.dot(c.uy) * c.scl.y + uz.dot(c.uz) * c.scl.z);
+	}
 	vec3 cross(crvec v)
 	{
 		vec3 dv = v - o;
 		return dv.cross(ux) * scl.x + dv.cross(uy) * scl.y + dv.cross(uz) * scl.z;
+	}
+	vec3 cross(const coord_t& c)
+	{
+		return c.ux.cross(ux) * scl.x + c.uy.cross(uy) * scl.y + c.uz.cross(uz) * scl.z;
 	}
 	void dump()
 	{
