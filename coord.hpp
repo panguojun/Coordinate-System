@@ -13,9 +13,7 @@ struct coord_t
 
 	vec3 scl = vec3::ONE;			// 缩放
 
-	vec3 o;					// 空间
-	real t;					// 时间
-	vec3 vel;				// 运动参考系
+	vec3 o;					// 空间位置
 	
 	coord_t() {}
 	coord_t(crvec _ux, crvec _uy, crvec _uz)
@@ -24,18 +22,15 @@ struct coord_t
 	}
 	void rot(real ang, crvec ax)
 	{
-	//	o.rot(ang, ax);
 		ux.rot(ang, ax);
 		uy.rot(ang, ax);
 		uz.rot(ang, ax);
 	}
-	// C1*C2*C3* ... *Cloc * Vloc （transfrom)
-	vec3 operator * (crvec v) const
+	vec3 operator * (crvec p) const
 	{
-		return ux * (scl.x * v.x) + uy * (scl.y * v.y) + uz * (scl.z * v.z) + o;
+		return ux * (scl.x * p.x) + uy * (scl.y * p.y) + uz * (scl.z * p.z) + o;
 	}
-	// V * C1 * C2 ...
-	friend vec3 operator * (crvec v, const coord_t& c)
+	friend vec3 operator * (crvec p, const coord_t& c)
 	{
 		return c.ux * (c.scl.x * v.x) + c.uy * (c.scl.y * v.y) + c.uz * (c.scl.z * v.z) + c.o;
 	}
@@ -49,11 +44,10 @@ struct coord_t
 		rc.o += ux * c.o.x + uy * c.o.y + uz * c.o.z;
 		return rc;
 	}
-	// Vworld/C1/C2/C3/ ... /Cloc（projection)
-	friend vec3 operator / (crvec v, const coord_t& c)
+	friend vec3 operator / (crvec p, const coord_t& c)
 	{
-		vec3 dv = v - c.o;
-		return vec3(dv.dot(c.ux)/ c.scl.x, dv.dot(c.uy) / c.scl.y, dv.dot(c.uz) / c.scl.z);
+		vec3 v = p - c.o;
+		return vec3(v.dot(c.ux)/ c.scl.x, v.dot(c.uy) / c.scl.y, v.dot(c.uz) / c.scl.z);
 	}
 	coord_t operator / (const coord_t& c)
 	{
