@@ -7,11 +7,11 @@
 // **********************************************************************
 struct coord_t
 {
-	vec3 ux = vec3::UX;		// 方向
+	vec3 ux = vec3::UX;			// 方向
 	vec3 uy = vec3::UY;
 	vec3 uz = vec3::UZ;
 
-	vec3 scl = vec3::ONE;	// 缩放
+	vec3 scl = vec3::ONE;			// 缩放
 
 	vec3 o;					// 空间
 	real t;					// 时间
@@ -72,8 +72,7 @@ struct coord_t
 	}
 	real dot(crvec v)
 	{
-		vec3 dv = v - o;
-		return (dv.dot(ux) * scl.x + dv.dot(uy) * scl.y + dv.dot(uz) * scl.z;
+		return (v.dot(ux) * scl.x + v.dot(uy) * scl.y + v.dot(uz) * scl.z;
 	}
 	real dot(const coord_t& c)
 	{
@@ -83,8 +82,7 @@ struct coord_t
 	}
 	vec3 cross(crvec v)
 	{
-		vec3 dv = v - o;
-		return dv.cross(ux) * scl.x + dv.cross(uy) * scl.y + dv.cross(uz) * scl.z;
+		return v.cross(ux) * scl.x + v.cross(uy) * scl.y + v.cross(uz) * scl.z;
 	}
 	vec3 cross(const coord_t& c)
 	{
