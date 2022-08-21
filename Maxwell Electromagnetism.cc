@@ -1,6 +1,6 @@
 void Maxwell_Electromagnetism()
 {
-	coord_t c;
+	coord c;
 	
 	auto A = [](crvec p, real t)->vec3 {
 		vec3 dp = p;
