@@ -8,7 +8,7 @@
 A coordinate system in three-dimensional space consists of an origin plus three orientation axes and three scaling components. Corresponding to the three transformations of displacement, rotation, and scaling, respectively.
 We define a structure:
 ````
-struct coord_t
+struct coord
 {
     vec3 o; 		// define the origin position
     vec3 ux,uy,uz; 	// three axial unit vectors
@@ -20,19 +20,17 @@ struct coord_t
 *Note that the position, rotation and scaling of the coordinate system are all defined under its parent coordinate system.*
 ## Multiplication operation
 ```
-// C1*C2*C3* ... *Cloc * Vloc （transfrom)
-vec3 operator * (crvec v)
+vec3 operator * (crvec p)
 {
     return ux * v.x + uy * v.y + uz * v.z + o;
 }
-// V * C1 * C2 ...
-friend vec3 operator * (crvec v, const coord_t& c)
+friend vec3 operator * (crvec p, const coord& c)
 {
-    return c.ux * v.x + c.uy * v.y + c.uz * v.z + c.o;
+    return c.ux * p.x + c.uy * p.y + c.uz * p.z + c.o;
 }
-coord_t operator * (coord_t& c)
+coord operator * (coord& c)
 {
-    coord_t rc;
+    coord rc;
     rc.ux = ux * c.ux.x + uy * c.ux.y + uz * c.ux.z;
     rc.uy = ux * c.uy.x + uy * c.uy.y + uz * c.uy.z;
     rc.ux = ux * c.uz.x + uy * c.uz.y + uz * c.uz.z;
@@ -42,15 +40,14 @@ coord_t operator * (coord_t& c)
 ```
 ## Division operation
 ```
-// Vworld/C1/C2/C3/ ... /Cloc（projection)
-friend vec3 operator / (crvec v, const coord_t& c)
+friend vec3 operator / (crvec p, const coord& c)
 {
-	vec3 dv = v - c.o;
-	return vec3(dv.dot(c.ux), dv.dot(c.uy), dv.dot(c.uz));
+	vec3 v = p - c.o;
+	return vec3(v.dot(c.ux), v.dot(c.uy), v.dot(c.uz));
 }
-coord_t operator / (const coord_t& c)
+coord operator / (const coord& c)
 {
-	coord_t rc;
+	coord rc;
 	rc.ux = vec3(ux.dot(c.ux), ux.dot(c.uy), ux.dot(c.uz));
 	rc.uy = vec3(uy.dot(c.ux), uy.dot(c.uy), uy.dot(c.uz));
 	rc.uz = vec3(uz.dot(c.ux), uz.dot(c.uy), uz.dot(c.uz));
@@ -67,15 +64,14 @@ vec3 dot(crvec v)
 }
 vec3 cross(crvec v)
 {
-	vec3 dv = v - o;
-	return dv.cross(ux) * scl.x + dv.cross(uy) * scl.y + dv.cross(uz) * scl.z;
+	return v.cross(ux) * scl.x + v.cross(uy) * scl.y + v.cross(uz) * scl.z;
 }
 ```
 
 ## Sample 1: Centripetal force
 ### Polar coordinate transformation
 ````
-void polecoord(coord_t& c1, real x, real y)
+void polecoord(coord& c1, real x, real y)
 {
     c1.o.x = x;
     c1.o.y = y;
@@ -93,12 +89,12 @@ real dth = dt * w; // deta theta
 ### Observe a coordinate system C1 at point (r, ang) in global coordinates
 ````
 real r = 1, ang = 180;
-coord_t c1;
+coord c1;
 polecoord(c1, r, ang * PI / 180);
 ````
 ### Observe a coordinate system C2 at a point after dt next to C1
 ````
-coord_t c2;
+coord c2;
 polecoord(c2, r, dth + ang * PI / 180);
 ````
 ### Velocity vector in polar coordinates (circular motion)
@@ -122,11 +118,10 @@ auto A = [](crvec p, real t)->vec3 {
 };
 auto DXYZ_A = [A](crvec p, real t)->vec3 {
 		real d = 0.001f;
-		coord c;
-		c.ux = (A(p + vec3::UX * d, t) - A(p, t)) / d;
-		c.uy = (A(p + vec3::UY * d, t) - A(p, t)) / d;
-		c.uz = (A(p + vec3::UZ * d, t) - A(p, t)) / d;
-		return c;
+		return 
+			(A(p + vec3::UX * d, t) - A(p, t)) / d +
+			(A(p + vec3::UY * d, t) - A(p, t)) / d +
+			(A(p + vec3::UZ * d, t) - A(p, t)) / d;
 	};
 auto DT_A = [A](crvec p, real t)->vec3 {real dt = 0.001f; return (A(p,t + dt) - A(p, t)) / dt; };
 ```
@@ -149,7 +144,7 @@ auto DXYZ_Fai = [Fai](crvec p)->vec3 {
 	vec3 o = vec3::UX;
 	vec3 deta = vec3::UX * 0.0;
 	real t = 1;
-	vec3 B = c.cross(CDXYZ_A(o, t));
+	vec3 B = c.cross(DXYZ_A(o, t));
 	vec3 E = -(DXYZ_Fai(o + deta) / c) - DT_A(o, t);
 
 	PRINTVEC3(B);
