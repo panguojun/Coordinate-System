@@ -120,7 +120,7 @@ auto A = [](crvec p, real t)->vec3 {
 	vec3 dp = p;
 	return dp * sin(t); 
 };
-auto DXYZ_A = [A](crvec p, real t)->vec3 {
+auto CDXYZ_A = [A](crvec p, real t)->vec3 {
 		real d = 0.001f;
 		coord_t c;
 		c.ux = (A(p + vec3::UX * d, t) - A(p, t)) / d;
@@ -149,7 +149,7 @@ auto DXYZ_Fai = [Fai](crvec p)->vec3 {
 	vec3 o = vec3::UX;
 	vec3 deta = vec3::UX * 0.0;
 	real t = 1;
-	vec3 B = c.cross(DXYZ_A(o, t));
+	vec3 B = c.cross(CDXYZ_A(o, t));
 	vec3 E = -(DXYZ_Fai(o + deta) / c) - DT_A(o, t);
 
 	PRINTVEC3(B);
