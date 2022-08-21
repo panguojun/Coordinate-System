@@ -13,14 +13,6 @@ void Maxwell_Electromagnetism()
 			(A(p + vec3::UY * d, t) - A(p, t)) / d +
 			(A(p + vec3::UZ * d, t) - A(p, t)) / d;
 	};
-	auto DXYZ_A_C = [A](crvec p, real t)->vec3 {
-		real d = 0.001f;
-		coord_t c;
-		c.ux = (A(p + vec3::UX * d, t) - A(p, t)) / d;
-		c.uy = (A(p + vec3::UY * d, t) - A(p, t)) / d;
-		c.uz = (A(p + vec3::UZ * d, t) - A(p, t)) / d;
-		return c;
-	};
 	auto DT_A = [A](crvec p, real t)->vec3 {real dt = 0.001f; return (A(p,t + dt) - A(p, t)) / dt; };
 
 	auto Fai = [](crvec p)->real {
@@ -37,7 +29,7 @@ void Maxwell_Electromagnetism()
 		vec3 o = vec3::UX;
 		vec3 deta = vec3::UX * 0.0;
 		real t = 1;
-		vec3 B = c.cross(DXYZ_A_C(o, t));
+		vec3 B = c.cross(DXYZ_A(o, t));
 		vec3 E = -(DXYZ_Fai(o + deta) / c) - DT_A(o, t);
 
 		PRINTVEC3(B);
