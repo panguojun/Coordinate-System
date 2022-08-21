@@ -121,12 +121,13 @@ auto A = [](crvec p, real t)->vec3 {
 	return dp * sin(t); 
 };
 auto DXYZ_A = [A](crvec p, real t)->vec3 {
-	real d = 0.001f;
-	return 
-		(A(p + vec3::UX * d, t) - A(p, t)) / d +
-		(A(p + vec3::UY * d, t) - A(p, t)) / d +
-		(A(p + vec3::UZ * d, t) - A(p, t)) / d;
-};
+		real d = 0.001f;
+		coord_t c;
+		c.ux = (A(p + vec3::UX * d, t) - A(p, t)) / d;
+		c.uy = (A(p + vec3::UY * d, t) - A(p, t)) / d;
+		c.uz = (A(p + vec3::UZ * d, t) - A(p, t)) / d;
+		return c;
+	};
 auto DT_A = [A](crvec p, real t)->vec3 {real dt = 0.001f; return (A(p,t + dt) - A(p, t)) / dt; };
 ```
 ### phase
