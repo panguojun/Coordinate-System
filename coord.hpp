@@ -69,9 +69,13 @@ struct coord
 	{
 		return v.dot(eigenvec());
 	}
-	vec3 cross(crvec v)
+	vec3 cross(const coord3& c)
 	{
-		return v.cross(eigenvec());
+		return vec3(
+			uy.dot(c.UZ()) - uz.dot(c.UY()) +
+			uz.dot(c.UX()) - ux.dot(c.UZ()) +
+			ux.dot(c.UY()) - uy.dot(c.UX())
+		);
 	}
 	void dump()
 	{
