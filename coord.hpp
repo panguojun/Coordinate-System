@@ -61,25 +61,17 @@ struct coord
 		scl.y = uy.len(); uy /= scl.y;
 		scl.z = uz.len(); uz /= scl.z;
 	}
+	vec3 eigenvec()
+	{
+		return (ux + uy + uz) * scl;
+	}
 	real dot(crvec v)
 	{
-		return (v.dot(ux) * scl.x + v.dot(uy) * scl.y + v.dot(uz) * scl.z;
-	}
-	real dot(const coord& c)
-	{
-		return 	(ux.dot(c.ux) * c.scl.x + ux.dot(c.uy) * c.scl.y + ux.dot(c.uz) * c.scl.z) +
-			(uy.dot(c.ux) * c.scl.x + uy.dot(c.uy) * c.scl.y + uy.dot(c.uz) * c.scl.z) +
-			(uz.dot(c.ux) * c.scl.x + uz.dot(c.uy) * c.scl.y + uz.dot(c.uz) * c.scl.z);
+		return v.dot(eigenvec());
 	}
 	vec3 cross(crvec v)
 	{
-		return v.cross(ux) * scl.x + v.cross(uy) * scl.y + v.cross(uz) * scl.z;
-	}
-	vec3 cross(const coord& c)
-	{
-		return 	(ux.cross(c.ux) * c.scl.x + ux.cross(c.uy) * c.scl.y + ux.cross(c.uz) * c.scl.z) +
-			(uy.cross(c.ux) * c.scl.x + uy.cross(c.uy) * c.scl.y + uy.cross(c.uz) * c.scl.z) +
-			(uz.cross(c.ux) * c.scl.x + uz.cross(c.uy) * c.scl.y + uz.cross(c.uz) * c.scl.z);
+		return v.cross(eigenvec());
 	}
 	void dump()
 	{
