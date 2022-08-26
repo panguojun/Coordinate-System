@@ -17,6 +17,9 @@ struct coord
 	{
 		ux = _ux; uy = _uy; uz = _uz;
 	}
+	vec3 UX() const { return ux * scl.x; }
+	vec3 UY() const { return uy * scl.y; }
+	vec3 UZ() const { return uz * scl.z; }
 	void rot(real ang, crvec ax)
 	{
 		ux.rot(ang, ax);
@@ -84,12 +87,13 @@ struct coord
 		PRINT("uy: " << uy.x << "," << uy.y << "," << uy.z);
 		PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
 	}
-	static vec3 coord2eulers(coord& rm)
+	vec3 coord2eulers() const
 	{
-		real sy = sqrt(rm.ux.x * rm.ux.x + rm.uy.x * rm.uy.x);
+		const coord3& rm = *this;
+		float sy = sqrt(rm.ux.x * rm.ux.x + rm.uy.x * rm.uy.x);
 		bool singular = sy < 1e-6;
 
-		real x, y, z;
+		float x, y, z;
 		if (!singular)
 		{
 			x = atan2(rm.uz.y, rm.uz.z);
@@ -102,6 +106,7 @@ struct coord
 			y = atan2(-rm.uz.x, sy);
 			z = 0;
 		}
+		PRINT("rx: " << x * 180 / PI << ", ry: " << y * 180 / PI << ", rz: " << z * 180 / PI);
 		return vec3(x, y, z);
 	}
 };
