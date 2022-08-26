@@ -59,12 +59,15 @@ coord operator / (const coord& c)
 ```
 vec3 dot(crvec v)
 {
-	vec3 dv = v - o;
-	return vec3(dv.dot(ux) * scl.x, dv.dot(uy) * scl.y, dv.dot(uz) * scl.z);
+	return vec3(v.dot(ux) * scl.x, v.dot(uy) * scl.y, v.dot(uz) * scl.z);
 }
-vec3 cross(crvec v)
+vec3 cross(const coord3& c)
 {
-	return v.cross(ux) * scl.x + v.cross(uy) * scl.y + v.cross(uz) * scl.z;
+	return vec3(
+		uy.dot(c.UZ()) - uz.dot(c.UY()) +
+		uz.dot(c.UX()) - ux.dot(c.UZ()) +
+		ux.dot(c.UY()) - uy.dot(c.UX())
+	);
 }
 ```
 
