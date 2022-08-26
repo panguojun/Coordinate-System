@@ -47,10 +47,10 @@ friend vec3 operator / (crvec p, const coord& c)
 }
 coord operator / (const coord& c)
 {
-	coord rc;
-	rc.ux = vec3(ux.dot(c.ux), ux.dot(c.uy), ux.dot(c.uz));
-	rc.uy = vec3(uy.dot(c.ux), uy.dot(c.uy), uy.dot(c.uz));
-	rc.uz = vec3(uz.dot(c.ux), uz.dot(c.uy), uz.dot(c.uz));
+	coord_t rc;
+	rc.ux = vec3(ux.dot(c.ux) / c.scl.x, ux.dot(c.uy) / c.scl.y, ux.dot(c.uz) / c.scl.z);
+	rc.uy = vec3(uy.dot(c.ux) / c.scl.x, uy.dot(c.uy) / c.scl.y, uy.dot(c.uz) / c.scl.z);
+	rc.uz = vec3(uz.dot(c.ux) / c.scl.x, uz.dot(c.uy) / c.scl.y, uz.dot(c.uz) / c.scl.z);
 	rc.o -= c.o;
 	return rc;
 }
