@@ -129,7 +129,7 @@ auto DXYZ_A = [A](crvec p, real t)->coord3 {
 	};
 auto DT_A = [A](crvec p, real t)->vec3 {real dt = 0.001f; return (A(p,t + dt) - A(p, t)) / dt; };
 ```
-### phase
+### Phase
 ```
 auto Fai = [](crvec p)->real {
 	return real(1.0f / p.len()); 
