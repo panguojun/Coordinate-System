@@ -17,15 +17,11 @@ struct coord
 	{
 		ux = _ux; uy = _uy; uz = _uz;
 	}
+	
 	vec3 UX() const { return ux * scl.x; }
 	vec3 UY() const { return uy * scl.y; }
 	vec3 UZ() const { return uz * scl.z; }
-	void rot(real ang, crvec ax)
-	{
-		ux.rot(ang, ax);
-		uy.rot(ang, ax);
-		uz.rot(ang, ax);
-	}
+	
 	vec3 operator * (crvec p) const
 	{
 		return ux * (scl.x * p.x) + uy * (scl.y * p.y) + uz * (scl.z * p.z) + o;
@@ -80,12 +76,11 @@ struct coord
 			ux.dot(c.UY()) - uy.dot(c.UX())
 		);
 	}
-	void dump()
+	void rot(real ang, crvec ax)
 	{
-		PRINT("-------");
-		PRINT("ux: " << ux.x << "," << ux.y << "," << ux.z);
-		PRINT("uy: " << uy.x << "," << uy.y << "," << uy.z);
-		PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
+		ux.rot(ang, ax);
+		uy.rot(ang, ax);
+		uz.rot(ang, ax);
 	}
 	vec3 coord2eulers() const
 	{
@@ -108,5 +103,12 @@ struct coord
 		}
 		PRINT("rx: " << x * 180 / PI << ", ry: " << y * 180 / PI << ", rz: " << z * 180 / PI);
 		return vec3(x, y, z);
+	}
+	void dump()
+	{
+		PRINT("-------");
+		PRINT("ux: " << ux.x << "," << ux.y << "," << ux.z);
+		PRINT("uy: " << uy.x << "," << uy.y << "," << uy.z);
+		PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
 	}
 };
