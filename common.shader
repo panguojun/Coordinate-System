@@ -63,7 +63,7 @@ vec3 coord_cross(coord3 a,coord3 b)
 coord3 default_coord;		// Default Coordinate System
 
 // ---------------------------------------------------------
-// DIV, Curl
+// GRAD
 // ---------------------------------------------------------
 #define GRAD_V3(Fai, p, t) \
         vec3((Fai(p + vec3(deta_d,0.0,0.0), t) - Fai(p, t)) / deta_d,\
