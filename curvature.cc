@@ -14,5 +14,8 @@ vec3 div_coord(const vec3& cv)
 }
 void curvature()
 {
-		
+	coord3 c;
+	vec3 v = vec3(1,0,0);
+	vec3 cv = v * c;
+	
 }
