@@ -18,9 +18,14 @@ struct coord
 		ux = _ux; uy = _uy; uz = _uz;
 	}
 	
-	vec3 UX() const { return ux * scl.x; }
-	vec3 UY() const { return uy * scl.y; }
-	vec3 UZ() const { return uz * scl.z; }
+	vec3 UX0() const { return ux * scl.x; }
+	vec3 UY0() const { return uy * scl.y; }
+	vec3 UZ0() const { return uz * scl.z; }
+	
+	vec3 (funAX)();
+	funAX UX = UX0;
+	funAX UY = UY0;
+	funAX UZ = UZ0;
 	
 	vec3 operator * (crvec p) const
 	{
@@ -75,6 +80,11 @@ struct coord
 			uz.dot(c.UX()) - ux.dot(c.UZ()) +
 			ux.dot(c.UY()) - uy.dot(c.UX())
 		);
+	}
+	coord3 deta_coord3(vec3 deta)
+	{
+		coord3 rc(UX(),UY(),UZ());
+		rc.scl = deta;
 	}
 	void rot(real ang, crvec ax)
 	{
