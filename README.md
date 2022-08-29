@@ -76,8 +76,6 @@ vec3 cross(const coord3& c)
 ````
 void polecoord(coord& c1, real x, real y)
 {
-    c1.o.x = x;
-    c1.o.y = y;
     c1.ux = vec3(cos(c1.o.y), sin(c1.o.y), 0);
     c1.uy = vec3(-c1.o.x * sin(c1.o.y), c1.o.x * cos(c1.o.y), 0);
 }
