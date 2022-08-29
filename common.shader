@@ -65,12 +65,12 @@ coord3 default_coord;		// Default Coordinate System
 // ---------------------------------------------------------
 // DIV, Curl
 // ---------------------------------------------------------
-#define DIV(Fai, p, t) \
+#define GRAD_V3(Fai, p, t) \
         vec3((Fai(p + vec3(deta_d,0.0,0.0), t) - Fai(p, t)) / deta_d,\
         (Fai(p + vec3(0.0,deta_d,0.0), t) - Fai(p, t)) / deta_d, \
         (Fai(p + vec3(0.0,0.0,deta_d), t) - Fai(p, t)) / deta_d)
 
-#define CURL(A, p, t) \
+#define GRAD_C3(A, p, t) \
     create_coord( \
     (A(p + vec3(1.0,0.0,0.0) * deta_d, t) - A(p, t)) / deta_d, \
     (A(p + vec3(0.0,1.0,0.0) * deta_d, t) - A(p, t)) / deta_d, \
