@@ -4,7 +4,7 @@ void coord_at(coord3& c, vec3 q)
 	c.ux = vec3(cos(q.y), sin(q.y), 0);
 	c.uy = vec3(-q.x * sin(q.y), q.x * cos(q.y), 0);
 }
-void curvature()
+coord3 curvature()
 {
 	vec3 q = vec3(2, 1, 0);
 	vec3 q11 = q;
@@ -31,4 +31,5 @@ void curvature()
 	vec3 deta = v * grad1 * grad2 - v * grad2 * grad1;
 	PRINTVEC3(v * grad1); PRINTVEC3(v * grad2);
 	PRINTVEC3(deta);
+	return  grad1 * grad2 - grad2 * grad1;
 }
