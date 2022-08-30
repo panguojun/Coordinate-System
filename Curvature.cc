@@ -1,4 +1,3 @@
-// Curvature of General Relativity
 void coord_at(coord3& c, vec3 q)
 {
 	q.y /= 2.0;
