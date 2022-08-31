@@ -1,5 +1,5 @@
 /********************************************************************
-*				坐标系
+*							坐标系
 * *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 * 坐标系类是我单独封装，用于简化坐标变换，衍生出许多算法，能解决一些
 * 坐标系变换相关的问题。
@@ -129,12 +129,15 @@ struct coord3
 		rc.o -= c.o;
 		return rc;
 	}
-	void norm()
+	void norm(bool bscl = true)
 	{
 #define ISZERO(a) (fabs(a) < 1e-6)
 		scl.x = ux.len(); if (!ISZERO(scl.x)) ux /= scl.x;
 		scl.y = uy.len(); if (!ISZERO(scl.y)) uy /= scl.y;
 		scl.z = uz.len(); if (!ISZERO(scl.z)) uz /= scl.z;
+
+		if (!bscl)
+			scl = vec3::ONE;
 	}
 	// 本征向量
 	vec3 eigenvec() const
@@ -180,8 +183,8 @@ struct coord3
 		coord_at(c12, q12);
 		vec3 p12 = q12 * c12;
 
-		coord3 grad1 = c21 / c11;
-		coord3 grad2 = c12 / c11;
+		coord3 grad1 = c21 / c11; grad1.norm(false);
+		coord3 grad2 = c12 / c11; grad2.norm(false);
 
 		vec3 deta = v * grad1 * grad2 - v * grad2 * grad1; // 非阿贝尔群
 		deta /= deta_d;
