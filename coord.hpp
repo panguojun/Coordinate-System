@@ -1,5 +1,5 @@
 /********************************************************************
-*				坐标系
+*							坐标系
 * *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 * 坐标系类是我单独封装，用于简化坐标变换，衍生出许多算法，能解决一些
 * 坐标系变换相关的问题。
@@ -19,9 +19,9 @@ struct coord3
 	vec3 uy = vec3::UY;
 	vec3 uz = vec3::UZ;
 
-	vec3 scl = vec3::ONE;		// 缩放
+	vec3 scl = vec3::ONE;	// 缩放
 
-	vec3 o;				// 原点
+	vec3 o;					// 原点
 
 	coord3() {}
 	coord3(const coord3& c)
@@ -97,6 +97,7 @@ struct coord3
 		rc.o = o - c.o;
 		return rc;
 	}
+	// 在坐标系下定义一个向量
 	vec3 operator * (crvec p) const
 	{
 		return ux * (scl.x * p.x) + uy * (scl.y * p.y) + uz * (scl.z * p.z) + o;
@@ -115,6 +116,7 @@ struct coord3
 		rc.o = o + ux * c.o.x + uy * c.o.y + uz * c.o.z;
 		return rc;
 	}
+	// 向量向坐标系投影
 	friend vec3 operator / (crvec p, const coord3& c)
 	{
 		vec3 v = p - c.o;
@@ -159,8 +161,8 @@ struct coord3
 		vec3 cvz = c.VZ();
 
 		return vec3(
-			vy.dot(cvz) - vz.dot(cvy) +
-			vz.dot(cvx) - vx.dot(cvz) +
+			vy.dot(cvz) - vz.dot(cvy),
+			vz.dot(cvx) - vx.dot(cvz),
 			vx.dot(cvy) - vy.dot(cvx)
 		);
 	}
@@ -192,7 +194,7 @@ struct coord3
 		PRINTVEC3(v * grad1); PRINTVEC3(v * grad2);
 		PRINTVEC3(deta);
 
-		coord3 ret = grad1 * grad2 - grad2 * grad1;
+		coord3 ret = grad1 * grad2 - grad2 * grad1; // 这个似乎就是曲率！
 		return ret;
 	}
 	void dump() const
@@ -222,7 +224,8 @@ struct coord3
 			y = atan2(-rm.uz.x, sy);
 			z = 0;
 		}
-		PRINT("rx: " << x * 180 / PI << ", ry: " << y * 180 / PI << ", rz: " << z * 180 / PI);
+		//PRINT("rx: " << x * 180 / PI << ", ry: " << y * 180 / PI << ", rz: " << z * 180 / PI);
+		PRINT("rx: " << x << ", ry: " << y  << ", rz: " << z);
 		return vec3(x, y, z);
 	}
 };
