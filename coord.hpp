@@ -12,16 +12,14 @@
 
 const real deta_d = 0.0001f;	// 空间微分精度
 const real deta_t = 0.0001f;	// 时间微分精度
-extern void edgeax(const VECLIST& e, vec& ux, vec& uy, vec& uz);
+
 struct coord3
 {
 	vec3 ux = vec3::UX;		// 方向
 	vec3 uy = vec3::UY;
 	vec3 uz = vec3::UZ;
-
-	vec3 scl = vec3::ONE;	// 缩放
-
-	vec3 o;					// 原点
+	vec3 scl = vec3::ONE;		// 缩放
+	vec3 o;				// 原点
 
 	coord3() {}
 	coord3(const coord3& c)
@@ -61,7 +59,6 @@ struct coord3
 
 	void rot(real ang, crvec ax)
 	{
-		//	o.rot(ang, ax);
 		ux.rot(ang, ax);
 		uy.rot(ang, ax);
 		uz.rot(ang, ax);
@@ -203,7 +200,7 @@ struct coord3
 		PRINT("ux: " << ux.x << "," << ux.y << "," << ux.z);
 		PRINT("uy: " << uy.x << "," << uy.y << "," << uy.z);
 		PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
-		PRINT("o: " << o.x << "," << o.y << "," << o.z);
+		//PRINT("o: " << o.x << "," << o.y << "," << o.z);
 	}
 	vec3 coord2eulers() const
 	{
