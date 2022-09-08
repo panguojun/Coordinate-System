@@ -16,7 +16,7 @@ struct coord
 }
 ````
 *Note that the position, rotation and scaling of the coordinate system are all defined under its parent coordinate system.*
-## Multiplication operation
+## Multiplication operation: define a vector in a coordinate system.
 ```
 vec3 operator * (crvec p)
 {
@@ -36,7 +36,7 @@ coord operator * (coord& c)
     return rc;
 }
 ```
-## Division operation
+## Division operation: measure this vector in a coordinate system.
 ```
 friend vec3 operator / (crvec p, const coord& c)
 {
