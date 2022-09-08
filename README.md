@@ -150,7 +150,7 @@ auto DXYZ_Fai = [Fai](crvec p)->vec3 {
 	PRINTVEC3(E);
 }
 ```
-## Sample 2: Curvature
+## Sample 3: Curvature
 ### Curvature, I'm not quite sure if this curvature algorithm is correct, if so it can greatly simplify tensor calculations.
 ``
 coord3 curvature()
