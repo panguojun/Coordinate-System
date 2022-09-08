@@ -150,3 +150,36 @@ auto DXYZ_Fai = [Fai](crvec p)->vec3 {
 	PRINTVEC3(E);
 }
 ```
+## Sample 2: Curvature
+### Curvature, I'm not quite sure if this curvature algorithm is correct, if so it can greatly simplify tensor calculations.
+``
+coord3 curvature()
+{
+	vec3 q = vec3(2, 1, 0);
+	vec3 q11 = q;
+	vec3 q21 = q + vec3(deta_d, 0, 0);
+	vec3 q12 = q + vec3(0, deta_d, 0);
+	vec3 q22 = q + vec3(deta_d, deta_d, 0);
+	
+	coord3 c11;
+	coord_at(c11, q11);
+	vec3 p11 = q11 * c11;
+
+	coord3 c21;
+	coord_at(c21, q21);
+	vec3 p21 = q21 * c21;
+
+	coord3 c12;
+	coord_at(c12, q12);
+	vec3 p12= q12 * c12;
+
+	coord3 grad1 = c21 / c11; grad1.norm(false);
+	coord3 grad2 = c12 / c11; grad2.norm(false);
+
+	vec3 v(1,1,0);
+	vec3 deta = v * grad1 * grad2 - v * grad2 * grad1;
+	PRINTVEC3(v * grad1); PRINTVEC3(v * grad2);
+	PRINTVEC3(deta);
+	return  grad1 * grad2 - grad2 * grad1;
+}
+``
