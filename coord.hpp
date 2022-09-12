@@ -231,13 +231,12 @@ struct coord3
 // 梯度 / 时间变化率
 // **********************************************************************
 #define GRAD_V3(Fai, p, t) \
-        vec3((Fai(p + vec3(deta_d,0.0,0.0), t) - Fai(p, t)) / deta_d,\
-			 (Fai(p + vec3(0.0,deta_d,0.0), t) - Fai(p, t)) / deta_d, \
-			 (Fai(p + vec3(0.0,0.0,deta_d), t) - Fai(p, t)) / deta_d)
+        vec3(	(Fai(p + vec3(deta_d,0.0,0.0), t) - Fai(p, t)) / deta_d, \
+		(Fai(p + vec3(0.0,deta_d,0.0), t) - Fai(p, t)) / deta_d, \
+		(Fai(p + vec3(0.0,0.0,deta_d), t) - Fai(p, t)) / deta_d)
 
 #define GRAD_C3(A, p, t) \
-    coord3( \
-		(A(p + vec3(1.0,0.0,0.0) * deta_d, t) - A(p, t)) / deta_d, \
+    coord3( 	(A(p + vec3(1.0,0.0,0.0) * deta_d, t) - A(p, t)) / deta_d, \
 		(A(p + vec3(0.0,1.0,0.0) * deta_d, t) - A(p, t)) / deta_d, \
 		(A(p + vec3(0.0,0.0,1.0) * deta_d, t) - A(p, t)) / deta_d)
 
