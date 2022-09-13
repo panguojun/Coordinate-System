@@ -121,6 +121,7 @@ struct coord3
 	}
 	coord3 operator / (const coord3& c) const
 	{
+		// c.ux,c.uy,c.uz must be unitized!
 		coord3 rc;
 		rc.ux = vec3(ux.dot(c.ux) / c.scl.x, ux.dot(c.uy) / c.scl.y, ux.dot(c.uz) / c.scl.z);
 		rc.uy = vec3(uy.dot(c.ux) / c.scl.x, uy.dot(c.uy) / c.scl.y, uy.dot(c.uz) / c.scl.z);
@@ -130,7 +131,7 @@ struct coord3
 	}
 	void norm(bool bscl = true)
 	{
-#define ISZERO(a) (fabs(a) < 1e-6)
+#define ISZERO(a) (fabs(a) < 1e-10)
 		scl.x = ux.len(); if (!ISZERO(scl.x)) ux /= scl.x;
 		scl.y = uy.len(); if (!ISZERO(scl.y)) uy /= scl.y;
 		scl.z = uz.len(); if (!ISZERO(scl.z)) uz /= scl.z;
