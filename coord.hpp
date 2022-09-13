@@ -116,6 +116,7 @@ struct coord3
 	// 向量向坐标系投影
 	friend vec3 operator / (crvec p, const coord3& c)
 	{
+		// c.ux,c.uy,c.uz must be unitized!
 		vec3 v = p - c.o;
 		return vec3(v.dot(c.ux) / c.scl.x, v.dot(c.uy) / c.scl.y, v.dot(c.uz) / c.scl.z);
 	}
