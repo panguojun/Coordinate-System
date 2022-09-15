@@ -180,6 +180,6 @@ coord3 curvature()
 	vec3 deta = v * grad1 * grad2 - v * grad2 * grad1;
 	PRINTVEC3(v * grad1); PRINTVEC3(v * grad2);
 	PRINTVEC3(deta);
-	return  grad1 * grad2 - grad2 * grad1;
+	return  grad1 * grad2 - grad2 * grad1; // just related to curvature
 }
 ```
