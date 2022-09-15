@@ -1,5 +1,5 @@
 /********************************************************************
-*				坐标系
+*							坐标系
 * *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 * 坐标系类是我单独封装，用于简化坐标变换，衍生出许多算法，能解决一些
 * 坐标系变换相关的问题。
@@ -12,14 +12,15 @@
 
 const real deta_d = 0.0001f;	// 空间微分精度
 const real deta_t = 0.0001f;	// 时间微分精度
-
+extern void edgeax(const VECLIST& e, vec& ux, vec& uy, vec& uz);
 struct coord3
 {
 	vec3 ux = vec3::UX;		// 方向
 	vec3 uy = vec3::UY;
 	vec3 uz = vec3::UZ;
-	vec3 scl = vec3::ONE;		// 缩放
-	vec3 o;				// 原点
+
+	vec3 scl = vec3::ONE;	// 缩放
+	vec3 o;					// 原点
 
 	coord3() {}
 	coord3(const coord3& c)
@@ -59,6 +60,7 @@ struct coord3
 
 	void rot(real ang, crvec ax)
 	{
+		//	o.rot(ang, ax);
 		ux.rot(ang, ax);
 		uy.rot(ang, ax);
 		uz.rot(ang, ax);
@@ -80,16 +82,11 @@ struct coord3
 	coord3 operator - (const coord3& c) const
 	{
 		coord3 rc;
-		if (is_same_dirs(c))
-		{
-			rc.ux = ux; rc.uy = uy; rc.uz = uz;
-		}
-		else
 		{
 			rc.ux = VX() - c.VX();
 			rc.uy = VY() - c.VY();
 			rc.uz = VZ() - c.VZ();
-			rc.norm();
+			//rc.norm();
 		}
 		rc.o = o - c.o;
 		return rc;
@@ -113,16 +110,22 @@ struct coord3
 		rc.o = o + ux * c.o.x + uy * c.o.y + uz * c.o.z;
 		return rc;
 	}
-	// 向量向坐标系投影
+	coord3 operator * (const quaternion& q) const
+	{
+		coord3 rc = *this;
+		rc.ux = q * ux;
+		rc.uy = q * uy;
+		rc.uz = q * uz;
+		return rc;
+	}
+	// 向量向坐标系投影 注意：要保证ux,uy,uz是单位向量！
 	friend vec3 operator / (crvec p, const coord3& c)
 	{
-		// c.ux,c.uy,c.uz must be unitized!
 		vec3 v = p - c.o;
 		return vec3(v.dot(c.ux) / c.scl.x, v.dot(c.uy) / c.scl.y, v.dot(c.uz) / c.scl.z);
 	}
 	coord3 operator / (const coord3& c) const
 	{
-		// c.ux,c.uy,c.uz must be unitized!
 		coord3 rc;
 		rc.ux = vec3(ux.dot(c.ux) / c.scl.x, ux.dot(c.uy) / c.scl.y, ux.dot(c.uz) / c.scl.z);
 		rc.uy = vec3(uy.dot(c.ux) / c.scl.x, uy.dot(c.uy) / c.scl.y, uy.dot(c.uz) / c.scl.z);
@@ -165,43 +168,62 @@ struct coord3
 			vx.dot(cvy) - vy.dot(cvx)
 		);
 	}
+	// 曲率
 	coord3 curvature(std::function<void(coord3& c, vec3 q)> coord_at, crvec q, crvec v)
 	{
-		vec3 q11 = q;
-		vec3 q21 = q + vec3(deta_d, 0, 0);
-		vec3 q12 = q + vec3(0, deta_d, 0);
-		vec3 q22 = q + vec3(deta_d, deta_d, 0);
+		const real delta_x = 0.01f;
+		const real delta_y = 0.01f;
+		vec3 q11 = q + vec3(delta_x, 0, 0);
+		vec3 q21 = q + vec3(0, delta_y, 0);
+		vec3 q12 = q + vec3(delta_x, delta_y, 0);
 
 		coord3 c11;
 		coord_at(c11, q11);
 		vec3 p11 = q11 * c11;
+		c11.norm(false);
 
 		coord3 c21;
 		coord_at(c21, q21);
 		vec3 p21 = q21 * c21;
+		c21.norm(false);
 
 		coord3 c12;
 		coord_at(c12, q12);
 		vec3 p12 = q12 * c12;
+		c12.norm(false);
 
 		coord3 grad1 = c21 / c11; grad1.norm(false);
 		coord3 grad2 = c12 / c11; grad2.norm(false);
 
-		vec3 deta = v * grad1 * grad2 - v * grad2 * grad1; // 非阿贝尔群
-		deta /= deta_d;
+		PRINT("--- c11 ---");
+		(c11).dump();
+		PRINT("--- c12 ---");
+		(c12).dump();
+		PRINT("--- grad1 ---");
+		(grad1).dump();
+		PRINT("--- grad2 ---");
+		(grad2).dump();
 
-		PRINTVEC3(v * grad1); PRINTVEC3(v * grad2);
+		PRINT("--- g1 ---");
+		coord3 g1 = grad1 * grad2; g1.norm(false); g1.dump();
+		PRINT("--- g2 ---");
+		coord3 g2 = grad2 * grad2; g2.norm(false); g2.dump();
+		coord3 R = (g1 / g2); R.norm(false);
+		PRINT("--- R ---");
+		R.dump();
+		vec3 deta = v * R;
+		deta.norm();
 		PRINTVEC3(deta);
 
-		coord3 ret = grad1 * grad2 - grad2 * grad1; // 这个似乎就是曲率！
-		return ret;
+		return R;
 	}
 	void dump() const
 	{
-		PRINT("-------");
+		//PRINT("-------");
 		PRINT("ux: " << ux.x << "," << ux.y << "," << ux.z);
 		PRINT("uy: " << uy.x << "," << uy.y << "," << uy.z);
-		PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
+		PRINTVEC3(scl);
+		//PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
 		//PRINT("o: " << o.x << "," << o.y << "," << o.z);
 	}
 	vec3 coord2eulers() const
@@ -233,12 +255,13 @@ struct coord3
 // 梯度 / 时间变化率
 // **********************************************************************
 #define GRAD_V3(Fai, p, t) \
-        vec3(	(Fai(p + vec3(deta_d,0.0,0.0), t) - Fai(p, t)) / deta_d, \
-		(Fai(p + vec3(0.0,deta_d,0.0), t) - Fai(p, t)) / deta_d, \
-		(Fai(p + vec3(0.0,0.0,deta_d), t) - Fai(p, t)) / deta_d)
+        vec3((Fai(p + vec3(deta_d,0.0,0.0), t) - Fai(p, t)) / deta_d,\
+			 (Fai(p + vec3(0.0,deta_d,0.0), t) - Fai(p, t)) / deta_d, \
+			 (Fai(p + vec3(0.0,0.0,deta_d), t) - Fai(p, t)) / deta_d)
 
 #define GRAD_C3(A, p, t) \
-    coord3( 	(A(p + vec3(1.0,0.0,0.0) * deta_d, t) - A(p, t)) / deta_d, \
+    coord3( \
+		(A(p + vec3(1.0,0.0,0.0) * deta_d, t) - A(p, t)) / deta_d, \
 		(A(p + vec3(0.0,1.0,0.0) * deta_d, t) - A(p, t)) / deta_d, \
 		(A(p + vec3(0.0,0.0,1.0) * deta_d, t) - A(p, t)) / deta_d)
 
