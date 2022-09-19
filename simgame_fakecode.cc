@@ -5,10 +5,15 @@
         btn2{type:button;p:100,30;onclick:btn2}
     }
     #shader
-    shader{
+    shader2d{
         params{mouse:1,1}
         mainimage{
-            color = rgb(1,1,0);
+            dx1:x-0.25;dy:y-0.5;
+            r1:sqrt(dx1*dx1+dy1*dy1);
+            dx2:x-0.75;dy:y-0.5;
+            r2:sqrt(dx2*dx2+dy2*dy2);
+            f:sin(r1)+sin(r2);
+            color: rgb(f,f,0);
         }
     }
 }
