@@ -1,8 +1,8 @@
 {   #gui
     gui{
         params{param1:1;param2:2;param3:3}
-        btn1{type:button;p:100,10;onclick:onbtn1}
-        btn2{type:button;p:100,30;onclick:btn2}
+        btn1{type:button;p:100,10;onclick:param1++}
+        btn2{type:button;p:100,30;onclick:param2++}
     }
     #shader
     shader2d{
