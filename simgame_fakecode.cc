@@ -15,7 +15,7 @@
             coord1:=polar_coord(x,y);   // coord
             dx:=x-0.25;dy:=y-0.5;   
             r1:=sqrt(dx*dx+dy*dy);
-            dx=x-0.75;dy:y-0.5;
+            dx=x-0.75;dy=y-0.5;
             r2:=sqrt(dx*dx+dy*dy);
             
             f:=sin(r1)+sin(r2);         // field
