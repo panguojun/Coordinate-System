@@ -7,7 +7,11 @@
     #shader
     shader2d{
         params{mouse:1,1}
+        polar_coord{params:float x, float y;
+            return: coord(vec2(cos(x),sin(y)),vec2(sin(x),cos(y)));
+        }
         mainimage{
+            coord1:polar_coord(x,y);
             dx1:x-0.25;dy:y-0.5;
             r1:sqrt(dx1*dx1+dy1*dy1);
             dx2:x-0.75;dy:y-0.5;
