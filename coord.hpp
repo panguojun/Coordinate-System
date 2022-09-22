@@ -275,10 +275,17 @@ struct coord3
 		//}
 		return vec3(v.dot(c.ux) / c.s.x, v.dot(c.uy) / c.s.y, v.dot(c.uz) / c.s.z);
 	}
+#define PL_PRJ3(v) vec3(pl_prj(v-c.uz*v.dot(c.uz), c.ux, c.uy) / c.s.x, \
+			pl_prj(v-c.ux*v.dot(c.ux), c.uy, c.uz) / c.s.y, \
+			pl_prj(v-c.uy*v.dot(c.uy), c.uz, c.ux) / c.s.z)
 	coord3 operator / (const coord3& c) const
 	{
 		coord3 rc;
-		//todo 对于非正交情况 
+		/*{// 对于非正交情况
+			rc.ux = PL_PRJ3(ux);
+			rc.uy = PL_PRJ3(uy);
+			rc.uz = PL_PRJ3(uz);
+		}*/
 		rc.ux = vec3(ux.dot(c.ux) / c.s.x, ux.dot(c.uy) / c.s.y, ux.dot(c.uz) / c.s.z);
 		rc.uy = vec3(uy.dot(c.ux) / c.s.x, uy.dot(c.uy) / c.s.y, uy.dot(c.uz) / c.s.z);
 		rc.uz = vec3(uz.dot(c.ux) / c.s.x, uz.dot(c.uy) / c.s.y, uz.dot(c.uz) / c.s.z);
