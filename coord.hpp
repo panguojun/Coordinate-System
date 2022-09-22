@@ -256,12 +256,13 @@ struct coord3
 		return rc;
 	}
 	// Parallel projection
-	static real pl_prj(crvec2 v, crvec2 ax1, crvec2 ax2)
+	static real pl_prj(crvec v, crvec ax1, crvec ax2)
 	{
+		vec3 ax = ax1.cross(ax2);
 		real co = ax1.dot(ax2);
 		real si = sqrt(1 - co * co);
 		real sc = (co / si);
-		return (v.dot(ax1)- v.cross(ax1) * sc);
+		return (v.dot(ax1) - v.cross(ax1).dot(ax) * sc);
 	} 
 	// 向量向坐标系投影 注意：要保证ux,uy,uz是单位向量！
 	friend vec3 operator / (crvec p, const coord3& c)
