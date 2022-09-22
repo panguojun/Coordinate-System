@@ -1,6 +1,6 @@
-/********************************************************************
-*				坐标系
-* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
+/********************************************************
+*			坐标系
+* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 * 坐标系类是我单独封装，用于简化坐标变换，衍生出许多算法，能解决一些
 * 坐标系变换相关的问题。
 * 
@@ -21,8 +21,8 @@ struct coord2
 	vec2 ux = vec2::UX;		// 方向
 	vec2 uy = vec2::UY;
 
-	vec2 s = vec2::ONE;	// 缩放
-	vec2 o;					// 原点
+	vec2 s = vec2::ONE;		// 缩放
+	vec2 o;				// 原点
 
 	coord2() {}
 	coord2(const coord2& c)
@@ -96,7 +96,7 @@ struct coord2
 		return rc;
 	}
 	// Parallel projection
-	static real pl_dot(crvec2 v, crvec2 ax1, crvec2 ax2)
+	static real pl_prj(crvec2 v, crvec2 ax1, crvec2 ax2)
 	{
 		real co = ax1.dot(ax2);
 		real si = sqrt(1 - co * co);
@@ -108,7 +108,7 @@ struct coord2
 	{
 		vec2 v = p - c.o;
 		//{// 对于非正交情况
-		//	return vec2(pl_dot(v, c.ux, c.uy) / c.s.x, pl_dot(v, c.uy, c.ux) / c.s.y);
+		//	return vec2(pl_prj(v, c.ux, c.uy) / c.s.x, pl_prj(v, c.uy, c.ux) / c.s.y);
 		//}
 		return vec2(v.dot(c.ux) / c.s.x, v.dot(c.uy) / c.s.y);
 	}
@@ -116,8 +116,8 @@ struct coord2
 	{
 		coord2 rc;
 		//{// 对于非正交情况
-		//	rc.ux = vec2(pl_dot(ux, c.ux, c.uy) / c.s.x, pl_dot(ux, c.uy, c.ux) / c.s.y);
-		//	rc.uy = vec2(pl_dot(uy, c.ux, c.uy) / c.s.x, pl_dot(uy, c.uy, c.ux) / c.s.y);
+		//	rc.ux = vec2(pl_prj(ux, c.ux, c.uy) / c.s.x, pl_prj(ux, c.uy, c.ux) / c.s.y);
+		//	rc.uy = vec2(pl_prj(uy, c.ux, c.uy) / c.s.x, pl_prj(uy, c.uy, c.ux) / c.s.y);
 		//}
 		rc.ux = vec2(ux.dot(c.ux) / c.s.x, ux.dot(c.uy) / c.s.y);
 		rc.uy = vec2(uy.dot(c.ux) / c.s.x, uy.dot(c.uy) / c.s.y);
@@ -126,7 +126,7 @@ struct coord2
 	}
 	void norm(bool bscl = true)
 	{
-#define ISZERO(a) (fabs(a) < 1e-10)
+		#define ISZERO(a) (fabs(a) < 1e-10)
 		s.x = ux.len(); if (!ISZERO(s.x)) ux /= s.x;
 		s.y = uy.len(); if (!ISZERO(s.y)) uy /= s.y;
 
@@ -148,23 +148,20 @@ struct coord2
 		PRINT("ux: " << ux.x << "," << ux.y);
 		PRINT("uy: " << uy.x << "," << uy.y);
 		PRINTVEC2(s);
-		//PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
-		//PRINT("o: " << o.x << "," << o.y << "," << o.z);
 	}
 };
 
 // ***********************************************
 // coord3
 // ***********************************************
-extern void edgeax(const VECLIST& e, vec& ux, vec& uy, vec& uz);
 struct coord3
 {
 	vec3 ux = vec3::UX;		// 方向
 	vec3 uy = vec3::UY;
 	vec3 uz = vec3::UZ;
 
-	vec3 s = vec3::ONE;	// 缩放
-	vec3 o;					// 原点
+	vec3 s = vec3::ONE;		// 缩放
+	vec3 o;				// 原点
 
 	coord3() {}
 	coord3(const coord3& c)
@@ -194,17 +191,13 @@ struct coord3
 		coord3 cz(pit, vec3::UZ);
 		*this = cx * cy * cz;
 	}
-	coord3(const VECLIST& e)
-	{
-		edgeax(e, ux, uy, uz);
-	}
 	vec3 VX() const { return ux * s.x; }
 	vec3 VY() const { return uy * s.y; }
 	vec3 VZ() const { return uz * s.z; }
 
 	void rot(real ang, crvec ax)
 	{
-		//	o.rot(ang, ax);
+		//o.rot(ang, ax);
 		ux.rot(ang, ax);
 		uy.rot(ang, ax);
 		uz.rot(ang, ax);
@@ -361,9 +354,9 @@ struct coord3
 		//PRINT("-------");
 		PRINT("ux: " << ux.x << "," << ux.y << "," << ux.z);
 		PRINT("uy: " << uy.x << "," << uy.y << "," << uy.z);
+		PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
 		PRINTVEC3(s);
-		//PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
-		//PRINT("o: " << o.x << "," << o.y << "," << o.z);
+		PRINTVEC3(o);
 	}
 	vec3 coord2eulers() const
 	{
@@ -384,7 +377,6 @@ struct coord3
 			y = atan2(-rm.uz.x, sy);
 			z = 0;
 		}
-		//PRINT("rx: " << x * 180 / PI << ", ry: " << y * 180 / PI << ", rz: " << z * 180 / PI);
 		PRINT("rx: " << x << ", ry: " << y  << ", rz: " << z);
 		return vec3(x, y, z);
 	}
@@ -405,17 +397,3 @@ struct coord3
 		(A(p + vec3(0.0,0.0,1.0) * deta_d, t) - A(p, t)) / deta_d)
 
 #define DT_A(A, p, t) (A(p,t + deta_t) - A(p, t)) / deta_t
-
-// **********************************************************************
-// 可视化
-// **********************************************************************
-void drawcoord(coord3& coord)
-{
-	color = 0xFF0000FF;
-	ptr(coord.o, coord.o + coord.ux * (0.5), 0.01);
-	color = 0xFF00FF00;
-	ptr(coord.o, coord.o + coord.uy * (0.5), 0.01);
-	color = 0xFFFF0000;
-	ptr(coord.o, coord.o + coord.uz * (0.5), 0.01);
-	color = 0xFFFFFFFF;
-}
