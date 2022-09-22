@@ -126,7 +126,7 @@ struct coord2
 	}
 	void norm(bool bscl = true)
 	{
-		#define ISZERO(a) (fabs(a) < 1e-10)
+#define ISZERO(a) (fabs(a) < 1e-10)
 		s.x = ux.len(); if (!ISZERO(s.x)) ux /= s.x;
 		s.y = uy.len(); if (!ISZERO(s.y)) uy /= s.y;
 
@@ -255,13 +255,23 @@ struct coord3
 		rc.uz = q * uz;
 		return rc;
 	}
-	// TODO Parallel projection
-	// 
+	// Parallel projection
+	static real pl_prj(crvec2 v, crvec2 ax1, crvec2 ax2)
+	{
+		real co = ax1.dot(ax2);
+		real si = sqrt(1 - co * co);
+		real sc = (co / si);
+		return (v.dot(ax1)- v.cross(ax1) * sc);
+	} 
 	// 向量向坐标系投影 注意：要保证ux,uy,uz是单位向量！
 	friend vec3 operator / (crvec p, const coord3& c)
 	{
 		vec3 v = p - c.o;
-		//todo 对于非正交情况 
+		//{// 对于非正交情况
+		//	return vec3(pl_prj(v-c.uz*v.dot(c.uz), c.ux, c.uy) / c.s.x, 
+		//		    pl_prj(v-c.ux*v.dot(c.ux), c.uy, c.uz) / c.s.y, 
+		//		    pl_prj(v-c.uy*v.dot(c.uy), c.uz, c.ux) / c.s.z);
+		//}
 		return vec3(v.dot(c.ux) / c.s.x, v.dot(c.uy) / c.s.y, v.dot(c.uz) / c.s.z);
 	}
 	coord3 operator / (const coord3& c) const
