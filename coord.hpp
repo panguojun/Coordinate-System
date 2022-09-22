@@ -258,7 +258,7 @@ struct coord3
 	// Parallel projection
 	static real pl_prj(crvec v, crvec ax1, crvec ax2)
 	{
-		vec3 ax = ax1.cross(ax2);
+		vec3 ax = ax1.cross(ax2);ax.norm();
 		real co = ax1.dot(ax2);
 		real si = sqrt(1 - co * co);
 		real sc = (co / si);
