@@ -7,11 +7,155 @@
 * 坐标系是物理规范的简化，物理学因为规范而变得数学上很困难，如果能用
 * 算法简化规范运算,可以还原一个初中生眼中的物理世界！
 * 物理学范式: 测量 = 规范 * 本征 * 量纲
+* 补充了2D 非正交情况下的平行投影
 * 
 */
 
 const real deta_d = 0.0001f;	// 空间微分精度
 const real deta_t = 0.0001f;	// 时间微分精度
+// ***********************************************
+// coord2
+// ***********************************************
+struct coord2
+{
+	vec2 ux = vec2::UX;		// 方向
+	vec2 uy = vec2::UY;
+
+	vec2 s = vec2::ONE;	// 缩放
+	vec2 o;					// 原点
+
+	coord2() {}
+	coord2(const coord2& c)
+	{
+		ux = c.ux; uy = c.uy;
+		s = c.s;
+		o = c.o;
+	}
+	coord2(crvec2 _ux, crvec2 _uy, crvec2 _uz)
+	{
+		ux = _ux; uy = _uy;
+	}
+	coord2(crvec2 _ux, crvec2 _uy)
+	{
+		ux = _ux;
+		uy = _uy;
+	}
+	coord2(real ang)
+	{
+		ux.rot(ang);
+		uy.rot(ang);
+	}
+	vec2 VX() const { return ux * s.x; }
+	vec2 VY() const { return uy * s.y; }
+
+	void rot(real ang)
+	{
+		//	o.rot(ang, ax);
+		ux.rot(ang);
+	}
+	bool is_same_dirs(const coord2& c) const
+	{
+		return ux == c.ux && uy == c.uy;
+	}
+	coord2 operator + (const coord2& c) const
+	{
+		coord2 rc;
+		rc.ux = VX() + c.VX();
+		rc.uy = VY() + c.VY();
+		rc.norm();
+		rc.o = o + c.o;
+		return rc;
+	}
+	coord2 operator - (const coord2& c) const
+	{
+		coord2 rc;
+		{
+			rc.ux = VX() - c.VX();
+			rc.uy = VY() - c.VY();
+			//rc.norm();
+		}
+		rc.o = o - c.o;
+		return rc;
+	}
+	// 在坐标系下定义一个向量
+	vec2 operator * (crvec2 p) const
+	{
+		return ux * (s.x * p.x) + uy * (s.y * p.y) + o;
+	}
+	friend vec2 operator * (crvec2 p, const coord2& c)
+	{
+		return c.ux * (c.s.x * p.x) + c.uy * (c.s.y * p.y) + c.o;
+	}
+	coord2 operator * (const coord2& c) const
+	{
+		coord2 rc;
+		rc.ux = ux * c.ux.x + uy * c.ux.y;
+		rc.uy = ux * c.uy.x + uy * c.uy.y;
+		rc.s = s * c.s;
+		rc.o = o + ux * c.o.x + uy * c.o.y;
+		return rc;
+	}
+	// Parallel projection
+	static real pl_dot(crvec2 v, crvec2 ax1, crvec2 ax2)
+	{
+		real co = ax1.dot(ax2);
+		real si = sqrt(1 - co * co);
+		real sc = (co / si);
+		return (v.dot(ax1)- v.cross(ax1) * sc);
+	}
+	// 向量向坐标系投影 注意：要保证ux,uy是单位向量！
+	friend vec2 operator / (crvec2 p, const coord2& c)
+	{
+		vec2 v = p - c.o;
+		//{// 对于非正交情况
+		//	return vec2(pl_dot(v, c.ux, c.uy) / c.s.x, pl_dot(v, c.uy, c.ux) / c.s.y);
+		//}
+		return vec2(v.dot(c.ux) / c.s.x, v.dot(c.uy) / c.s.y);
+	}
+	coord2 operator / (const coord2& c) const
+	{
+		coord2 rc;
+		//{// 对于非正交情况
+		//	rc.ux = vec2(pl_dot(ux, c.ux, c.uy) / c.s.x, pl_dot(ux, c.uy, c.ux) / c.s.y);
+		//	rc.uy = vec2(pl_dot(uy, c.ux, c.uy) / c.s.x, pl_dot(uy, c.uy, c.ux) / c.s.y);
+		//}
+		rc.ux = vec2(ux.dot(c.ux) / c.s.x, ux.dot(c.uy) / c.s.y);
+		rc.uy = vec2(uy.dot(c.ux) / c.s.x, uy.dot(c.uy) / c.s.y);
+		rc.o -= c.o;
+		return rc;
+	}
+	void norm(bool bscl = true)
+	{
+#define ISZERO(a) (fabs(a) < 1e-10)
+		s.x = ux.len(); if (!ISZERO(s.x)) ux /= s.x;
+		s.y = uy.len(); if (!ISZERO(s.y)) uy /= s.y;
+
+		if (!bscl)
+			s = vec2::ONE;
+	}
+	// 本征向量
+	vec2 eigenvec() const
+	{
+		return (ux + uy) * s;
+	}
+	real dot(crvec2 v) const
+	{
+		return v.dot(eigenvec());
+	}
+	void dump() const
+	{
+		//PRINT("-------");
+		PRINT("ux: " << ux.x << "," << ux.y);
+		PRINT("uy: " << uy.x << "," << uy.y);
+		PRINTVEC2(s);
+		//PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
+		//PRINT("o: " << o.x << "," << o.y << "," << o.z);
+	}
+};
+
+// ***********************************************
+// coord3
+// ***********************************************
 extern void edgeax(const VECLIST& e, vec& ux, vec& uy, vec& uz);
 struct coord3
 {
@@ -19,14 +163,14 @@ struct coord3
 	vec3 uy = vec3::UY;
 	vec3 uz = vec3::UZ;
 
-	vec3 scl = vec3::ONE;	// 缩放
+	vec3 s = vec3::ONE;	// 缩放
 	vec3 o;					// 原点
 
 	coord3() {}
 	coord3(const coord3& c)
 	{
 		ux = c.ux; uy = c.uy; uz = c.uz;
-		scl = c.scl;
+		s = c.s;
 		o = c.o;
 	}
 	coord3(crvec _ux, crvec _uy, crvec _uz)
@@ -54,9 +198,9 @@ struct coord3
 	{
 		edgeax(e, ux, uy, uz);
 	}
-	vec3 VX() const { return ux * scl.x; }
-	vec3 VY() const { return uy * scl.y; }
-	vec3 VZ() const { return uz * scl.z; }
+	vec3 VX() const { return ux * s.x; }
+	vec3 VY() const { return uy * s.y; }
+	vec3 VZ() const { return uz * s.z; }
 
 	void rot(real ang, crvec ax)
 	{
@@ -94,11 +238,11 @@ struct coord3
 	// 在坐标系下定义一个向量
 	vec3 operator * (crvec p) const
 	{
-		return ux * (scl.x * p.x) + uy * (scl.y * p.y) + uz * (scl.z * p.z) + o;
+		return ux * (s.x * p.x) + uy * (s.y * p.y) + uz * (s.z * p.z) + o;
 	}
 	friend vec3 operator * (crvec p, const coord3& c)
 	{
-		return c.ux * (c.scl.x * p.x) + c.uy * (c.scl.y * p.y) + c.uz * (c.scl.z * p.z) + c.o;
+		return c.ux * (c.s.x * p.x) + c.uy * (c.s.y * p.y) + c.uz * (c.s.z * p.z) + c.o;
 	}
 	coord3 operator * (const coord3& c) const
 	{
@@ -106,7 +250,7 @@ struct coord3
 		rc.ux = ux * c.ux.x + uy * c.ux.y + uz * c.ux.z;
 		rc.uy = ux * c.uy.x + uy * c.uy.y + uz * c.uy.z;
 		rc.uz = ux * c.uz.x + uy * c.uz.y + uz * c.uz.z;
-		rc.scl = scl * c.scl;
+		rc.s = s * c.s;
 		rc.o = o + ux * c.o.x + uy * c.o.y + uz * c.o.z;
 		return rc;
 	}
@@ -118,35 +262,39 @@ struct coord3
 		rc.uz = q * uz;
 		return rc;
 	}
+	// TODO Parallel projection
+	// 
 	// 向量向坐标系投影 注意：要保证ux,uy,uz是单位向量！
 	friend vec3 operator / (crvec p, const coord3& c)
 	{
 		vec3 v = p - c.o;
-		return vec3(v.dot(c.ux) / c.scl.x, v.dot(c.uy) / c.scl.y, v.dot(c.uz) / c.scl.z);
+		//todo 对于非正交情况 
+		return vec3(v.dot(c.ux) / c.s.x, v.dot(c.uy) / c.s.y, v.dot(c.uz) / c.s.z);
 	}
 	coord3 operator / (const coord3& c) const
 	{
 		coord3 rc;
-		rc.ux = vec3(ux.dot(c.ux) / c.scl.x, ux.dot(c.uy) / c.scl.y, ux.dot(c.uz) / c.scl.z);
-		rc.uy = vec3(uy.dot(c.ux) / c.scl.x, uy.dot(c.uy) / c.scl.y, uy.dot(c.uz) / c.scl.z);
-		rc.uz = vec3(uz.dot(c.ux) / c.scl.x, uz.dot(c.uy) / c.scl.y, uz.dot(c.uz) / c.scl.z);
+		//todo 对于非正交情况 
+		rc.ux = vec3(ux.dot(c.ux) / c.s.x, ux.dot(c.uy) / c.s.y, ux.dot(c.uz) / c.s.z);
+		rc.uy = vec3(uy.dot(c.ux) / c.s.x, uy.dot(c.uy) / c.s.y, uy.dot(c.uz) / c.s.z);
+		rc.uz = vec3(uz.dot(c.ux) / c.s.x, uz.dot(c.uy) / c.s.y, uz.dot(c.uz) / c.s.z);
 		rc.o -= c.o;
 		return rc;
 	}
 	void norm(bool bscl = true)
 	{
 #define ISZERO(a) (fabs(a) < 1e-10)
-		scl.x = ux.len(); if (!ISZERO(scl.x)) ux /= scl.x;
-		scl.y = uy.len(); if (!ISZERO(scl.y)) uy /= scl.y;
-		scl.z = uz.len(); if (!ISZERO(scl.z)) uz /= scl.z;
+		s.x = ux.len(); if (!ISZERO(s.x)) ux /= s.x;
+		s.y = uy.len(); if (!ISZERO(s.y)) uy /= s.y;
+		s.z = uz.len(); if (!ISZERO(s.z)) uz /= s.z;
 
 		if (!bscl)
-			scl = vec3::ONE;
+			s = vec3::ONE;
 	}
 	// 本征向量
 	vec3 eigenvec() const
 	{
-		return (ux + uy + uz) * scl;
+		return (ux + uy + uz) * s;
 	}
 	real dot(crvec v) const
 	{
@@ -195,20 +343,11 @@ struct coord3
 		coord3 grad1 = c21 / c11; grad1.norm(false);
 		coord3 grad2 = c12 / c11; grad2.norm(false);
 
-		PRINT("--- c11 ---");
-		(c11).dump();
-		PRINT("--- c12 ---");
-		(c12).dump();
-		PRINT("--- grad1 ---");
-		(grad1).dump();
-		PRINT("--- grad2 ---");
-		(grad2).dump();
-
 		PRINT("--- g1 ---");
 		coord3 g1 = grad1 * grad2; g1.norm(false); g1.dump();
 		PRINT("--- g2 ---");
 		coord3 g2 = grad2 * grad2; g2.norm(false); g2.dump();
-		coord3 R = (g1 / g2); R.norm(false);
+		coord3 R = (g1 - g2);
 		PRINT("--- R ---");
 		R.dump();
 		vec3 deta = v * R;
@@ -222,7 +361,7 @@ struct coord3
 		//PRINT("-------");
 		PRINT("ux: " << ux.x << "," << ux.y << "," << ux.z);
 		PRINT("uy: " << uy.x << "," << uy.y << "," << uy.z);
-		PRINTVEC3(scl);
+		PRINTVEC3(s);
 		//PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
 		//PRINT("o: " << o.x << "," << o.y << "," << o.z);
 	}
@@ -266,3 +405,17 @@ struct coord3
 		(A(p + vec3(0.0,0.0,1.0) * deta_d, t) - A(p, t)) / deta_d)
 
 #define DT_A(A, p, t) (A(p,t + deta_t) - A(p, t)) / deta_t
+
+// **********************************************************************
+// 可视化
+// **********************************************************************
+void drawcoord(coord3& coord)
+{
+	color = 0xFF0000FF;
+	ptr(coord.o, coord.o + coord.ux * (0.5), 0.01);
+	color = 0xFF00FF00;
+	ptr(coord.o, coord.o + coord.uy * (0.5), 0.01);
+	color = 0xFFFF0000;
+	ptr(coord.o, coord.o + coord.uz * (0.5), 0.01);
+	color = 0xFFFFFFFF;
+}
