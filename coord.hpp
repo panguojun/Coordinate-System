@@ -187,8 +187,8 @@ struct coord3
 	coord3(real pit, real yaw, real rol)
 	{
 		coord3 cx(pit, vec3::UX);
-		coord3 cy(pit, vec3::UY);
-		coord3 cz(pit, vec3::UZ);
+		coord3 cy(yaw, vec3::UY);
+		coord3 cz(rol, vec3::UZ);
 		*this = cx * cy * cz;
 	}
 	vec3 VX() const { return ux * s.x; }
