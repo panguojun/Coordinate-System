@@ -302,14 +302,19 @@ struct coord3
 		if (!bscl)
 			s = vec3::ONE;
 	}
-	// 本征向量
-	vec3 eigenvec() const
+	vec3 sumvec() const
 	{
 		return (ux + uy + uz) * s;
 	}
+	// 本征值
+	void eigenvalue() const
+	{
+		vec3 sv = sumvec();
+		return ux.dot(sv) + uy.dot(sv) + uz.dot(sv);
+	}
 	real dot(crvec v) const
 	{
-		return v.dot(eigenvec());
+		return v.dot(sumvec());
 	}
 	vec3 cross(const coord3& c) const
 	{
