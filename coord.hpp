@@ -307,7 +307,7 @@ struct coord3
 		return (ux + uy + uz) * s;
 	}
 	// 本征值
-	void eigenvalue() const
+	real eigenvalue() const
 	{
 		vec3 sv = sumvec();
 		return ux.dot(sv) + uy.dot(sv) + uz.dot(sv);
