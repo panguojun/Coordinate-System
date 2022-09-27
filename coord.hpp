@@ -339,9 +339,9 @@ struct coord3
 		vec3 vz = VZ();
 		
 		return coord3(
-			vy.dot(v.z) - vz.dot(v.y),
-			vz.dot(v.x) - vx.dot(v.z),
-			vx.dot(v.y) - vy.dot(v.x)
+			vx.cross(v),
+			vy.cross(v),
+			vz.cross(v)
 		);
 	}
 	coord3 curvature(std::function<void(coord3& c, vec3 q)> coord_at, crvec q, crvec v)
@@ -383,15 +383,6 @@ struct coord3
 
 		return R;
 	}
-	void dump() const
-	{
-		//PRINT("-------");
-		PRINT("ux: " << ux.x << "," << ux.y << "," << ux.z);
-		PRINT("uy: " << uy.x << "," << uy.y << "," << uy.z);
-		PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
-		PRINTVEC3(s);
-		PRINTVEC3(o);
-	}
 	vec3 coord2eulers() const
 	{
 		const coord3& rm = *this;
@@ -414,13 +405,22 @@ struct coord3
 		PRINT("rx: " << x << ", ry: " << y  << ", rz: " << z);
 		return vec3(x, y, z);
 	}
+	void dump() const
+	{
+		//PRINT("-------");
+		PRINT("ux: " << ux.x << "," << ux.y << "," << ux.z);
+		PRINT("uy: " << uy.x << "," << uy.y << "," << uy.z);
+		PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
+		PRINTVEC3(s);
+		PRINTVEC3(o);
+	}
 };
 
 // **********************************************************************
 // 梯度 / 时间变化率
 // **********************************************************************
 #define GRAD_V3(Fai, p, t) \
-        vec3( \
+     vec3( \
 		(Fai(p + vec3(deta_d,0.0,0.0), t) - Fai(p, t)) / deta_d,\
 		(Fai(p + vec3(0.0,deta_d,0.0), t) - Fai(p, t)) / deta_d, \
 		(Fai(p + vec3(0.0,0.0,deta_d), t) - Fai(p, t)) / deta_d)
