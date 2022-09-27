@@ -89,8 +89,8 @@ struct coord2
 	coord2 operator * (const coord2& c) const
 	{
 		coord2 rc;
-		rc.ux = ux * c.ux.x + uy * c.ux.y;
-		rc.uy = ux * c.uy.x + uy * c.uy.y;
+		rc.ux = ux.x * c.ux + uy.x * c.ux;
+		rc.uy = ux.y * c.uy + uy.y * c.uy;
 		rc.s = s * c.s;
 		rc.o = o + ux * c.o.x + uy * c.o.y;
 		return rc;
