@@ -419,16 +419,24 @@ struct coord3
 // **********************************************************************
 // 梯度 / 时间变化率
 // **********************************************************************
+#define D_F(F,U)	(F(p + vec3::U * deta_d, t) - F(p, t)) / deta_d
+#define D_F_UV(F,U,V)	(F(p + vec3::U * deta_d, t).V - F(p, t).V) / deta_d
 #define GRAD_V3(Fai, p, t) \
      vec3( \
-		(Fai(p + vec3(deta_d,0.0,0.0), t) - Fai(p, t)) / deta_d,\
-		(Fai(p + vec3(0.0,deta_d,0.0), t) - Fai(p, t)) / deta_d, \
-		(Fai(p + vec3(0.0,0.0,deta_d), t) - Fai(p, t)) / deta_d)
+		D_F(Fai, UX), \
+		D_F(Fai, UY), \
+		D_F(Fai, UZ)
 
 #define GRAD_C3(A, p, t) \
     coord3( \
-		(A(p + vec3(1.0,0.0,0.0) * deta_d, t) - A(p, t)) / deta_d, \
-		(A(p + vec3(0.0,1.0,0.0) * deta_d, t) - A(p, t)) / deta_d, \
-		(A(p + vec3(0.0,0.0,1.0) * deta_d, t) - A(p, t)) / deta_d)
+		D_F(A, UX), \
+		D_F(A, UY), \
+		D_F(A, UZ)
+
+#define CURL_C3(A, p, t) \
+    coord3( \
+		D_F_UV(A, UY,z) - D_F_UV(A, UZ,y), \
+		D_F_UV(A, UZ,x) - D_F_UV(A, UX,z), \
+		D_F_UV(A, UX,y) - D_F_UV(A, UY,x)
 
 #define DT_A(A, p, t) (A(p,t + deta_t) - A(p, t)) / deta_t
