@@ -55,9 +55,9 @@ coord operator / (const coord& c)
 ```
 ## Dot / Cross
 ```
-vec3 dot(crvec v)
+real dot(crvec v)
 {
-	return vec3(v.dot(ux) * scl.x, v.dot(uy) * scl.y, v.dot(uz) * scl.z);
+	return v.dot(ux) * scl.x + v.dot(uy) * scl.y + v.dot(uz) * scl.z;
 }
 vec3 cross(const coord3& c)
 {
