@@ -332,7 +332,18 @@ struct coord3
 			vx.dot(cvy) - vy.dot(cvx)
 		);
 	}
-	// 曲率
+	coord3 cross(const vec3& v) const
+	{
+		vec3 vx = VX();
+		vec3 vy = VY();
+		vec3 vz = VZ();
+		
+		return coord3(
+			vy.dot(v.z) - vz.dot(v.y),
+			vz.dot(v.x) - vx.dot(v.z),
+			vx.dot(v.y) - vy.dot(v.x)
+		);
+	}
 	coord3 curvature(std::function<void(coord3& c, vec3 q)> coord_at, crvec q, crvec v)
 	{
 		const real delta_x = 0.01f;
@@ -409,9 +420,10 @@ struct coord3
 // 梯度 / 时间变化率
 // **********************************************************************
 #define GRAD_V3(Fai, p, t) \
-        vec3((Fai(p + vec3(deta_d,0.0,0.0), t) - Fai(p, t)) / deta_d,\
-			 (Fai(p + vec3(0.0,deta_d,0.0), t) - Fai(p, t)) / deta_d, \
-			 (Fai(p + vec3(0.0,0.0,deta_d), t) - Fai(p, t)) / deta_d)
+        vec3( \
+		(Fai(p + vec3(deta_d,0.0,0.0), t) - Fai(p, t)) / deta_d,\
+		(Fai(p + vec3(0.0,deta_d,0.0), t) - Fai(p, t)) / deta_d, \
+		(Fai(p + vec3(0.0,0.0,deta_d), t) - Fai(p, t)) / deta_d)
 
 #define GRAD_C3(A, p, t) \
     coord3( \
