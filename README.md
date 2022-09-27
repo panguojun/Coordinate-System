@@ -29,9 +29,9 @@ friend vec3 operator * (crvec p, const coord& c)
 coord operator * (coord& c)
 {
     coord rc;
-    rc.ux = ux * c.ux.x + uy * c.ux.y + uz * c.ux.z;
-    rc.uy = ux * c.uy.x + uy * c.uy.y + uz * c.uy.z;
-    rc.uz = ux * c.uz.x + uy * c.uz.y + uz * c.uz.z;
+    rc.ux = ux.x * c.ux + uy.x * c.uy + uz.x * c.uz;
+    rc.uy = ux.y * c.ux + uy.y * c.uy + uz.y * c.uz;
+    rc.uz = ux.z * c.ux + uy.z * c.uy + uz.z * c.uz;
     rc.o = o + ux * c.o.x + uy * c.o.y + uz * c.o.z;
     return rc;
 }
