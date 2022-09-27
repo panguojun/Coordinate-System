@@ -46,9 +46,9 @@ friend vec3 operator / (crvec p, const coord& c)
 coord operator / (const coord& c)
 {
 	coord_t rc;
-	rc.ux = vec3(ux.dot(c.ux) / c.scl.x, ux.dot(c.uy) / c.scl.y, ux.dot(c.uz) / c.scl.z);
-	rc.uy = vec3(uy.dot(c.ux) / c.scl.x, uy.dot(c.uy) / c.scl.y, uy.dot(c.uz) / c.scl.z);
-	rc.uz = vec3(uz.dot(c.ux) / c.scl.x, uz.dot(c.uy) / c.scl.y, uz.dot(c.uz) / c.scl.z);
+	rc.ux = vec3(ux.dot(c.ux) / c.s.x, ux.dot(c.uy) / c.s.y, ux.dot(c.uz) / c.s.z);
+	rc.uy = vec3(uy.dot(c.ux) / c.s.x, uy.dot(c.uy) / c.s.y, uy.dot(c.uz) / c.s.z);
+	rc.uz = vec3(uz.dot(c.ux) / c.s.x, uz.dot(c.uy) / c.s.y, uz.dot(c.uz) / c.s.z);
 	rc.o -= c.o;
 	return rc;
 }
@@ -57,7 +57,7 @@ coord operator / (const coord& c)
 ```
 real dot(crvec v)
 {
-	return v.dot(ux) * scl.x + v.dot(uy) * scl.y + v.dot(uz) * scl.z;
+	return v.dot(ux) * s.x + v.dot(uy) * s.y + v.dot(uz) * s.z;
 }
 vec3 cross(const coord3& c)
 {
