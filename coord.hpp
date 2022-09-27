@@ -433,12 +433,12 @@ struct coord3
 		D_F(A, UY), \
 		D_F(A, UZ)
 
-#define CURL_C3(A, p, t) \
+#define CURL_V3(A, p, t) \
     vec3( \
 		D_F_UV(A, UY, z) - D_F_UV(A, UZ, y), \
 		D_F_UV(A, UZ, x) - D_F_UV(A, UX, z), \
 		D_F_UV(A, UX, y) - D_F_UV(A, UY, x)
-#define DIV_C3(A, p, t) \
+#define DIV_V3(A, p, t) \
     vec3( \
 		D_F_UV(A, UX, x), \
 		D_F_UV(A, UY, y), \
