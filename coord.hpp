@@ -1,28 +1,39 @@
-/********************************************************
-*			坐标系
-* *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
+/*********************************************************************
+*							坐标系
+*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 * 坐标系类是我单独封装，用于简化坐标变换，衍生出许多算法，能解决一些
 * 坐标系变换相关的问题。
+* 坐标系的运算跟李群很相似，在曲面上的微元运算对应了李代数。
 * 
-* 坐标系是物理规范的简化，物理学因为规范而变得数学上很困难，如果能用
-* 算法简化规范运算,可以还原一个初中生眼中的物理世界！
-* 物理学范式: 测量 = 规范 * 本征 * 量纲
-* 补充了2D 非正交情况下的平行投影
+*  *  *  *  *  *  *  *  *  *  详解  *  *  *  *  *  *  *  *  *  *  *  *  
+* 坐标系本体符号 C，坐标系之间的变换可以写成G（G=C1/C2,GRAD梯度的意思）
+* 坐标系的李括号:[X,Y] = C1*C2 - C2*C1
+* 具体来说：
+* 定义一个内禀坐标系(假设它是平直空间，向量可以随意移动而不变)下V,在弯
+* 曲坐标系下观察V，不同点上V是不同的，故而坐标系跟位置有关，取相邻两点
+* （1),(2)点处有向量V1,V2，对应坐标系C1,C2，那么：
 * 
+*					V = V1 * C1 = V2 * C2 => 
+*					V2 = V1 * C1 / C2, 令 G12 = C1 / C2 =>
+*					V2 = V1 * G12
+* 
+* 在弯曲坐标系下内禀坐标系x,y轴的平行线投影得到的u,v曲线上G12分别在两个
+* 方向上对应Gu,Gv, 从(u1,v1)到(u2,v2) 计算两个路径的差别:
+* 
+*					Ruv = Gu*Gv - Gv*Gu
+* 
+* 如果两条路径到达的目标点重合 那么Ruv就是曲率！		
 */
-
-const real deta_d = 0.0001f;	// 空间微分精度
-const real deta_t = 0.0001f;	// 时间微分精度
-// ***********************************************
+// *******************************************************************
 // coord2
-// ***********************************************
+// *******************************************************************
 struct coord2
 {
 	vec2 ux = vec2::UX;		// 方向
 	vec2 uy = vec2::UY;
 
 	vec2 s = vec2::ONE;		// 缩放
-	vec2 o;				// 原点
+	vec2 o;					// 原点
 
 	coord2() {}
 	coord2(const coord2& c)
@@ -50,7 +61,7 @@ struct coord2
 
 	void rot(real ang)
 	{
-		//	o.rot(ang, ax);
+		//o.rot(ang, ax);
 		ux.rot(ang);
 	}
 	bool is_same_dirs(const coord2& c) const
@@ -95,8 +106,9 @@ struct coord2
 		rc.o = o + ux * c.o.x + uy * c.o.y;
 		return rc;
 	}
+
 	// Parallel projection
-	static real pl_prj(crvec2 v, crvec2 ax1, crvec2 ax2)
+	static real pl_dot(crvec2 v, crvec2 ax1, crvec2 ax2)
 	{
 		real co = ax1.dot(ax2);
 		real si = sqrt(1 - co * co);
@@ -108,7 +120,7 @@ struct coord2
 	{
 		vec2 v = p - c.o;
 		//{// 对于非正交情况
-		//	return vec2(pl_prj(v, c.ux, c.uy) / c.s.x, pl_prj(v, c.uy, c.ux) / c.s.y);
+		//	return vec2(pl_dot(v, c.ux, c.uy) / c.s.x, pl_dot(v, c.uy, c.ux) / c.s.y);
 		//}
 		return vec2(v.dot(c.ux) / c.s.x, v.dot(c.uy) / c.s.y);
 	}
@@ -116,8 +128,8 @@ struct coord2
 	{
 		coord2 rc;
 		//{// 对于非正交情况
-		//	rc.ux = vec2(pl_prj(ux, c.ux, c.uy) / c.s.x, pl_prj(ux, c.uy, c.ux) / c.s.y);
-		//	rc.uy = vec2(pl_prj(uy, c.ux, c.uy) / c.s.x, pl_prj(uy, c.uy, c.ux) / c.s.y);
+		//	rc.ux = vec2(pl_dot(ux, c.ux, c.uy) / c.s.x, pl_dot(ux, c.uy, c.ux) / c.s.y);
+		//	rc.uy = vec2(pl_dot(uy, c.ux, c.uy) / c.s.x, pl_dot(uy, c.uy, c.ux) / c.s.y);
 		//}
 		rc.ux = vec2(ux.dot(c.ux) / c.s.x, ux.dot(c.uy) / c.s.y);
 		rc.uy = vec2(uy.dot(c.ux) / c.s.x, uy.dot(c.uy) / c.s.y);
@@ -148,12 +160,14 @@ struct coord2
 		PRINT("ux: " << ux.x << "," << ux.y);
 		PRINT("uy: " << uy.x << "," << uy.y);
 		PRINTVEC2(s);
+		//PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
+		//PRINT("o: " << o.x << "," << o.y << "," << o.z);
 	}
 };
 
-// ***********************************************
+// ******************************************************************
 // coord3
-// ***********************************************
+// ******************************************************************
 struct coord3
 {
 	vec3 ux = vec3::UX;		// 方向
@@ -161,7 +175,7 @@ struct coord3
 	vec3 uz = vec3::UZ;
 
 	vec3 s = vec3::ONE;		// 缩放
-	vec3 o;				// 原点
+	vec3 o;					// 原点
 
 	coord3() {}
 	coord3(const coord3& c)
@@ -176,7 +190,7 @@ struct coord3
 	}
 	coord3(crvec _ux, crvec _uy)
 	{
-		uz = ux.cross(uy);
+		ux = _ux; uy = _uy; uz = ux.cross(uy);
 	}
 	coord3(real ang, crvec ax)
 	{
@@ -197,7 +211,7 @@ struct coord3
 
 	void rot(real ang, crvec ax)
 	{
-		//o.rot(ang, ax);
+		//	o.rot(ang, ax);
 		ux.rot(ang, ax);
 		uy.rot(ang, ax);
 		uz.rot(ang, ax);
@@ -243,6 +257,7 @@ struct coord3
 		rc.ux = ux.x * c.ux + uy.x * c.uy + uz.x * c.uz;
 		rc.uy = ux.y * c.ux + uy.y * c.uy + uz.y * c.uz;
 		rc.uz = ux.z * c.ux + uy.z * c.uy + uz.z * c.uz;
+
 		rc.s = s * c.s;
 		rc.o = o + ux * c.o.x + uy * c.o.y + uz * c.o.z;
 		return rc;
@@ -258,12 +273,12 @@ struct coord3
 	// Parallel projection
 	static real pl_prj(crvec v, crvec ax1, crvec ax2)
 	{
-		vec3 ax = ax1.cross(ax2);ax.norm();
+		vec3 ax = ax1.cross(ax2); ax.norm();
 		real co = ax1.dot(ax2);
 		real si = sqrt(1 - co * co);
 		real sc = (co / si);
 		return (v.dot(ax1) - v.cross(ax1).dot(ax) * sc);
-	} 
+	}
 	// 向量向坐标系投影 注意：要保证ux,uy,uz是单位向量！
 	friend vec3 operator / (crvec p, const coord3& c)
 	{
@@ -337,13 +352,14 @@ struct coord3
 		vec3 vx = VX();
 		vec3 vy = VY();
 		vec3 vz = VZ();
-		
+
 		return coord3(
 			vx.cross(v),
 			vy.cross(v),
 			vz.cross(v)
 		);
 	}
+	// 曲率
 	coord3 curvature(std::function<void(coord3& c, vec3 q)> coord_at, crvec q, crvec v)
 	{
 		const real delta_x = 0.01f;
@@ -374,7 +390,7 @@ struct coord3
 		coord3 g1 = grad1 * grad2; g1.norm(false); g1.dump();
 		PRINT("--- g2 ---");
 		coord3 g2 = grad2 * grad2; g2.norm(false); g2.dump();
-		coord3 R = (g1 - g2);
+		coord3 R = (g1 - g2); // 这个是（二阶）李括号，就是在坐标系映射下的李括号，在[X,Y]=0时可以对应曲率
 		PRINT("--- R ---");
 		R.dump();
 		vec3 deta = v * R;
@@ -402,45 +418,17 @@ struct coord3
 			y = atan2(-rm.uz.x, sy);
 			z = 0;
 		}
-		PRINT("rx: " << x << ", ry: " << y  << ", rz: " << z);
+		PRINT("rx: " << x * 180 / PI << ", ry: " << y * 180 / PI << ", rz: " << z * 180 / PI);
+		//PRINT("rx: " << x << ", ry: " << y  << ", rz: " << z);
 		return vec3(x, y, z);
 	}
-	void dump() const
+	void dump(const string& name = "") const
 	{
-		//PRINT("-------");
+		PRINT("----" << name << "---");
 		PRINT("ux: " << ux.x << "," << ux.y << "," << ux.z);
 		PRINT("uy: " << uy.x << "," << uy.y << "," << uy.z);
 		PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
-		PRINTVEC3(s);
-		PRINTVEC3(o);
+		//PRINTVEC3(s);
+		//PRINT("o: " << o.x << "," << o.y << "," << o.z);
 	}
 };
-
-// **********************************************************************
-// 梯度, 散度，旋度，时间变化率
-// **********************************************************************
-#define D_F(F,U)	(F(p + vec3::U * deta_d, t) - F(p, t)) / deta_d
-#define D_F_UV(F,U,V)	(F(p + vec3::U * deta_d, t).V - F(p, t).V) / deta_d
-#define GRAD_V3(Fai, p, t) \
-     vec3( \
-		D_F(Fai, UX), \
-		D_F(Fai, UY), \
-		D_F(Fai, UZ)
-
-#define GRAD_C3(A, p, t) \
-    coord3( \
-		D_F(A, UX), \
-		D_F(A, UY), \
-		D_F(A, UZ)
-
-#define CURL_V3(A, p, t) \
-    vec3( \
-		D_F_UV(A, UY, z) - D_F_UV(A, UZ, y), \
-		D_F_UV(A, UZ, x) - D_F_UV(A, UX, z), \
-		D_F_UV(A, UX, y) - D_F_UV(A, UY, x)
-#define DIV_V3(A, p, t) \
-    vec3( \
-		D_F_UV(A, UX, x), \
-		D_F_UV(A, UY, y), \
-		D_F_UV(A, UZ, z)
-#define DT_A(A, p, t) (A(p,t + deta_t) - A(p, t)) / deta_t
