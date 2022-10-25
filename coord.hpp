@@ -13,17 +13,20 @@
 * 曲坐标系下观察V，不同点上V是不同的，故而坐标系跟位置有关，取相邻两点
 * （1),(2)点处有向量V1,V2，对应坐标系C1,C2，那么：
 * 
-*		V = V1 * C1 = V2 * C2 => 
-*		V2 = V1 * C1 / C2, 令 G12 = C1 / C2 =>
-*		V2 = V1 * G12
+*					V = V1 * C1 = V2 * C2 => 
+*					V2 = V1 * C1 / C2, 令 G12 = C1 / C2 =>
+*					V2 = V1 * G12
 * 
 * 在弯曲坐标系下内禀坐标系x,y轴的平行线投影得到的u,v曲线上G12分别在两个
 * 方向上对应Gu,Gv, 从(u1,v1)到(u2,v2) 计算两个路径的差别:
 * 
-*		Ruv = Gu*Gv - Gv*Gu
+*					Ruv = Gu*Gv - Gv*Gu
 * 
 * 如果两条路径到达的目标点重合 那么Ruv就是曲率！		
 */
+
+//#define		Parallel_Projection    // 非正交坐标系下平行投影
+
 // *******************************************************************
 // coord2
 // *******************************************************************
@@ -61,7 +64,7 @@ struct coord2
 
 	void rot(real ang)
 	{
-		//o.rot(ang, ax);
+		//	o.rot(ang, ax);
 		ux.rot(ang);
 	}
 	bool is_same_dirs(const coord2& c) const
@@ -106,8 +109,8 @@ struct coord2
 		rc.o = o + ux * c.o.x + uy * c.o.y;
 		return rc;
 	}
-
-	// Parallel projection
+#ifdef Parallel_Projection
+	// 非正交坐标系下平行投影 Parallel projection
 	static real pl_dot(crvec2 v, crvec2 ax1, crvec2 ax2)
 	{
 		real co = ax1.dot(ax2);
@@ -115,22 +118,27 @@ struct coord2
 		real sc = (co / si);
 		return (v.dot(ax1)- v.cross(ax1) * sc);
 	}
+#endif
 	// 向量向坐标系投影 注意：要保证ux,uy是单位向量！
 	friend vec2 operator / (crvec2 p, const coord2& c)
 	{
 		vec2 v = p - c.o;
-		//{// 对于非正交情况
-		//	return vec2(pl_dot(v, c.ux, c.uy) / c.s.x, pl_dot(v, c.uy, c.ux) / c.s.y);
-		//}
+#ifdef Parallel_Projection
+		{// 对于非正交情况
+			return vec2(pl_dot(v, c.ux, c.uy) / c.s.x, pl_dot(v, c.uy, c.ux) / c.s.y);
+		}
+#endif
 		return vec2(v.dot(c.ux) / c.s.x, v.dot(c.uy) / c.s.y);
 	}
 	coord2 operator / (const coord2& c) const
 	{
 		coord2 rc;
-		//{// 对于非正交情况
-		//	rc.ux = vec2(pl_dot(ux, c.ux, c.uy) / c.s.x, pl_dot(ux, c.uy, c.ux) / c.s.y);
-		//	rc.uy = vec2(pl_dot(uy, c.ux, c.uy) / c.s.x, pl_dot(uy, c.uy, c.ux) / c.s.y);
-		//}
+#ifdef Parallel_Projection
+		{// 对于非正交情况
+			rc.ux = vec2(pl_dot(ux, c.ux, c.uy) / c.s.x, pl_dot(ux, c.uy, c.ux) / c.s.y);
+			rc.uy = vec2(pl_dot(uy, c.ux, c.uy) / c.s.x, pl_dot(uy, c.uy, c.ux) / c.s.y);
+		}
+#endif
 		rc.ux = vec2(ux.dot(c.ux) / c.s.x, ux.dot(c.uy) / c.s.y);
 		rc.uy = vec2(uy.dot(c.ux) / c.s.x, uy.dot(c.uy) / c.s.y);
 		rc.o -= c.o;
@@ -168,6 +176,7 @@ struct coord2
 // ******************************************************************
 // coord3
 // ******************************************************************
+extern void edgeax(const VECLIST& e, vec& ux, vec& uy, vec& uz);
 struct coord3
 {
 	vec3 ux = vec3::UX;		// 方向
@@ -204,6 +213,10 @@ struct coord3
 		coord3 cy(yaw, vec3::UY);
 		coord3 cz(rol, vec3::UZ);
 		*this = cx * cy * cz;
+	}
+	coord3(const VECLIST& e)
+	{
+		edgeax(e, ux, uy, uz);
 	}
 	vec3 VX() const { return ux * s.x; }
 	vec3 VY() const { return uy * s.y; }
@@ -270,7 +283,7 @@ struct coord3
 		rc.uz = q * uz;
 		return rc;
 	}
-	// Parallel projection
+	// 非正交坐标系下平行投影 Parallel projection
 	static real pl_prj(crvec v, crvec ax1, crvec ax2)
 	{
 		vec3 ax = ax1.cross(ax2); ax.norm();
@@ -283,11 +296,13 @@ struct coord3
 	friend vec3 operator / (crvec p, const coord3& c)
 	{
 		vec3 v = p - c.o;
-		//{// 对于非正交情况
-		//	return vec3(pl_prj(v-c.uz*v.dot(c.uz), c.ux, c.uy) / c.s.x, 
-		//		    pl_prj(v-c.ux*v.dot(c.ux), c.uy, c.uz) / c.s.y, 
-		//		    pl_prj(v-c.uy*v.dot(c.uy), c.uz, c.ux) / c.s.z);
-		//}
+#ifdef Parallel_Projection
+		{// 对于非正交情况
+			return vec3(pl_prj(v-c.uz*v.dot(c.uz), c.ux, c.uy) / c.s.x, 
+				    pl_prj(v-c.ux*v.dot(c.ux), c.uy, c.uz) / c.s.y, 
+				    pl_prj(v-c.uy*v.dot(c.uy), c.uz, c.ux) / c.s.z);
+		}
+#endif
 		return vec3(v.dot(c.ux) / c.s.x, v.dot(c.uy) / c.s.y, v.dot(c.uz) / c.s.z);
 	}
 #define PL_PRJ3(v) vec3(pl_prj(v-c.uz*v.dot(c.uz), c.ux, c.uy) / c.s.x, \
@@ -296,11 +311,13 @@ struct coord3
 	coord3 operator / (const coord3& c) const
 	{
 		coord3 rc;
-		/*{// 对于非正交情况
+#ifdef Parallel_Projection
+		{// 对于非正交情况
 			rc.ux = PL_PRJ3(ux);
 			rc.uy = PL_PRJ3(uy);
 			rc.uz = PL_PRJ3(uz);
-		}*/
+		}
+#endif
 		rc.ux = vec3(ux.dot(c.ux) / c.s.x, ux.dot(c.uy) / c.s.y, ux.dot(c.uz) / c.s.z);
 		rc.uy = vec3(uy.dot(c.ux) / c.s.x, uy.dot(c.uy) / c.s.y, uy.dot(c.uz) / c.s.z);
 		rc.uz = vec3(uz.dot(c.ux) / c.s.x, uz.dot(c.uy) / c.s.y, uz.dot(c.uz) / c.s.z);
