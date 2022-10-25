@@ -12,6 +12,7 @@
 * 定义一个内禀坐标系(假设它是平直空间，向量可以随意移动而不变)下V,在弯
 * 曲坐标系下观察V，不同点上V是不同的，故而坐标系跟位置有关，取相邻两点
 * （1),(2)点处有向量V1,V2，对应坐标系C1,C2，那么：
+* 
 *		V = V1 * C1 = V2 * C2 => 
 *		V2 = V1 * C1 / C2, 令 G12 = C1 / C2 =>
 *		V2 = V1 * G12
@@ -22,7 +23,7 @@
 *		Ruv = Gu*Gv - Gv*Gu - Gu*Wu*Gv*Wv
 */
 
-//#define	Parallel_Projection    // 非正交坐标系下平行投影
+//#define	arallel_Projection	// 非正交坐标系下平行投影
 
 // *******************************************************************
 // coord2
@@ -89,13 +90,18 @@ struct coord2
 		return rc;
 	}
 	// 在坐标系下定义一个向量
-	vec2 operator * (crvec2 p) const
-	{
-		return ux * (s.x * p.x) + uy * (s.y * p.y) + o;
-	}
 	friend vec2 operator * (crvec2 p, const coord2& c)
 	{
 		return c.ux * (c.s.x * p.x) + c.uy * (c.s.y * p.y) + c.o;
+	}
+	coord2 operator * (crvec2 p) const
+	{
+		coord2 c = *this;
+		c.ux = lerp(vec2::UX, c.VX(), p.x);
+		c.uy = lerp(vec2::UY, c.VY(), p.y);
+		c.norm();
+		c.o.x *= p.x; c.o.y *= p.y;
+		return c;
 	}
 	coord2 operator * (const coord2& c) const
 	{
@@ -135,9 +141,10 @@ struct coord2
 			rc.ux = vec2(pl_dot(ux, c.ux, c.uy) / c.s.x, pl_dot(ux, c.uy, c.ux) / c.s.y);
 			rc.uy = vec2(pl_dot(uy, c.ux, c.uy) / c.s.x, pl_dot(uy, c.uy, c.ux) / c.s.y);
 		}
-#endif
+#else
 		rc.ux = vec2(ux.dot(c.ux) / c.s.x, ux.dot(c.uy) / c.s.y);
 		rc.uy = vec2(uy.dot(c.ux) / c.s.x, uy.dot(c.uy) / c.s.y);
+#endif
 		rc.o -= c.o;
 		return rc;
 	}
@@ -253,13 +260,19 @@ struct coord3
 		return rc;
 	}
 	// 在坐标系下定义一个向量
-	vec3 operator * (crvec p) const
-	{
-		return ux * (s.x * p.x) + uy * (s.y * p.y) + uz * (s.z * p.z) + o;
-	}
 	friend vec3 operator * (crvec p, const coord3& c)
 	{
 		return c.ux * (c.s.x * p.x) + c.uy * (c.s.y * p.y) + c.uz * (c.s.z * p.z) + c.o;
+	}
+	coord3 operator * (crvec p) const
+	{
+		coord3 c = *this;
+		c.ux = lerp(vec3::UX, c.VX(), p.x);
+		c.uy = lerp(vec3::UY, c.VY(), p.y);
+		c.uz = lerp(vec3::UZ, c.VZ(), p.z);
+		c.norm();
+		c.o.x *= p.x; c.o.y *= p.y; c.o.z *= p.z;
+		return c;
 	}
 	coord3 operator * (const coord3& c) const
 	{
@@ -314,10 +327,11 @@ struct coord3
 			rc.uy = PL_PRJ3(uy);
 			rc.uz = PL_PRJ3(uz);
 		}
-#endif
+#else
 		rc.ux = vec3(ux.dot(c.ux) / c.s.x, ux.dot(c.uy) / c.s.y, ux.dot(c.uz) / c.s.z);
 		rc.uy = vec3(uy.dot(c.ux) / c.s.x, uy.dot(c.uy) / c.s.y, uy.dot(c.uz) / c.s.z);
 		rc.uz = vec3(uz.dot(c.ux) / c.s.x, uz.dot(c.uy) / c.s.y, uz.dot(c.uz) / c.s.z);
+#endif
 		rc.o -= c.o;
 		return rc;
 	}
@@ -373,8 +387,8 @@ struct coord3
 			vz.cross(v)
 		);
 	}
-	// 曲率
-	coord3 curvature(std::function<void(coord3& c, vec3 q)> coord_at, crvec q, crvec v)
+	// 曲率测试算法
+	coord3 curvature0(std::function<void(coord3& c, vec3 q)> coord_at, crvec q, crvec v)
 	{
 		const real delta_x = 0.01f;
 		const real delta_y = 0.01f;
