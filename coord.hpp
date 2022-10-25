@@ -23,7 +23,7 @@
 *		Ruv = Gu*Gv - Gv*Gu - Gu*Wu*Gv*Wv
 */
 
-//#define	arallel_Projection	// 非正交坐标系下平行投影
+//#define	Parallel_Projection	// 非正交坐标系下平行投影
 // *******************************************************************
 //  |_
 // C     2d Coordinate System
