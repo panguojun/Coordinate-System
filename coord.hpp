@@ -24,9 +24,9 @@
 */
 
 //#define	arallel_Projection	// 非正交坐标系下平行投影
-
 // *******************************************************************
-// coord2
+//  |_
+// C     2d Coordinate System
 // *******************************************************************
 struct coord2
 {
@@ -62,8 +62,8 @@ struct coord2
 
 	void rot(real ang)
 	{
-		//	o.rot(ang, ax);
 		ux.rot(ang);
+		uy.rot(ang);
 	}
 	bool is_same_dirs(const coord2& c) const
 	{
@@ -81,11 +81,9 @@ struct coord2
 	coord2 operator - (const coord2& c) const
 	{
 		coord2 rc;
-		{
-			rc.ux = VX() - c.VX();
-			rc.uy = VY() - c.VY();
-			//rc.norm();
-		}
+		rc.ux = VX() - c.VX();
+		rc.uy = VY() - c.VY();
+		rc.norm();
 		rc.o = o - c.o;
 		return rc;
 	}
@@ -178,7 +176,8 @@ struct coord2
 };
 
 // ******************************************************************
-// coord3
+//  |/_
+// C     3d Coordinate System
 // ******************************************************************
 extern void edgeax(const VECLIST& e, vec& ux, vec& uy, vec& uz);
 struct coord3
@@ -250,12 +249,10 @@ struct coord3
 	coord3 operator - (const coord3& c) const
 	{
 		coord3 rc;
-		{
-			rc.ux = VX() - c.VX();
-			rc.uy = VY() - c.VY();
-			rc.uz = VZ() - c.VZ();
-			//rc.norm();
-		}
+		rc.ux = VX() - c.VX();
+		rc.uy = VY() - c.VY();
+		rc.uz = VZ() - c.VZ();
+		rc.norm();
 		rc.o = o - c.o;
 		return rc;
 	}
@@ -293,6 +290,7 @@ struct coord3
 		rc.uz = q * uz;
 		return rc;
 	}
+#ifdef Parallel_Projection
 	// 非正交坐标系下平行投影 Parallel projection
 	static real pl_prj(crvec v, crvec ax1, crvec ax2)
 	{
@@ -302,22 +300,26 @@ struct coord3
 		real sc = (co / si);
 		return (v.dot(ax1) - v.cross(ax1).dot(ax) * sc);
 	}
+
+	#define PL_PRJ3(v) vec3( \
+				pl_prj(v-c.uz*v.dot(c.uz), c.ux, c.uy) / c.s.x, \
+				pl_prj(v-c.ux*v.dot(c.ux), c.uy, c.uz) / c.s.y, \
+				pl_prj(v-c.uy*v.dot(c.uy), c.uz, c.ux) / c.s.z)
+#endif
 	// 向量向坐标系投影 注意：要保证ux,uy,uz是单位向量！
 	friend vec3 operator / (crvec p, const coord3& c)
 	{
 		vec3 v = p - c.o;
 #ifdef Parallel_Projection
 		{// 对于非正交情况
-			return vec3(pl_prj(v-c.uz*v.dot(c.uz), c.ux, c.uy) / c.s.x, 
+			return vec3(
+					pl_prj(v-c.uz*v.dot(c.uz), c.ux, c.uy) / c.s.x, 
 				    pl_prj(v-c.ux*v.dot(c.ux), c.uy, c.uz) / c.s.y, 
 				    pl_prj(v-c.uy*v.dot(c.uy), c.uz, c.ux) / c.s.z);
 		}
 #endif
 		return vec3(v.dot(c.ux) / c.s.x, v.dot(c.uy) / c.s.y, v.dot(c.uz) / c.s.z);
 	}
-#define PL_PRJ3(v) vec3(pl_prj(v-c.uz*v.dot(c.uz), c.ux, c.uy) / c.s.x, \
-			pl_prj(v-c.ux*v.dot(c.ux), c.uy, c.uz) / c.s.y, \
-			pl_prj(v-c.uy*v.dot(c.uy), c.uz, c.ux) / c.s.z)
 	coord3 operator / (const coord3& c) const
 	{
 		coord3 rc;
@@ -341,7 +343,6 @@ struct coord3
 		s.x = ux.len(); if (!ISZERO(s.x)) ux /= s.x;
 		s.y = uy.len(); if (!ISZERO(s.y)) uy /= s.y;
 		s.z = uz.len(); if (!ISZERO(s.z)) uz /= s.z;
-
 		if (!bscl)
 			s = vec3::ONE;
 	}
