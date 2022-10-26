@@ -7,7 +7,7 @@
 * 
 *  *  *  *  *  *  *  *  *  *  详解  *  *  *  *  *  *  *  *  *  *  *  *  
 * 坐标系本体符号 C，坐标系之间的变换可以写成G（G=C1/C2,GRAD梯度的意思）
-* 坐标系的李括号:[X,Y] = C1*C2 - C2*C1
+* 坐标系的李括号: [X,Y] = C1*C2 - C2*C1
 * 具体来说：
 * 定义一个内禀坐标系(假设它是平直空间，向量可以随意移动而不变)下V,在弯
 * 曲坐标系下观察V，不同点上V是不同的，故而坐标系跟位置有关，取相邻两点
@@ -23,13 +23,16 @@
 *		Ruv = Gu*Gv - Gv*Gu - Gu*Wu*Gv*Wv
 */
 
-//#define	Parallel_Projection	// 非正交坐标系下平行投影
+//#define	Parallel_Projection	  // 非正交坐标系下平行投影
+
 // *******************************************************************
 //  |_
 // C     2d Coordinate System
 // *******************************************************************
 struct coord2
 {
+	static const coord2 ONE;
+
 	vec2 ux = vec2::UX;		// 方向
 	vec2 uy = vec2::UY;
 
@@ -155,6 +158,19 @@ struct coord2
 		if (!bscl)
 			s = vec2::ONE;
 	}
+	void revert()
+	{
+		(*this) = ONE / (*this);
+	}
+	coord2 revertcopy() const
+	{
+		return ONE / (*this);
+	}
+	// 梯度坐标系 = 梯度 X 切空间
+	static coord2 gradcoord(const coord2& c1, const coord2& c2)
+	{
+		return c1.revertcopy() * c2;
+	}
 	// 本征向量
 	vec2 eigenvec() const
 	{
@@ -174,6 +190,7 @@ struct coord2
 		//PRINT("o: " << o.x << "," << o.y << "," << o.z);
 	}
 };
+const coord2 coord2::ONE = coord2();
 
 // ******************************************************************
 //  |/_
@@ -182,6 +199,8 @@ struct coord2
 extern void edgeax(const VECLIST& e, vec& ux, vec& uy, vec& uz);
 struct coord3
 {
+	static const coord3 ONE;
+
 	vec3 ux = vec3::UX;		// 方向
 	vec3 uy = vec3::UY;
 	vec3 uz = vec3::UZ;
@@ -346,6 +365,14 @@ struct coord3
 		if (!bscl)
 			s = vec3::ONE;
 	}
+	void revert()
+	{
+		(*this) = ONE / (*this);
+	}
+	coord3 revertcopy() const
+	{
+		return ONE / (*this);
+	}
 	vec3 sumvec() const
 	{
 		return (ux + uy + uz) * s;
@@ -387,6 +414,11 @@ struct coord3
 			vy.cross(v),
 			vz.cross(v)
 		);
+	}
+	// 梯度坐标系 = 梯度 X 切空间, 是否对应纤维丛需要进一步研究！ 
+	static coord3 gradcoord(const coord3& c1, const coord3& c2)
+	{
+		return c1.revertcopy() * c2;
 	}
 	// 曲率测试算法
 	coord3 curvature0(std::function<void(coord3& c, vec3 q)> coord_at, crvec q, crvec v)
@@ -461,3 +493,4 @@ struct coord3
 		//PRINT("o: " << o.x << "," << o.y << "," << o.z);
 	}
 };
+const coord3 coord3::ONE = coord3();
