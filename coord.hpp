@@ -25,6 +25,8 @@
 
 //#define	Parallel_Projection	  // 非正交坐标系下平行投影
 
+const real delta_x = 0.01f;
+const real delta_y = 0.01f;
 // *******************************************************************
 //  |_
 // C     2d Coordinate System
@@ -223,6 +225,11 @@ struct coord3
 	{
 		ux = _ux; uy = _uy; uz = ux.cross(uy);
 	}
+	coord3(crvec _uz)
+	{
+		uz = _uz;
+		v2vxvy(uz, ux, uy);
+	}
 	coord3(real ang, crvec ax)
 	{
 		ux.rot(ang, ax);
@@ -240,6 +247,23 @@ struct coord3
 	{
 		edgeax(e, ux, uy, uz);
 	}
+	coord3(const quaternion& q)
+	{
+		uz = q.xyz().normcopy();
+		vz2vxvy(uz, ux, uy);
+		ux = q * ux;
+		uy = q * uy;
+	}
+	void fromvectors(crvec v1, crvec v2)
+	{
+		quaternion q = quaternion::fromvectors(v1,v2);
+		uz = q.xyz();
+		ux = v1.normcopy();
+		vz2vxvy(uz, ux, uy);
+		ux = q * ux;
+		uy = q * uy;
+	}
+
 	vec3 VX() const { return ux * s.x; }
 	vec3 VY() const { return uy * s.y; }
 	vec3 VZ() const { return uz * s.z; }
@@ -250,6 +274,13 @@ struct coord3
 		ux.rot(ang, ax);
 		uy.rot(ang, ax);
 		uz.rot(ang, ax);
+	}
+	coord3 ucoord() const
+	{
+		coord3 c = *this;
+		c.norm(false);
+		c.o = vec3::ZERO;
+		return c;
 	}
 	bool is_same_dirs(const coord3& c) const
 	{
@@ -415,16 +446,14 @@ struct coord3
 			vz.cross(v)
 		);
 	}
-	// 梯度坐标系 = 梯度 X 切空间, 是否对应纤维丛需要进一步研究！ 
+	// 梯度坐标系 = 梯度 X 切空间
 	static coord3 gradcoord(const coord3& c1, const coord3& c2)
 	{
 		return c1.revertcopy() * c2;
 	}
 	// 曲率测试算法
-	coord3 curvature0(std::function<void(coord3& c, vec3 q)> coord_at, crvec q, crvec v)
+	coord3 curvature(std::function<void(coord3& c, vec3 q)> coord_at, crvec q)
 	{
-		const real delta_x = 0.01f;
-		const real delta_y = 0.01f;
 		vec3 q11 = q + vec3(delta_x, 0, 0);
 		vec3 q21 = q + vec3(0, delta_y, 0);
 		vec3 q12 = q + vec3(delta_x, delta_y, 0);
@@ -444,19 +473,18 @@ struct coord3
 		vec3 p12 = q12 * c12;
 		c12.norm(false);
 
-		coord3 grad1 = c21 / c11; grad1.norm(false);
-		coord3 grad2 = c12 / c11; grad2.norm(false);
+		coord3 grad1 = coord3::gradcoord(c11, c21); grad1.norm(false);
+		coord3 grad2 = coord3::gradcoord(c11, c12); grad2.norm(false);
 
 		PRINT("--- g1 ---");
 		coord3 g1 = grad1 * grad2; g1.norm(false); g1.dump();
 		PRINT("--- g2 ---");
 		coord3 g2 = grad2 * grad2; g2.norm(false); g2.dump();
 		coord3 R = (g1 - g2); // 这个是（二阶）李括号，就是在坐标系映射下的李括号，在[X,Y]=0时可以对应曲率
-		PRINT("--- R ---");
-		R.dump();
-		vec3 deta = v * R;
+		//R.dump();
+	/*	vec3 deta = v * R;
 		deta.norm();
-		PRINTVEC3(deta);
+		PRINTVEC3(deta);*/
 
 		return R;
 	}
@@ -483,7 +511,7 @@ struct coord3
 		//PRINT("rx: " << x << ", ry: " << y  << ", rz: " << z);
 		return vec3(x, y, z);
 	}
-	void dump(const string& name = "") const
+	void dump(const std::string& name = "") const
 	{
 		PRINT("----" << name << "---");
 		PRINT("ux: " << ux.x << "," << ux.y << "," << ux.z);
