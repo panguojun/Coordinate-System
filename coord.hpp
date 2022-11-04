@@ -39,7 +39,7 @@ struct coord2
 	vec2 uy = vec2::UY;
 
 	vec2 s = vec2::ONE;		// 缩放
-	vec2 o;					// 原点
+	vec2 o;				// 原点
 
 	coord2() {}
 	coord2(const coord2& c)
