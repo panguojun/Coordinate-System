@@ -39,7 +39,7 @@ struct coord2
 	vec2 uy = vec2::UY;
 
 	vec2 s = vec2::ONE;		// 缩放
-	vec2 o;				// 原点
+	vec2 o;					// 原点
 
 	coord2() {}
 	coord2(const coord2& c)
@@ -275,6 +275,7 @@ struct coord3
 		uy.rot(ang, ax);
 		uz.rot(ang, ax);
 	}
+	// 归一化正交 orthogonal
 	coord3 ucoord() const
 	{
 		coord3 c = *this;
@@ -396,11 +397,29 @@ struct coord3
 		if (!bscl)
 			s = vec3::ONE;
 	}
-	void revert()
+	// 转置
+	void transpose()
+	{
+		vec3 ux = vec3(ux.x, uy.x, uz.x);
+		vec3 uy = vec3(ux.y, uy.y, uz.y);
+		vec3 uz = vec3(ux.z, uy.z, uz.z);
+		(*this).ux = ux;
+		(*this).uy = uy;
+		(*this).uz = uz;
+	}
+	coord3 transposed()
+	{
+		coord3 c = (*this);
+		c.ux = vec3(ux.x, uy.x, uz.x);
+		c.uy = vec3(ux.y, uy.y, uz.y);
+		c.uz = vec3(ux.z, uy.z, uz.z);
+		return c;
+	}
+	void reverse()
 	{
 		(*this) = ONE / (*this);
 	}
-	coord3 revertcopy() const
+	coord3 reversed() const
 	{
 		return ONE / (*this);
 	}
@@ -449,7 +468,7 @@ struct coord3
 	// 梯度坐标系 = 梯度 X 切空间
 	static coord3 gradcoord(const coord3& c1, const coord3& c2)
 	{
-		return c1.revertcopy() * c2;
+		return c1.reversed() * c2;
 	}
 	// 曲率测试算法
 	coord3 curvature(std::function<void(coord3& c, vec3 q)> coord_at, crvec q)
