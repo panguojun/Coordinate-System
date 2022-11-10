@@ -20,7 +20,8 @@
 * 在弯曲坐标系下内禀坐标系x,y轴的平行线投影得到的u,v曲线上G12分别在两个
 * 方向上对应Gu,Gv, 从(u1,v1)到(u2,v2) 计算两个路径的差别再加上修正项可
 * 得曲率公式为：
-*		Ruv = Gu*Gv - Gv*Gu - Gu*Wu*Gv*Wv
+*		Ruv = Gu*Gv - Gv*Gu*Gu*Wu*Gv*Wv
+*		W = (U + V*Gu) - (V + U*Gv) 
 */
 
 //#define	Parallel_Projection	  // 非正交坐标系下平行投影
