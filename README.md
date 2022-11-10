@@ -99,7 +99,7 @@ polecoord(c2, r, dth + ang * PI / 180);
 ### Velocity vector in polar coordinates (circular motion)
 ````
 vec3 v(0.0, w, 0);
-vec3 dv = (c2* v - c1 * v) ; // Instead, observe the velocity vector in the global coordinate system and differentiate the velocity
+vec3 dv = (v * c2 - v * c1) ; // Instead, observe the velocity vector in the global coordinate system and differentiate the velocity
 vec3 a = dv / dt; // the time derivative of the vector, the acceleration
 ````
 
@@ -151,7 +151,7 @@ auto DXYZ_Fai = [Fai](crvec p)->vec3 {
 }
 ```
 ## Sample 3: Curvature
-### Curvature, I'm not quite sure if this curvature algorithm is correct, if so it can greatly simplify tensor calculations.
+### Curvature, I'm not quite sure if this curvature algorithm is correct, if so it could greatly simplify tensor calculations.
 ```
 coord3 curvature()
 {
