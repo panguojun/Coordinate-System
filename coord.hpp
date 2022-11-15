@@ -13,15 +13,15 @@
 * 	曲坐标系下观察V，不同点上V是不同的，故而坐标系跟位置有关，取相邻两点
 * 	（1),(2)点处有向量V1,V2，对应坐标系C1,C2，那么：
 * 
-*			V = V1 * C1 = V2 * C2 => 
-*			V2 = V1 * C1 / C2, 令 G12 = C1 / C2 =>
-*			V2 = V1 * G12
+*		V = V1 * C1 = V2 * C2 => 
+*		V2 = V1 * C1 / C2, 令 G12 = C1 / C2 =>
+*		V2 = V1 * G12
 * 
 * 	在弯曲坐标系下内禀坐标系x,y轴的平行线投影得到的u,v曲线上G12分别在两个
 * 	方向上对应Gu,Gv, 从(u1,v1)到(u2,v2) 计算两个路径的差别再加上修正项可
 * 	得曲率公式为：
-*			Ruv = Gu*Gv - Gv*Gu*Gu*Wu*Gv*Wv
-*			W = (U + V*Gu) - (V + U*Gv) 
+*		Ruv = Gu*Gv - Gv*Gu*Gu*Wu*Gv*Wv
+*		W = (U + V*Gu) - (V + U*Gv) 
 */
 
 //#define	Parallel_Projection	  // 非正交坐标系下平行投影
@@ -38,9 +38,8 @@ struct coord2
 
 	vec2 ux = vec2::UX;		// 方向
 	vec2 uy = vec2::UY;
-
 	vec2 s = vec2::ONE;		// 缩放
-	vec2 o;					// 原点
+	vec2 o;				// 原点
 
 	coord2() {}
 	coord2(const coord2& c)
