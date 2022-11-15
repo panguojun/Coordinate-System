@@ -207,7 +207,7 @@ struct coord3
 	vec3 uz = vec3::UZ;
 
 	vec3 s = vec3::ONE;		// 缩放
-	vec3 o;					// 原点
+	vec3 o;				// 原点
 
 	coord3() {}
 	coord3(const coord3& c)
