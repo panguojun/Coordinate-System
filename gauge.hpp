@@ -1,17 +1,17 @@
 /**
-*							�淶�任
-*				�������Ը�ĳ����λ����λ����z����ϣ���Ϊ"��λͶӰ":
+*						规范变换
+*				向量可以跟某个相位（单位复数z）结合，称为"相位投影":
 *						P(v,z) = v * exp(z)
-*				Ȼ����ĳ��Ƶ��n��ͶӰ����Ϊ"Ƶ��ͶӰ":
+*				然后在某个频率n上投影，称为"频率投影":
 *					G(v,z,n) = (P(v,z))^n = (v*exp(z))^n
-*				���������Ƶ����ͣ�
+*				最后在所有频率求和：
 *					SUM(N, G(v,z,n)) = SUM(N, (v*exp(z))^n)
 * 
-*				�淶�任����������λ�任��Ȼ��ϳɲ�ͬƵ������ЧӦ
+*				规范变换本质上是相位变换，然后合成不同频率总体效应
 */
 scope gauge_math
 {
-	// ������ĳ����λ"ͶӰ"�任��ע���ǵ�λ����!)
+	// 向量向某个相位"投影"变换（注意是单位复数!)
 	compx phase(const compx& v, const compx& z)
 	{
 		compx nz = exp(z);
@@ -23,7 +23,7 @@ scope gauge_math
 		return v * nq;
 	}
 
-	// ����Ƶ�����
+	// 各个频率求和
 	quaternion freqsum(const quaternion& v, int N)
 	{
 		quaternion sum;
