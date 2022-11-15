@@ -1,13 +1,13 @@
 /****************************************************************************
-				四元数
-			(本文件基于OGRE引擎的数学库)
+							四元数
+					(本文件基于OGRE引擎的数学库)
 	四元数是在复数基础上的扩展,单位四元数用于旋转操作，向量是源自于四元数，
 	不过二者有差别。目前四元数跟向量之间的关系以及应用存在着争议。
 
 	*  *  *  *  *  *  *  *  *  详解  *  *  *  *  *  *  *  *  *  *  *  *  * 
 	类似于复数，四元数也拥有指数形式：e^q，结果也是一个四元数： q = e^q,
-	在底层物理里对应了规范变换，跟坐标系变换有一些不同，规范变换更加
-	侧重相位，拥有时间属性，坐标系变换偏向于空间的变换以及曲率等特征提取。
+	在底层物理里应了规范变换，跟坐标系变换有一些不同，规范变换更加
+	侧重相位拥有时间属性，坐标系变换偏向于空间的变换以及曲率等特征提取。
 
 	四元数存在归一化(normalise)，共轭(conj)，求逆(invert)，乘除法等操作，
 	还规定了单位一（ONE).
@@ -126,13 +126,21 @@ struct  quaternion
 		return sqrt(w * w + x * x + y * y + z * z);
 	}
 	//-----------------------------------------------------------------------
-	void normalise(void)
+	void normalize(void)
 	{
 		real len = length();
 		if (len != 0)
 		{
 			real factor = 1.0f / (len);
 			*this = *this * factor;
+		}
+	}
+	quaternion normalized(void)
+	{
+		real len = length();
+		if (len != 0)
+		{
+			return (*this) / len;
 		}
 	}
 	//-----------------------------------------------------------------------
@@ -149,6 +157,7 @@ struct  quaternion
 		return c;
 	}
 	//-----------------------------------------------------------------------
+	// inverse = invert
 	void invert()
 	{
 		real r = length();
@@ -170,7 +179,7 @@ struct  quaternion
 	}
 	//-----------------------------------------------------------------------
 	// 指数四元数就是规范变换！
-	quaternion exp()
+	quaternion exp() const
 	{
 		real r = length();
 		vec3 v(x, y, z);
@@ -178,6 +187,30 @@ struct  quaternion
 		vec3 n = v.normcopy();
 		vec3 qv = n * (r * sin(th));
 		return quaternion(r * cos(th), qv.x, qv.y, qv.z);
+	}
+	friend quaternion exp(const quaternion& q)
+	{
+		real r = q.length();
+		vec3 v(q.x, q.y, q.z);
+		real th = v.len();
+		vec3 n = v.normcopy();
+		vec3 qv = n * (r * sin(th));
+		return quaternion(r * cos(th), qv.x, qv.y, qv.z);
+	}
+	//-----------------------------------------------------------------------
+	quaternion operator ^ (int n) const
+	{
+		quaternion ret = *this;
+		for (int i = 1; i < n; i++)
+		{
+			ret = ret * (*this);
+		}
+		return ret;
+	}
+	//-----------------------------------------------------------------------
+	static quaternion fromvectors(crvec v1, crvec v2)
+	{
+		return quaternion(v1.dot(v2), v1.cross(v2)).normalized();
 	}
 	//-----------------------------------------------------------------------
 	void fromangleaxis(real rfAngle,
@@ -320,7 +353,7 @@ struct  quaternion
 			//    have method to fix this case, so just use linear interpolation here.
 			quaternion t = (1.0f - fT) * rkP + fT * rkT;
 			// taking the complement requires renormalisation
-			t.normalise();
+			t.normalize();
 			return t;
 		}
 	}
@@ -338,7 +371,7 @@ struct  quaternion
 		{
 			result = rkP + fT * (rkQ - rkP);
 		}
-		result.normalise();
+		result.normalize();
 		return result;
 	}
 };
