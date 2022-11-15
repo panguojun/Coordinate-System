@@ -197,7 +197,6 @@ const coord2 coord2::ONE = coord2();
 //  |/_
 // C     3d Coordinate System
 // ******************************************************************
-extern void edgeax(const VECLIST& e, vec& ux, vec& uy, vec& uz);
 struct coord3
 {
 	static const coord3 ONE;
@@ -241,10 +240,6 @@ struct coord3
 		coord3 cy(yaw, vec3::UY);
 		coord3 cz(rol, vec3::UZ);
 		*this = cx * cy * cz;
-	}
-	coord3(const VECLIST& e)
-	{
-		edgeax(e, ux, uy, uz);
 	}
 	coord3(const quaternion& q)
 	{
