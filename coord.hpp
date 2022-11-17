@@ -25,8 +25,6 @@
 
 //#define	Parallel_Projection	  // 非正交坐标系下平行投影
 
-const real delta_x = 0.01f;
-const real delta_y = 0.01f;
 // *******************************************************************
 //  |_
 // C     2d Coordinate System
@@ -466,6 +464,9 @@ struct coord3
 	// 曲率测试算法
 	coord3 curvature(std::function<void(coord3& c, vec3 q)> coord_at, crvec q)
 	{
+		const real delta_x = 0.01f;
+		const real delta_y = 0.01f;
+		
 		vec3 q11 = q + vec3(delta_x, 0, 0);
 		vec3 q21 = q + vec3(0, delta_y, 0);
 		vec3 q12 = q + vec3(delta_x, delta_y, 0);
