@@ -419,17 +419,16 @@ struct coord3
 	}
 	vec3 sumvec() const
 	{
-		return (ux + uy + uz) * s;
+		return ux*s.x + uy*s.y + uz*s.z;
 	}
 	// 本征值
 	real eigenvalue() const
 	{
-		vec3 sv = sumvec();
-		return ux.dot(sv) + uy.dot(sv) + uz.dot(sv);
+		return sumvec().len();
 	}
 	real dot(crvec v) const
 	{
-		return v.dot(sumvec());
+		return v.dot(ux) * s.x + v.dot(uy) * s.y + v.dot(uz) * s.z;
 	}
 	vec3 cross(const coord3& c) const
 	{
