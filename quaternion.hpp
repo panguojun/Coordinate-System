@@ -212,7 +212,6 @@ struct  quaternion
 	void fromvectors(crvec v1, crvec v2)
 	{
 		fromangleaxis(acos(v1.dot(v2)), v1.cross(v2));
-		normalize();
 	}
 	//-----------------------------------------------------------------------
 	void fromangleaxis(real rfAngle,
