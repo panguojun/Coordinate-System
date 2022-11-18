@@ -229,26 +229,34 @@ struct coord3
 	}
 	coord3(real pit, real yaw, real rol)
 	{
-		coord3 cx(pit, vec3::UX);
-		coord3 cy(yaw, vec3::UY);
-		coord3 cz(rol, vec3::UZ);
-		*this = cx * cy * cz;
+		ux.rot(pit, vec3::UX);
+		uy.rot(yaw, vec3::UY);
+		uz.rot(rol, vec3::UZ);
 	}
 	coord3(const quaternion& q)
 	{
-		uz = q.xyz().normcopy();
-		vz2vxvy(uz, ux, uy);
-		ux = q * ux;
-		uy = q * uy;
+		ux = q * vec3::UX;
+		uy = q * vec3::UY;
+		uz = q * vec3::UZ;
 	}
 	void fromvectors(crvec v1, crvec v2)
 	{
-		quaternion q = quaternion::fromvectors(v1,v2);
-		uz = q.xyz();
-		ux = v1.normcopy();
-		vz2vxvy(uz, ux, uy);
-		ux = q * ux;
-		uy = q * uy;
+		quaternion q;
+		q.fromvectors(v1,v2);
+		ux = q * vec3::UX;
+		uy = q * vec3::UY;
+		uz = q * vec3::UZ;
+	}
+	void fromaxvecs(crvec ax, crvec v1, crvec v2)
+	{
+		vec3 pv1 = v1.crossdot(ax);
+		vec3 pv2 = v2.crossdot(ax);
+		real ang = acos(pv1.dot(pv2));
+		quaternion q;
+		q.fromangleaxis(ang, ax);
+		ux = q * vec3::UX;
+		uy = q * vec3::UY;
+		uz = q * vec3::UZ;;
 	}
 
 	vec3 VX() const { return ux * s.x; }
