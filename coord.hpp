@@ -36,7 +36,7 @@ struct coord2
 	vec2 uy = vec2::UY;
 
 	vec2 s = vec2::ONE;		// 缩放
-	vec2 o;					// 原点
+	vec2 o;				// 原点
 
 	coord2() {}
 	coord2(const coord2& c)
@@ -200,7 +200,7 @@ struct coord3
 	vec3 uz = vec3::UZ;
 
 	vec3 s = vec3::ONE;		// 缩放
-	vec3 o;					// 原点
+	vec3 o;				// 原点
 
 	coord3() {}
 	coord3(const coord3& c)
