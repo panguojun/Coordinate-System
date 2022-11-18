@@ -248,9 +248,9 @@ struct  quaternion
 	{
 		return vec3(x, y, z);
 	}
-	vec3 tovec() const
+	vec3 axis() const
 	{
-		return vec3(x, y, z);
+		return vec3(x, y, z).normcopy();
 	}
 	//-----------------------------------------------------------------------
 	vec3 toeuler()
