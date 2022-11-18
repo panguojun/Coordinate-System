@@ -208,9 +208,11 @@ struct  quaternion
 		return ret;
 	}
 	//-----------------------------------------------------------------------
-	static quaternion fromvectors(crvec v1, crvec v2)
+	// v1, v2 是单位向量
+	void fromvectors(crvec v1, crvec v2)
 	{
-		return quaternion(v1.dot(v2), v1.cross(v2)).normalized();
+		fromangleaxis(acos(v1.dot(v2)), v1.cross(v2));
+		normalize();
 	}
 	//-----------------------------------------------------------------------
 	void fromangleaxis(real rfAngle,
