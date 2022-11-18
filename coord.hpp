@@ -285,13 +285,21 @@ struct coord3
 	}
 	coord3 operator + (const coord3& c) const
 	{
-		coord3 rc = *this;
+		coord3 rc;
+		rc.ux = VX() + c.VX();
+		rc.uy = VY() + c.VY();
+		rc.uz = VZ() + c.VZ();
+		rc.norm();
 		rc.o = o + c.o;
 		return rc;
 	}
 	coord3 operator - (const coord3& c) const
 	{
-		coord3 rc = *this;
+		coord3 rc;
+		rc.ux = VX() - c.VX();
+		rc.uy = VY() - c.VY();
+		rc.uz = VZ() - c.VZ();
+		rc.norm();
 		rc.o = o - c.o;
 		return rc;
 	}
