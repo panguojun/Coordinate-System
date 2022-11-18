@@ -34,8 +34,9 @@ struct coord2
 
 	vec2 ux = vec2::UX;		// 方向
 	vec2 uy = vec2::UY;
+
 	vec2 s = vec2::ONE;		// 缩放
-	vec2 o;				// 原点
+	vec2 o;					// 原点
 
 	coord2() {}
 	coord2(const coord2& c)
@@ -164,19 +165,14 @@ struct coord2
 	{
 		return ONE / (*this);
 	}
-	// 梯度坐标系 = 梯度 X 切空间
+	// 梯度坐标系
 	static coord2 gradcoord(const coord2& c1, const coord2& c2)
 	{
 		return c1.revertcopy() * c2;
 	}
-	// 本征向量
-	vec2 eigenvec() const
-	{
-		return (ux + uy) * s;
-	}
 	real dot(crvec2 v) const
 	{
-		return v.dot(eigenvec());
+		return v.dot(ux) * s.x + v.dot(uy) * s.y;
 	}
 	void dump() const
 	{
@@ -196,6 +192,7 @@ const coord2 coord2::ONE = coord2();
 // ******************************************************************
 struct coord3
 {
+	static const coord3 ZERO;
 	static const coord3 ONE;
 
 	vec3 ux = vec3::UX;		// 方向
@@ -203,7 +200,7 @@ struct coord3
 	vec3 uz = vec3::UZ;
 
 	vec3 s = vec3::ONE;		// 缩放
-	vec3 o;				// 原点
+	vec3 o;					// 原点
 
 	coord3() {}
 	coord3(const coord3& c)
@@ -220,10 +217,9 @@ struct coord3
 	{
 		ux = _ux; uy = _uy; uz = ux.cross(uy);
 	}
-	coord3(crvec _uz)
+	coord3(crvec _p)
 	{
-		uz = _uz;
-		v2vxvy(uz, ux, uy);
+		o = _p;
 	}
 	coord3(real ang, crvec ax)
 	{
@@ -259,14 +255,7 @@ struct coord3
 	vec3 VY() const { return uy * s.y; }
 	vec3 VZ() const { return uz * s.z; }
 
-	void rot(real ang, crvec ax)
-	{
-		//	o.rot(ang, ax);
-		ux.rot(ang, ax);
-		uy.rot(ang, ax);
-		uz.rot(ang, ax);
-	}
-	// 归一化正交 orthogonal
+	// 归一化的正交坐标系
 	coord3 ucoord() const
 	{
 		coord3 c = *this;
@@ -274,31 +263,39 @@ struct coord3
 		c.o = vec3::ZERO;
 		return c;
 	}
+	quaternion toquat() const
+	{
+		coord3 c = ucoord();
+		vec3 pyr = c.coord2eulers();
+		quaternion q;
+		q.fromeuler(pyr.x, pyr.y, pyr.z);
+		return q;
+	}
 	bool is_same_dirs(const coord3& c) const
 	{
 		return ux == c.ux && uy == c.uy && uz == c.uz;
 	}
+	bool operator == (const coord3& c) const
+	{
+		return o == c.o && s == c.s && is_same_dirs(c);
+	}
+	bool operator != (const coord3& c) const
+	{
+		return o != c.o || s != c.s || !is_same_dirs(c);
+	}
 	coord3 operator + (const coord3& c) const
 	{
-		coord3 rc;
-		rc.ux = VX() + c.VX();
-		rc.uy = VY() + c.VY();
-		rc.uz = VZ() + c.VZ();
-		rc.norm();
+		coord3 rc = *this;
 		rc.o = o + c.o;
 		return rc;
 	}
 	coord3 operator - (const coord3& c) const
 	{
-		coord3 rc;
-		rc.ux = VX() - c.VX();
-		rc.uy = VY() - c.VY();
-		rc.uz = VZ() - c.VZ();
-		rc.norm();
+		coord3 rc = *this;
 		rc.o = o - c.o;
 		return rc;
 	}
-	// 在坐标系下定义一个向量
+	// 乘法：在坐标系下定义一个向量
 	friend vec3 operator * (crvec p, const coord3& c)
 	{
 		return c.ux * (c.s.x * p.x) + c.uy * (c.s.y * p.y) + c.uz * (c.s.z * p.z) + c.o;
@@ -332,6 +329,8 @@ struct coord3
 		rc.uz = q * uz;
 		return rc;
 	}
+
+	// 除法：向量向坐标系投影 注意：要保证ux,uy,uz是单位向量！
 #ifdef Parallel_Projection
 	// 非正交坐标系下平行投影 Parallel projection
 	static real pl_prj(crvec v, crvec ax1, crvec ax2)
@@ -348,7 +347,6 @@ struct coord3
 				pl_prj(v-c.ux*v.dot(c.ux), c.uy, c.uz) / c.s.y, \
 				pl_prj(v-c.uy*v.dot(c.uy), c.uz, c.ux) / c.s.z)
 #endif
-	// 向量向坐标系投影 注意：要保证ux,uy,uz是单位向量！
 	friend vec3 operator / (crvec p, const coord3& c)
 	{
 		vec3 v = p - c.o;
@@ -414,14 +412,32 @@ struct coord3
 	{
 		return ONE / (*this);
 	}
+	void flipX()
+	{
+		ux = -ux;
+	}
+	void flipY()
+	{
+		uy = -uy;
+	}
+	void flipZ()
+	{
+		uz = -uz;
+	}
+	void rot(real ang, crvec ax)
+	{
+		ux.rot(ang, ax);
+		uy.rot(ang, ax);
+		uz.rot(ang, ax);
+	}
 	vec3 sumvec() const
 	{
-		return ux*s.x + uy*s.y + uz*s.z;
+		return ux * s.x + uy * s.y + uz * s.z;
 	}
-	// 本征值
-	real eigenvalue() const
+	// 本征向量（坐标系作为旋转变换时候的特征）
+	vec3 eigenvec() const
 	{
-		return sumvec().len();
+		return toquat().axis();
 	}
 	real dot(crvec v) const
 	{
@@ -455,7 +471,32 @@ struct coord3
 			vz.cross(v)
 		);
 	}
+	// 坐标系到欧拉角，要保证是归一化的正交坐标系
+	vec3 coord2eulers() const
+	{
+		const coord3& rm = *this;
+		float sy = sqrt(rm.ux.x * rm.ux.x + rm.uy.x * rm.uy.x);
+		bool singular = sy < 1e-6;
+
+		float x, y, z;
+		if (!singular)
+		{
+			x = atan2(rm.uz.y, rm.uz.z);
+			y = atan2(-rm.uz.x, sy);
+			z = atan2(rm.uy.x, rm.ux.x);
+		}
+		else
+		{
+			x = atan2(-rm.uy.z, rm.uy.y);
+			y = atan2(-rm.uz.x, sy);
+			z = 0;
+		}
+		//PRINT("rx: " << x * 180 / PI << ", ry: " << y * 180 / PI << ", rz: " << z * 180 / PI);
+		//PRINT("rx: " << x << ", ry: " << y  << ", rz: " << z);
+		return vec3(x, y, z);
+	}
 	// 梯度坐标系 = 梯度 X 切空间
+	// 相当于一阶坐标系的导数
 	static coord3 gradcoord(const coord3& c1, const coord3& c2)
 	{
 		return c1.reversed() * c2;
@@ -465,7 +506,6 @@ struct coord3
 	{
 		const real delta_x = 0.01f;
 		const real delta_y = 0.01f;
-		
 		vec3 q11 = q + vec3(delta_x, 0, 0);
 		vec3 q21 = q + vec3(0, delta_y, 0);
 		vec3 q12 = q + vec3(delta_x, delta_y, 0);
@@ -500,37 +540,15 @@ struct coord3
 
 		return R;
 	}
-	vec3 coord2eulers() const
-	{
-		const coord3& rm = *this;
-		float sy = sqrt(rm.ux.x * rm.ux.x + rm.uy.x * rm.uy.x);
-		bool singular = sy < 1e-6;
-
-		float x, y, z;
-		if (!singular)
-		{
-			x = atan2(rm.uz.y, rm.uz.z);
-			y = atan2(-rm.uz.x, sy);
-			z = atan2(rm.uy.x, rm.ux.x);
-		}
-		else
-		{
-			x = atan2(-rm.uy.z, rm.uy.y);
-			y = atan2(-rm.uz.x, sy);
-			z = 0;
-		}
-		PRINT("rx: " << x * 180 / PI << ", ry: " << y * 180 / PI << ", rz: " << z * 180 / PI);
-		//PRINT("rx: " << x << ", ry: " << y  << ", rz: " << z);
-		return vec3(x, y, z);
-	}
 	void dump(const std::string& name = "") const
 	{
 		PRINT("----" << name << "---");
-		PRINT("ux: " << ux.x << "," << ux.y << "," << ux.z);
-		PRINT("uy: " << uy.x << "," << uy.y << "," << uy.z);
-		PRINT("uz: " << uz.x << "," << uz.y << "," << uz.z);
-		//PRINTVEC3(s);
-		//PRINT("o: " << o.x << "," << o.y << "," << o.z);
+		PRINTV3(ux);
+		PRINTV3(uy);
+		PRINTV3(uz);
+		PRINTV3(s);
+		PRINTV3(o);
 	}
 };
+const coord3 coord3::ZERO = {0};
 const coord3 coord3::ONE = coord3();
