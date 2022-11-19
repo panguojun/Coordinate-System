@@ -460,6 +460,10 @@ struct coord3
 	{
 		return v.dot(ux) * s.x + v.dot(uy) * s.y + v.dot(uz) * s.z;
 	}
+	real dot(coord3 c) const
+	{
+		return c.VX().dot(VX()) + c.VY().dot(VY()) + c.UZ().dot(UZ());
+	}
 	// 由李符号引出的叉乘，更加符合群论
 	coord3 lie_cross(const coord3& c) const
 	{
