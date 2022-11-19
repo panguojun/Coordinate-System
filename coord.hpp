@@ -466,7 +466,7 @@ struct coord3
 		return (*this) * c - c * (*this);
 	}
 	// 由电磁场计算引出的叉乘
-	vec3 cross(const coord3& c) const
+	coord3 cross(const coord3& c) const
 	{
 		vec3 vx = VX();
 		vec3 vy = VY();
@@ -476,10 +476,10 @@ struct coord3
 		vec3 cvy = c.VY();
 		vec3 cvz = c.VZ();
 
-		return vec3(
-			vy.dot(cvz) - vz.dot(cvy),
-			vz.dot(cvx) - vx.dot(cvz),
-			vx.dot(cvy) - vy.dot(cvx)
+		return coord3(
+			vec3::UX * (vy.dot(cvz) - vz.dot(cvy)),
+			vec3::UY * (vz.dot(cvx) - vx.dot(cvz)),
+			vec3::UZ * (vx.dot(cvy) - vy.dot(cvx))
 		);
 	}
 	coord3 cross(const vec3& v) const
