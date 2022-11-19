@@ -460,7 +460,7 @@ struct coord3
 	{
 		return v.dot(ux) * s.x + v.dot(uy) * s.y + v.dot(uz) * s.z;
 	}
-	real dot(coord3 c) const
+	real dot(const coord3& c) const
 	{
 		return c.VX().dot(VX()) + c.VY().dot(VY()) + c.UZ().dot(UZ());
 	}
