@@ -530,45 +530,7 @@ struct coord3
 	{
 		return c1.reversed() * c2;
 	}
-	// 曲率测试算法
-	coord3 curvature(std::function<void(coord3& c, vec3 q)> coord_at, crvec q)
-	{
-		const real delta_x = 0.01f;
-		const real delta_y = 0.01f;
-		vec3 q11 = q + vec3(delta_x, 0, 0);
-		vec3 q21 = q + vec3(0, delta_y, 0);
-		vec3 q12 = q + vec3(delta_x, delta_y, 0);
-
-		coord3 c11;
-		coord_at(c11, q11);
-		vec3 p11 = q11 * c11;
-		c11.norm(false);
-
-		coord3 c21;
-		coord_at(c21, q21);
-		vec3 p21 = q21 * c21;
-		c21.norm(false);
-
-		coord3 c12;
-		coord_at(c12, q12);
-		vec3 p12 = q12 * c12;
-		c12.norm(false);
-
-		coord3 grad1 = coord3::gradcoord(c11, c21); grad1.norm(false);
-		coord3 grad2 = coord3::gradcoord(c11, c12); grad2.norm(false);
-
-		PRINT("--- g1 ---");
-		coord3 g1 = grad1 * grad2; g1.norm(false); g1.dump();
-		PRINT("--- g2 ---");
-		coord3 g2 = grad2 * grad2; g2.norm(false); g2.dump();
-		coord3 R = (g1 - g2); // 这个是（二阶）李括号，就是在坐标系映射下的李括号，在[X,Y]=0时可以对应曲率
-		//R.dump();
-	/*	vec3 deta = v * R;
-		deta.norm();
-		PRINTVEC3(deta);*/
-
-		return R;
-	}
+	
 	void dump(const std::string& name = "") const
 	{
 		PRINT("----" << name << "---");
