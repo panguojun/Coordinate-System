@@ -59,12 +59,12 @@ real dot(crvec v)
 {
 	return v.dot(ux) * s.x + v.dot(uy) * s.y + v.dot(uz) * s.z;
 }
-vec3 cross(const coord3& c)
+coord3 cross(const coord3& c)
 {
-	return vec3(
-		uy.dot(c.UZ()) - uz.dot(c.UY()) +
-		uz.dot(c.UX()) - ux.dot(c.UZ()) +
-		ux.dot(c.UY()) - uy.dot(c.UX())
+	return coord3(
+		vec3::UX * (uy.dot(c.UZ()) - uz.dot(c.UY())),
+		vec3::UY * (uz.dot(c.UX()) - ux.dot(c.UZ())),
+		vec3::UZ * (ux.dot(c.UY()) - uy.dot(c.UX()))
 	);
 }
 ```
