@@ -136,6 +136,7 @@ struct coord2
 #endif
 		return vec2(v.dot(c.ux) / c.s.x, v.dot(c.uy) / c.s.y);
 	}
+	// oper(/) = C1 * C2^-1
 	coord2 operator / (const coord2& c) const
 	{
 		coord2 rc;
@@ -151,6 +152,11 @@ struct coord2
 		rc.o -= c.o;
 		return rc;
 	}
+	// oper(//) = C1^-1 * C2
+	coord2 operator % (const coord2& c) const
+	{
+		return (*this).reversed() * c;
+	}
 	void norm(bool bscl = true)
 	{
 #define ISZERO(a) (fabs(a) < 1e-10)
@@ -160,11 +166,11 @@ struct coord2
 		if (!bscl)
 			s = vec2::ONE;
 	}
-	void revert()
+	void reverse()
 	{
 		(*this) = ONE / (*this);
 	}
-	coord2 revertcopy() const
+	coord2 reversed() const
 	{
 		return ONE / (*this);
 	}
@@ -379,6 +385,7 @@ struct coord3
 #endif
 		return vec3(v.dot(c.ux) / c.s.x, v.dot(c.uy) / c.s.y, v.dot(c.uz) / c.s.z);
 	}
+	// oper(/) = C1 * C2^-1
 	coord3 operator / (const coord3& c) const
 	{
 		coord3 rc;
@@ -395,6 +402,11 @@ struct coord3
 #endif
 		rc.o -= c.o;
 		return rc;
+	}
+	// oper(//) = C1^-1 * C2
+	coord3 operator % (const coord3& c) const
+	{
+		return (*this).reversed() * c;
 	}
 	void norm(bool bscl = true)
 	{
