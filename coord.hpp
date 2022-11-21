@@ -500,6 +500,7 @@ struct coord3
 			vec3::UZ * (vx.dot(cvy) - vy.dot(cvx))
 		);
 	}
+	// v1 x v2 = v1 * (C x v2)
 	coord3 cross(const vec3& v) const
 	{
 		vec3 vx = VX();
