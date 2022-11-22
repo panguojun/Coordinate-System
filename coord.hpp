@@ -25,8 +25,6 @@
 *		Ruv = Gu*Gv - Gv*Gu*Gu*Wu*Gv*Wv
 *		W = (U + V*Gu) - (V + U*Gv) 
 */
-
-//#define	Parallel_Projection	  // 非正交坐标系下平行投影
 // *******************************************************************
 //  |_
 // C     2d Coordinate System
@@ -122,7 +120,7 @@ struct coord2
 		real co = ax1.dot(ax2);
 		real si = sqrt(1 - co * co);
 		real sc = (co / si);
-		return (v.dot(ax1)- v.cross(ax1) * sc);
+		return (v.dot(ax1) - v.cross(ax1) * sc);
 	}
 #endif
 	// 向量向坐标系投影 注意：要保证ux,uy是单位向量！
@@ -144,14 +142,14 @@ struct coord2
 		{// 对于非正交情况
 			rc.ux = vec2(pl_dot(ux, c.ux, c.uy) / c.s.x, pl_dot(ux, c.uy, c.ux) / c.s.y);
 			rc.uy = vec2(pl_dot(uy, c.ux, c.uy) / c.s.x, pl_dot(uy, c.uy, c.ux) / c.s.y);
-		}
+	}
 #else
 		rc.ux = vec2(ux.dot(c.ux) / c.s.x, ux.dot(c.uy) / c.s.y);
 		rc.uy = vec2(uy.dot(c.ux) / c.s.x, uy.dot(c.uy) / c.s.y);
 #endif
 		rc.o -= c.o;
 		return rc;
-	}
+}
 	// oper(//) = C1^-1 * C2
 	coord2 operator % (const coord2& c) const
 	{
@@ -177,7 +175,7 @@ struct coord2
 	// 梯度坐标系
 	static coord2 gradcoord(const coord2& c1, const coord2& c2)
 	{
-		return c1.revertcopy() * c2;
+		return c1.reversed() * c2;
 	}
 	real dot(crvec2 v) const
 	{
@@ -194,7 +192,6 @@ struct coord2
 	}
 };
 const coord2 coord2::ONE = coord2();
-
 // ******************************************************************
 //  |/_
 // C     3d Coordinate System
@@ -251,7 +248,7 @@ struct coord3
 	void fromvectors(crvec v1, crvec v2)
 	{
 		quaternion q;
-		q.fromvectors(v1,v2);
+		q.fromvectors(v1, v2);
 		ux = q * vec3::UX;
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;
@@ -367,7 +364,7 @@ struct coord3
 		return (v.dot(ax1) - v.cross(ax1).dot(ax) * sc);
 	}
 
-	#define PL_PRJ3(v) vec3( \
+#define PL_PRJ3(v) vec3( \
 				pl_prj(v-c.uz*v.dot(c.uz), c.ux, c.uy) / c.s.x, \
 				pl_prj(v-c.ux*v.dot(c.ux), c.uy, c.uz) / c.s.y, \
 				pl_prj(v-c.uy*v.dot(c.uy), c.uz, c.ux) / c.s.z)
@@ -378,9 +375,9 @@ struct coord3
 #ifdef Parallel_Projection
 		{// 对于非正交情况
 			return vec3(
-					pl_prj(v-c.uz*v.dot(c.uz), c.ux, c.uy) / c.s.x, 
-				    pl_prj(v-c.ux*v.dot(c.ux), c.uy, c.uz) / c.s.y, 
-				    pl_prj(v-c.uy*v.dot(c.uy), c.uz, c.ux) / c.s.z);
+				pl_prj(v - c.uz * v.dot(c.uz), c.ux, c.uy) / c.s.x,
+				pl_prj(v - c.ux * v.dot(c.ux), c.uy, c.uz) / c.s.y,
+				pl_prj(v - c.uy * v.dot(c.uy), c.uz, c.ux) / c.s.z);
 		}
 #endif
 		return vec3(v.dot(c.ux) / c.s.x, v.dot(c.uy) / c.s.y, v.dot(c.uz) / c.s.z);
@@ -476,7 +473,7 @@ struct coord3
 	}
 	real dot(const coord3& c) const
 	{
-		return c.VX().dot(VX()) + c.VY().dot(VY()) + c.UZ().dot(UZ());
+		return c.VX().dot(VX()) + c.VY().dot(VY()) + c.VZ().dot(VZ());
 	}
 	// 由李符号引出的叉乘，更加符合群论
 	coord3 lie_cross(const coord3& c) const
@@ -543,7 +540,7 @@ struct coord3
 	{
 		return c1.reversed() * c2;
 	}
-	
+
 	void dump(const std::string& name = "") const
 	{
 		PRINT("----" << name << "---");
@@ -554,5 +551,5 @@ struct coord3
 		PRINTV3(o);
 	}
 };
-const coord3 coord3::ZERO = {0};
+const coord3 coord3::ZERO = { 0 };
 const coord3 coord3::ONE = coord3();
