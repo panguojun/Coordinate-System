@@ -1,8 +1,13 @@
+/**
+*					向量的定义是来自于四元数
+*					向量不是完整的数，
+*					向量跟空间结构有关系，
+*					如果在时空中建议使用四元数
+*/
 // **********************************************************************
 // 2D
 // **********************************************************************
-struct vector2
-{
+struct vector2 {
 	union {
 		real val[2];
 		struct {
@@ -25,7 +30,7 @@ struct vector2
 		x = 0;
 		y = 0;
 	}
-	vector2(real v)
+	explicit vector2(real v)
 	{
 		x = v;
 		y = v;
@@ -428,11 +433,11 @@ struct vector3
 		x = _r * cos(_angle);
 		y = _r * sin(_angle);
 	}
-	real angle() const
+	inline real angle() const
 	{
 		return atan2(y, x);
 	}
-	real dot(const vector3& v) const
+	inline real dot(const vector3& v) const
 	{
 		return x * v.x + y * v.y + z * v.z;
 	}
@@ -688,3 +693,189 @@ const vector4 vector4::UY = vector4(0, 1, 0, 0);
 const vector4 vector4::UZ = vector4(0, 0, 1, 0);
 const vector4 vector4::UW = vector4(0, 0, 0, 1);
 const vector4 vector4::CENTER = vector4(0.5, 0.5, 0.5, 0.5);
+
+// **********************************************************************
+// nD
+// 多维特征空间
+// 来自于人类独特的思维方式（比如人鱼，半人马等）
+// 把现象分解成多个维度的属性组合，然后再分别不同维度上进行融合，
+// 最后可以合成出某种新的想象，如果在“本宇宙”得到验证，那么加强其权重，
+// 否则削弱其权重。
+// 注意，在物理学中（粒子物理学）至今没有观察到超过（3+1）自由度的高维粒子
+// 所以说上层的高维的属性（比如尺寸与颜色）必然是某种非独立变量的某种权重组合。
+// **********************************************************************
+struct vectorn {
+	std::vector<real> val;
+
+	static const vectorn ZERO;
+	static const vectorn ONE;
+	static const vectorn CENTER;
+
+	real& operator [](int ind) {
+		return val[ind];
+	}
+
+	vectorn() {
+	}
+	explicit vectorn(real v)
+	{
+		for (int i = 0; i < val.size(); i++)
+		{
+			val[i] = v;
+		}
+	}
+	vectorn operator + (vectorn& _p) const
+	{
+		vectorn fp;
+		for (int i = 0; i < val.size(); i++)
+		{
+			fp[i] = val[i] + _p[i];
+		}
+		return fp;
+	}
+	void operator += (vectorn& _p)
+	{
+		for (int i = 0; i < val.size(); i++)
+		{
+			val[i] += _p[i];
+		}
+	}
+	vectorn operator - (vectorn& _p) const
+	{
+		vectorn fp;
+		for (int i = 0; i < val.size(); i++)
+		{
+			fp[i] = val[i] - _p[i];
+		}
+		return fp;
+	}
+	void operator -= (vectorn& _p)
+	{
+		for (int i = 0; i < val.size(); i++)
+		{
+			val[i] -= _p[i];
+		}
+	}
+	vectorn operator - () const
+	{
+		vectorn fp;
+		for (int i = 0; i < val.size(); i++)
+		{
+			fp[i] = - val[i];
+		}
+		return fp;
+	}
+	vectorn operator * (real s) const
+	{
+		vectorn fp;
+		for (int i = 0; i < val.size(); i++)
+		{
+			fp[i] = val[i] * s;
+		}
+		return fp;
+	}
+	void operator *= (real s)
+	{
+		for (int i = 0; i < val.size(); i++)
+		{
+			val[i] *= s;
+		}
+	}
+	friend vectorn operator * (real s,  vectorn& v)
+	{
+		vectorn fp;
+		for (int i = 0; i < v.val.size(); i++)
+		{
+			fp[i] = v[i] * s;
+		}
+		return fp;
+	}
+	vectorn operator / (real s) const
+	{
+		vectorn fp;
+		for (int i = 0; i < val.size(); i++)
+		{
+			fp[i] = val[i] / s;
+		}
+		return fp;
+	}
+	void operator /= (real s)
+	{
+		for (int i = 0; i < val.size(); i++)
+		{
+			val[i] /= s;
+		}
+	}
+	bool operator == (const vectorn& v) const
+	{
+		if (val.size() != v.val.size())
+			return false;
+		bool ret = true;
+		for (int i = 0; i < val.size(); i++)
+		{
+			ret &= (fabs(val[i] - v.val[i]) <= 1e-5);
+			if (!ret) break;
+		}
+		return ret;
+	}
+	bool operator != (const vectorn& v) const
+	{
+		if (val.size() != v.val.size())
+			return true;
+		bool ret = false;
+		for (int i = 0; i < val.size(); i++)
+		{
+			ret |= (fabs(val[i] - v.val[i]) <= 1e-5);
+			if (ret) break;
+		}
+		return ret;
+	}
+	real len() const
+	{
+		real sqred = 0;
+		for (int i = 0; i < val.size(); i++)
+		{
+			sqred += val[i] * val[i];
+		}
+		return sqrt(sqred);
+	}
+	real sqrlen() const
+	{
+		real sqred = 0;
+		for (int i = 0; i < val.size(); i++)
+		{
+			sqred += val[i] * val[i];
+		}
+		return sqred;
+	}
+	void norm()
+	{
+		real r = len();
+		if (r > 0)
+		{
+			(*this) /= r;
+		}
+	}
+	vectorn normcopy() const
+	{
+		real r = len();
+		if (r > 0)
+		{
+			return (*this) / r;
+		}
+		return vectorn::ZERO;
+	}
+	real dot(const vectorn& v) const
+	{
+		ASSERT(val.size() == v.val.size());
+		real sum = 0;
+		for (int i = 0; i < val.size(); i++)
+		{
+			sum += val[i] * v.val[i];
+		}
+		return sum;
+	}
+};
+const vectorn vectorn::ZERO		= vectorn(0);
+const vectorn vectorn::ONE		= vectorn(1);
+const vectorn vectorn::CENTER	= vectorn(0.5);
