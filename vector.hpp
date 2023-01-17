@@ -337,6 +337,12 @@ struct vector3
 		fp.z = v.z * z;
 		return fp;
 	}
+	void operator *= (const vector3& s)
+	{
+		x = s.x * x;
+		y = s.y * y;
+		z = s.z * z;
+	}
 	friend vector3 operator * (real s, const vector3& v)
 	{
 		vector3 fp;
@@ -418,6 +424,17 @@ struct vector3
 		return false;
 	}
 	vector3 normcopy() const
+	{
+		real r = len();
+		if (r > 0)
+		{
+			return vector3(this->x / r,
+				this->y / r,
+				this->z / r);
+		}
+		return vector3::ZERO;
+	}
+	vector3 normlized() const
 	{
 		real r = len();
 		if (r > 0)
@@ -761,7 +778,7 @@ struct vectorn {
 		vectorn fp;
 		for (int i = 0; i < val.size(); i++)
 		{
-			fp[i] = - val[i];
+			fp[i] = -val[i];
 		}
 		return fp;
 	}
@@ -781,7 +798,7 @@ struct vectorn {
 			val[i] *= s;
 		}
 	}
-	friend vectorn operator * (real s,  vectorn& v)
+	friend vectorn operator * (real s, vectorn& v)
 	{
 		vectorn fp;
 		for (int i = 0; i < v.val.size(); i++)
@@ -876,6 +893,7 @@ struct vectorn {
 		return sum;
 	}
 };
-const vectorn vectorn::ZERO		= vectorn(0);
-const vectorn vectorn::ONE		= vectorn(1);
-const vectorn vectorn::CENTER	= vectorn(0.5);
+// **********************************************************************
+const vectorn vectorn::ZERO = vectorn(0);
+const vectorn vectorn::ONE = vectorn(1);
+const vectorn vectorn::CENTER = vectorn(0.5);
