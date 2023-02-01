@@ -25,7 +25,7 @@
 *			W = (U + V*Gu) - (V + U*Gv)
 */
 
-//#define			Parallel_Projection		 // 非正交坐标系下平行投影
+//#define	Parallel_Projection		 // 非正交坐标系下平行投影
 
 // *******************************************************************
 //  |_
@@ -83,6 +83,20 @@ struct coord2
 		rc.o = o + c.o;
 		return rc;
 	}
+	void operator += (const coord2& c) const
+	{
+		*this += c;
+	}
+	coord2 operator + (const vec2& v) const
+	{
+		coord2 rc = (*this);
+		rc.o = o + v;
+		return rc;
+	}
+	void operator += (const vec2& c) const
+	{
+		*this += c;
+	}
 	coord2 operator - (const coord2& c) const
 	{
 		coord2 rc;
@@ -91,6 +105,20 @@ struct coord2
 		rc.norm();
 		rc.o = o - c.o;
 		return rc;
+	}
+	void operator -= (const coord2& c) const
+	{
+		*this -= c;
+	}
+	coord2 operator - (const vec2& v) const
+	{
+		coord2 rc = (*this);
+		rc.o = o - v;
+		return rc;
+	}
+	void operator -= (const vec2& c) const
+	{
+		*this -= c;
 	}
 	// 在坐标系下定义一个向量
 	friend vec2 operator * (crvec2 p, const coord2& c)
@@ -194,6 +222,7 @@ struct coord2
 	}
 };
 const coord2 coord2::ONE = coord2();
+
 // ******************************************************************
 //  |/_
 // C     3d Coordinate System
@@ -247,13 +276,19 @@ struct coord3
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;
 	}
-	void fromvectors(crvec v1, crvec v2)
+	// 移动差
+	void fromvectorsT(crvec v1, crvec v2)
 	{
 		quaternion q;
 		q.fromvectors(v1, v2);
 		ux = q * vec3::UX;
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;
+	}
+	// 旋转差
+	void fromvectorsR(crvec v1, crvec v2)
+	{
+		o = v2 - v1;
 	}
 	void fromaxvecs(crvec ax, crvec v1, crvec v2)
 	{
@@ -270,6 +305,10 @@ struct coord3
 	vec3 VX() const { return ux * s.x; }
 	vec3 VY() const { return uy * s.y; }
 	vec3 VZ() const { return uz * s.z; }
+
+	vec3 X() const { return ux * s.x + vec3::UX * o.x; }
+	vec3 Y() const { return uy * s.y + vec3::UX * o.y; }
+	vec3 Z() const { return uz * s.z + vec3::UX * o.z; }
 
 	// 归一化的正交坐标系
 	coord3 ucoord() const
@@ -311,6 +350,8 @@ struct coord3
 	{
 		return o != c.o || s != c.s || !is_same_dirs(c);
 	}
+	
+	// +/- 运算
 	coord3 operator + (const coord3& c) const
 	{
 		coord3 rc;
@@ -325,6 +366,16 @@ struct coord3
 	{
 		*this = (*this) + c;
 	}
+	coord3 operator + (const vec3& v) const
+	{// C+V 移动
+		coord3 rc = (*this);
+		rc.o = o + v;
+		return rc;
+	}
+	void operator += (const vec3& v) const
+	{
+		*this += v;
+	}
 	coord3 operator - (const coord3& c) const
 	{
 		coord3 rc;
@@ -335,6 +386,17 @@ struct coord3
 		rc.o = o - c.o;
 		return rc;
 	}
+	coord3 operator - (const vec3& v) const
+	{
+		coord3 rc = (*this);
+		rc.o = o - v;
+		return rc;
+	}
+	void operator -= (const vec3& v) const
+	{
+		*this -= v;
+	}
+
 	// 乘法：在坐标系下定义一个向量
 	friend vec3 operator * (crvec p, const coord3& c)
 	{
@@ -345,17 +407,13 @@ struct coord3
 		p = p * c;
 	}
 	coord3 operator * (crvec p) const
-	{
+	{// C*V 缩放乘法
 		coord3 c = *this;
-		c.ux = lerp(vec3::UX, c.VX(), p.x);
-		c.uy = lerp(vec3::UY, c.VY(), p.y);
-		c.uz = lerp(vec3::UZ, c.VZ(), p.z);
-		c.norm();
-		c.o.x *= p.x; c.o.y *= p.y; c.o.z *= p.z;
+		c.s.x *= p.x;c.s.y *= p.y;c.s.z *= p.z;
 		return c;
 	}
 	coord3 operator * (const coord3& c) const
-	{
+	{// Cchild * Cparent * ...
 		coord3 rc;
 		rc.ux = ux.x * c.ux + ux.y * c.uy + ux.z * c.uz;
 		rc.uy = uy.x * c.ux + uy.y * c.uy + uy.z * c.uz;
@@ -381,6 +439,7 @@ struct coord3
 	{
 		*this = (*this) * q;
 	}
+
 	// 除法：向量向坐标系投影 注意：要保证ux,uy,uz是单位向量！
 #ifdef Parallel_Projection
 	// 非正交坐标系下平行投影 Parallel projection
@@ -442,6 +501,21 @@ struct coord3
 	{
 		return (*this).reversed() * c;
 	}
+	// oper(^)
+	// 相空间的乘法运算,Ce^(th*v)
+	// 如C表示某向量A在两点间的旋转，
+	// 融合向量0<v<1,c=C^v; v=0时c=ONE,v=1时c=C
+	coord3 operator ^ (crvec v) const
+	{
+		coord3 c = *this;
+		c.ux = lerp(vec3::UX, c.VX(), v.x);
+		c.uy = lerp(vec3::UY, c.VY(), v.y);
+		c.uz = lerp(vec3::UZ, c.VZ(), v.z);
+		c.norm();
+		return c;
+	}
+	
+	// 归一化
 	void norm(bool bscl = true)
 	{
 #define ISZERO(a) (fabs(a) < 1e-10)
@@ -469,6 +543,7 @@ struct coord3
 		c.uz = vec3(ux.z, uy.z, uz.z);
 		return c;
 	}
+	// 倒置
 	void reverse()
 	{
 		(*this) = ONE / (*this);
@@ -477,6 +552,7 @@ struct coord3
 	{
 		return ONE / (*this);
 	}
+	// 翻转
 	void flipX()
 	{
 		ux = -ux;
