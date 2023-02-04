@@ -559,7 +559,7 @@ struct coord3
 		if (!bscl)
 			s = vec3::ONE;
 	}
-	// 转置
+	// 转置(坐标轴交换）
 	void transpose()
 	{
 		vec3 ux = vec3(ux.x, uy.x, uz.x);
