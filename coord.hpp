@@ -260,7 +260,7 @@ struct ucoord3
 		uy.rot(ang, ax);
 		uz.rot(ang, ax);
 	}
-	vec3 sumvec() const
+	vec3 dir() const
 	{
 		return ux + uy + uz;
 	}
@@ -420,18 +420,29 @@ struct coord3 : ucoord3
 		c.o = vec3::ZERO;
 		return c;
 	}
-	// 位置
-	inline vec3 pos()
-	{
-		return o;
-	}
-	// 方向 X 缩放
+	// 向量坐标系 = 方向 X 缩放
 	inline coord3 vcoord()
 	{
 		coord3 c = *this;
 		c.o = vec3::ZERO;
 		return c;
 	}
+	// 位置
+	inline vec3 pos()
+	{
+		return o;
+	}
+	// 总向量
+	inline vec3 sumvec()
+	{
+		return o + VX() + VY() + VZ();
+	}
+	// 向量
+	vec3 tovec() const
+	{
+		return ux * s.x + uy * s.y + uz * s.z;
+	}
+	// 旋转
 	quaternion toquat() const
 	{
 		coord3 c = ucoord();
@@ -528,6 +539,7 @@ struct coord3 : ucoord3
 	{// C*V 缩放乘法
 		coord3 c = *this;
 		c.s.x *= v.x; c.s.y *= v.y; c.s.z *= v.z;
+		c.o.x *= v.x; c.o.y *= v.y; c.o.z *= v.z;
 		return c;
 	}
 	void operator *= (const vec3& v)
@@ -598,6 +610,7 @@ struct coord3 : ucoord3
 	{// C/V 缩放除法
 		coord3 c = *this;
 		c.s.x /= v.x; c.s.y /= v.y; c.s.z /= v.z;
+		c.o.x /= v.x; c.o.y /= v.y; c.o.z /= v.z;
 		return c;
 	}
 	void operator /= (const vec3& v)
@@ -661,10 +674,6 @@ struct coord3 : ucoord3
 	coord3 reversed() const
 	{
 		return ONE / (*this);
-	}
-	vec3 sumvec() const
-	{
-		return ux * s.x + uy * s.y + uz * s.z;
 	}
 	real dot(crvec v) const
 	{

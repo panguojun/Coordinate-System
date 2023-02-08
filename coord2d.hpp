@@ -225,10 +225,11 @@ struct coord2 : ucoord2
 	{
 		return c.ux * (c.s.x * p.x) + c.uy * (c.s.y * p.y) + c.o;
 	}
-	coord2 operator * (crvec2 p) const
+	coord2 operator * (crvec2 v) const
 	{// C*V 缩放乘法
 		coord2 c = *this;
-		c.s.x *= p.x; c.s.y *= p.y;
+		c.s.x *= v.x; c.s.y *= v.y;
+		c.o.x *= v.x; c.o.y *= v.y;
 		return c;
 	}
 	coord2 operator * (const coord2& c) const
@@ -276,6 +277,13 @@ struct coord2 : ucoord2
 #endif
 		rc.o -= c.o;
 		return rc;
+	}
+	coord2 operator / (crvec2 v) const
+	{// C*V 缩放除法
+		coord2 c = *this;
+		c.s.x /= v.x; c.s.y /= v.y;
+		c.o.x /= v.x; c.o.y /= v.y;
+		return c;
 	}
 	// oper(//) = C1^-1 * C2
 	coord2 operator % (const coord2& c) const
