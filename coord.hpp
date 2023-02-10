@@ -718,12 +718,6 @@ struct coord3 : ucoord3
 			vz.cross(v)
 		);
 	}
-	// 梯度坐标系 = 梯度 X 切空间
-	// 相当于一阶坐标系的导数
-	static coord3 gradcoord(const coord3& c1, const coord3& c2)
-	{
-		return c1.reversed() * c2;
-	}
 	void dump(const std::string& name = "") const
 	{
 		PRINT("----" << name << "---");

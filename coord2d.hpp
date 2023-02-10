@@ -308,11 +308,6 @@ struct coord2 : ucoord2
 	{
 		return ONE / (*this);
 	}
-	// ÌÝ¶È×ø±êÏµ
-	static coord2 gradcoord(const coord2& c1, const coord2& c2)
-	{
-		return c1.reversed() * c2;
-	}
 	real dot(crvec2 v) const
 	{
 		return v.dot(ux) * s.x + v.dot(uy) * s.y;
