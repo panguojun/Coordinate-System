@@ -45,15 +45,15 @@ struct ucoord3
 	{
 		ux = c.ux; uy = c.uy; uz = c.uz;
 	}
-	ucoord3(crvec _ux, crvec _uy, crvec _uz)
+	ucoord3(const vec3& _ux, const vec3& _uy, const vec3& _uz)
 	{
 		ux = _ux; uy = _uy; uz = _uz;
 	}
-	ucoord3(crvec _ux, crvec _uy)
+	ucoord3(const vec3& _ux, const vec3& _uy)
 	{
 		ux = _ux; uy = _uy; uz = ux.cross(uy);
 	}
-	ucoord3(real ang, crvec ax)
+	ucoord3(real ang, const vec3& ax)
 	{
 		ux.rot(ang, ax);
 		uy.rot(ang, ax);
@@ -171,7 +171,7 @@ struct ucoord3
 #endif
 		return vec3(v.dot(c.ux), v.dot(c.uy), v.dot(c.uz));
 	}
-	friend void operator /= (vec p, const ucoord3& c)
+	friend void operator /= (vec3& p, const ucoord3& c)
 	{
 		p = p / c;
 	}
@@ -674,7 +674,7 @@ struct coord3 : ucoord3
 	{
 		return ONE / (*this);
 	}
-	real dot(crvec v) const
+	real dot(const vec3& v) const
 	{
 		return v.dot(ux) * s.x + v.dot(uy) * s.y + v.dot(uz) * s.z;
 	}
