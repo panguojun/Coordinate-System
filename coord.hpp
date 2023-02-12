@@ -492,7 +492,7 @@ struct coord3 : ucoord3
 	{
 		return p + c.o;
 	}
-	friend void operator += (rvec p, const coord3& c)
+	friend void operator += (vec3& p, const coord3& c)
 	{
 		p = p + c;
 	}
@@ -500,7 +500,7 @@ struct coord3 : ucoord3
 	{
 		return p - c.o;
 	}
-	friend void operator -= (rvec p, const coord3& c)
+	friend void operator -= (vec3& p, const coord3& c)
 	{
 		p = p - c;
 	}
@@ -530,7 +530,7 @@ struct coord3 : ucoord3
 	{
 		return c.ux * (c.s.x * p.x) + c.uy * (c.s.y * p.y) + c.uz * (c.s.z * p.z) + c.o;
 	}
-	friend void operator *= (rvec p, const coord3& c)
+	friend void operator *= (vec3& p, const coord3& c)
 	{
 		p = p * c;
 	}
