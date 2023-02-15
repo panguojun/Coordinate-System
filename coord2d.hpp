@@ -1,5 +1,5 @@
 /*********************************************************************
-*				坐标系
+*							坐标系
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 * 	坐标系类是我单独封装，用于简化坐标变换，衍生出许多算法，能解决一些
 * 	坐标系变换相关的问题。
@@ -238,7 +238,7 @@ struct coord2 : ucoord2
 		rc.ux = ux.x * c.ux + ux.y * c.uy;
 		rc.uy = uy.x * c.ux + uy.y * c.uy;
 		rc.s = s * c.s;
-		rc.o = o + c.ux * o.x + c.uy * o.y;
+		rc.o = c.o + o.x * c.s.x * c.ux + o.y * c.s.y * c.uy;
 		return rc;
 	}
 #ifdef Parallel_Projection
@@ -275,7 +275,9 @@ struct coord2 : ucoord2
 		rc.ux = vec2(ux.dot(c.ux) / c.s.x, ux.dot(c.uy) / c.s.y);
 		rc.uy = vec2(uy.dot(c.ux) / c.s.x, uy.dot(c.uy) / c.s.y);
 #endif
-		rc.o -= c.o;
+		rc.s = s / c.s;
+		rc.o = o - c.o;
+		rc.o = vec2(rc.o.dot(c.ux) / c.s.x, rc.o.dot(c.uy) / c.s.y);
 		return rc;
 	}
 	coord2 operator / (crvec2 v) const

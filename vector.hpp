@@ -101,6 +101,13 @@ struct vector2 {
 		fp.y = y / s;
 		return fp;
 	}
+	vector2 operator / (const vector2& b) const
+	{
+		vector2 fp;
+		fp.x = x / b.x;
+		fp.y = y / b.y;
+		return fp;
+	}
 	void operator /= (real s)
 	{
 		x = x / s;
@@ -370,6 +377,20 @@ struct vector3
 		x = x / s;
 		y = y / s;
 		z = z / s;
+	}
+	vector3 operator / (const vector3& v) const
+	{
+		vector3 fp;
+		fp.x = x / v.x;
+		fp.y = y / v.y;
+		fp.z = z / v.z;
+		return fp;
+	}
+	void operator /= (const vector3& s)
+	{
+		x = x / s.x;
+		y = y / s.y;
+		z = z / s.z;
 	}
 	bool operator == (const vector3& rv) const
 	{
