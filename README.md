@@ -20,11 +20,11 @@ struct coord
 ```
 vec3 operator * (crvec p)
 {
-    return ux * v.x + uy * v.y + uz * v.z + o;
+    return ux * v.x + uy * v.y + uz * v.z;
 }
 friend vec3 operator * (crvec p, const coord& c)
 {
-    return c.ux * p.x + c.uy * p.y + c.uz * p.z + c.o;
+    return c.ux * p.x + c.uy * p.y + c.uz * p.z;
 }
 coord operator * (coord& c)
 {
@@ -32,7 +32,6 @@ coord operator * (coord& c)
     rc.ux = ux.x * c.ux + uy.x * c.uy + uz.x * c.uz;
     rc.uy = ux.y * c.ux + uy.y * c.uy + uz.y * c.uz;
     rc.uz = ux.z * c.ux + uy.z * c.uy + uz.z * c.uz;
-    rc.o = o + ux * c.o.x + uy * c.o.y + uz * c.o.z;
     return rc;
 }
 ```
@@ -46,10 +45,9 @@ friend vec3 operator / (crvec p, const coord& c)
 coord operator / (const coord& c)
 {
 	coord_t rc;
-	rc.ux = vec3(ux.dot(c.ux) / c.s.x, ux.dot(c.uy) / c.s.y, ux.dot(c.uz) / c.s.z);
-	rc.uy = vec3(uy.dot(c.ux) / c.s.x, uy.dot(c.uy) / c.s.y, uy.dot(c.uz) / c.s.z);
-	rc.uz = vec3(uz.dot(c.ux) / c.s.x, uz.dot(c.uy) / c.s.y, uz.dot(c.uz) / c.s.z);
-	rc.o -= c.o;
+	rc.ux = vec3(ux.dot(c.ux), ux.dot(c.uy), ux.dot(c.uz));
+	rc.uy = vec3(uy.dot(c.ux), uy.dot(c.uy), uy.dot(c.uz));
+	rc.uz = vec3(uz.dot(c.ux), uz.dot(c.uy), uz.dot(c.uz));
 	return rc;
 }
 ```
@@ -57,14 +55,14 @@ coord operator / (const coord& c)
 ```
 real dot(crvec v)
 {
-	return v.dot(ux) * s.x + v.dot(uy) * s.y + v.dot(uz) * s.z;
+	return v.dot(ux) + v.dot(uy) + v.dot(uz);
 }
 coord3 cross(const coord3& c)
 {
 	return coord3(
-		vec3::UX * (uy.dot(c.UZ()) - uz.dot(c.UY())),
-		vec3::UY * (uz.dot(c.UX()) - ux.dot(c.UZ())),
-		vec3::UZ * (ux.dot(c.UY()) - uy.dot(c.UX()))
+		vec3::UX * (uy.dot(c.uz) - uz.dot(c.uy)),
+		vec3::UY * (uz.dot(c.ux) - ux.dot(c.uz)),
+		vec3::UZ * (ux.dot(c.uy) - uy.dot(c.ux))
 	);
 }
 ```
@@ -80,9 +78,9 @@ void polecoord(coord& c1, real x, real y)
 ````
 ### Kinematics settings
 ````
-real w = 2.0f; // angular velocity
-real dt = 0.001; // deta time
-real dth = dt * w; // deta theta
+real w = 2.0f; 		// angular velocity
+real dt = 0.001; 	// deta time
+real dth = dt * w; 	// deta theta
 ````
 
 ### Observe a coordinate system C1 at point (r, ang) in global coordinates
@@ -151,7 +149,8 @@ auto DXYZ_Fai = [Fai](crvec p)->vec3 {
 }
 ```
 ## Sample 3: Curvature
-### Curvature, I'm not quite sure if this curvature algorithm is correct, if so it could greatly simplify tensor calculations.
+Ruv = Gu*Gv - Gv*Gu * Gu^Wu * Gv^Wv
+W = (U + V*Gu) - (V + U*Gv)
 ```
 coord3 curvature()
 {
