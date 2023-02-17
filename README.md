@@ -144,8 +144,7 @@ auto DXYZ_Fai = [Fai](crvec p)->vec3 {
 }
 ```
 ## Sample 3: Curvature
-Ruv = Gu*Gv - Gv*Gu * Gu^Wu * Gv^Wv
-W = (U + V*Gu) - (V + U*Gv)
+Ruv = Gu*Gv - Gv*Gu * Gu^Wu * Gv^Wv;  W = (U + V*Gu) - (V + U*Gv)
 ```
 coord3 curvature()
 {
