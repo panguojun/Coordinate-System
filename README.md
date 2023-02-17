@@ -18,10 +18,6 @@ struct coord
 *Note that the position, rotation and scaling of the coordinate system are all defined under its parent coordinate system.*
 ## Multiplication operation: define a vector in a coordinate system.
 ```
-vec3 operator * (crvec p)
-{
-    return ux * v.x + uy * v.y + uz * v.z;
-}
 friend vec3 operator * (crvec p, const coord& c)
 {
     return c.ux * p.x + c.uy * p.y + c.uz * p.z;
@@ -37,9 +33,8 @@ coord operator * (coord& c)
 ```
 ## Division operation: measure this vector in a coordinate system.
 ```
-friend vec3 operator / (crvec p, const coord& c)
+friend vec3 operator / (crvec v, const coord& c)
 {
-	vec3 v = p - c.o;
 	return vec3(v.dot(c.ux), v.dot(c.uy), v.dot(c.uz));
 }
 coord operator / (const coord& c)
