@@ -74,6 +74,10 @@ struct  quaternion
 	{
 		return q * v;
 	}
+	void friend  operator*= (vector3& v, const quaternion& q)
+	{
+		v = q * v;
+	}
 	quaternion operator* (const quaternion& rkQ) const
 	{
 		// NOTE:  Multiplication is not generally commutative, so in most
@@ -86,6 +90,10 @@ struct  quaternion
 			w * rkQ.y + y * rkQ.w + z * rkQ.x - x * rkQ.z,
 			w * rkQ.z + z * rkQ.w + x * rkQ.y - y * rkQ.x
 		);
+	}
+	void operator*= (const quaternion& rkQ)
+	{
+		(*this) = (*this) * rkQ;
 	}
 	quaternion operator* (real fScalar) const
 	{
@@ -102,13 +110,20 @@ struct  quaternion
 	{
 		return quaternion(w / fScalar, x / fScalar, y / fScalar, z / fScalar);
 	}
+	void operator /= (real fScalar)
+	{
+		w /= fScalar;
+		x /= fScalar;
+		y /= fScalar;
+		z /= fScalar;
+	}
 	quaternion operator / (const quaternion& q) const
 	{
-		return (*this) * q.invertcopy();
+		return (*this) * q.conjcopy();
 	}
-	vector3 friend operator/ (const vector3& v, const quaternion& q)
+	vector3 friend operator / (const vector3& v, const quaternion& q)
 	{
-		return q.invertcopy() * v;
+		return q.conjcopy() * v;
 	}
 	//-----------------------------------------------------------------------
 	bool operator == (const quaternion& rkQ) const
@@ -124,6 +139,19 @@ struct  quaternion
 	real length() const
 	{
 		return sqrt(w * w + x * x + y * y + z * z);
+	}
+	//-----------------------------------------------------------------------
+	vec3 xyz() const
+	{
+		return vec3(x, y, z);
+	}
+	vec3 axis() const
+	{
+		return vec3(x, y, z).normcopy();
+	}
+	real angle() const
+	{
+		return acos(w) * 2;
 	}
 	//-----------------------------------------------------------------------
 	void normalize(void)
@@ -149,36 +177,15 @@ struct  quaternion
 		this->w = w;
 		this->x = -x; this->y = -y; this->z = -z;
 	}
-	quaternion conjcopy()
+	quaternion conjcopy() const
 	{
-		quaternion c;
-		c.w = w;
-		c.x = -x; c.y = -y; c.z = -z;
-		return c;
+		quaternion q;
+		q.w = w;
+		q.x = -x; q.y = -y; q.z = -z;
+		return q;
 	}
 	//-----------------------------------------------------------------------
-	// inverse = invert
-	void invert()
-	{
-		real r = length();
-		if (r != 0)
-		{
-			quaternion q = (*this) / r;
-			q.conj();
-			(*this) = q / r;
-		}
-	}
-	quaternion invertcopy() const
-	{
-		real r = length();
-		if (r == 0)
-			return ONE;
-		quaternion q = (*this) / r;
-		q.conj();
-		return q / r;
-	}
-	//-----------------------------------------------------------------------
-	// 指数四元数就是规范变换！
+	// 指数上运算
 	quaternion exp() const
 	{
 		real r = length();
@@ -197,7 +204,6 @@ struct  quaternion
 		vec3 qv = n * (r * sin(th));
 		return quaternion(r * cos(th), qv.x, qv.y, qv.z);
 	}
-	//-----------------------------------------------------------------------
 	quaternion operator ^ (int n) const
 	{
 		quaternion ret = *this;
@@ -207,6 +213,10 @@ struct  quaternion
 		}
 		return ret;
 	}
+	quaternion operator ^ (real t)
+	{
+		return slerp(t, quaternion::ONE, *this, false);
+	}
 	//-----------------------------------------------------------------------
 	// v1, v2 是单位向量
 	void fromvectors(crvec v1, crvec v2)
@@ -214,8 +224,7 @@ struct  quaternion
 		fromangleaxis(acos(v1.dot(v2)), v1.cross(v2).normlized());
 	}
 	//-----------------------------------------------------------------------
-	void fromangleaxis(real rfAngle,
-		const vector3& rkAxis)
+	void fromangleaxis(real rfAngle, const vector3& rkAxis)
 	{
 		// assert:  axis[] is unit length
 		//
@@ -243,15 +252,6 @@ struct  quaternion
 		x = t3 * t4 * t0 - t2 * t5 * t1;
 		y = t2 * t5 * t0 + t3 * t4 * t1;
 		z = t2 * t4 * t1 - t3 * t5 * t0;
-	}
-	//-----------------------------------------------------------------------
-	vec3 xyz() const
-	{
-		return vec3(x, y, z);
-	}
-	vec3 axis() const
-	{
-		return vec3(x, y, z).normcopy();
 	}
 	//-----------------------------------------------------------------------
 	vec3 toeuler() const
@@ -283,7 +283,21 @@ struct  quaternion
 		return v;
 	}
 	//-----------------------------------------------------------------------
-	quaternion slerp(const quaternion& qa, const quaternion& qb, double t) {
+	// 求导运算
+	quaternion derivative_angle(const quaternion& a, const quaternion& b) const
+	{
+		return quaternion(1, (b / a).axis()); //角度为单位1
+	}
+	quaternion diff_angle(real angle) const
+	{
+		return quaternion(angle, axis());
+	}
+	quaternion diff_angle(const quaternion& deri, real angle) const
+	{
+		return quaternion(angle, deri.axis());
+	}
+	//-----------------------------------------------------------------------
+	static quaternion slerp(const quaternion& qa, const quaternion& qb, double t) {
 		// quaternion to return
 		quaternion qm;
 		// Calculate angle between them.
@@ -315,7 +329,7 @@ struct  quaternion
 		return qm;
 	}
 	//-----------------------------------------------------------------------
-	quaternion slerp(real fT, const quaternion& rkP,
+	static quaternion slerp(real fT, const quaternion& rkP,
 		const quaternion& rkQ, bool shortestPath)
 	{
 		const real msEpsilon = 1e-03;

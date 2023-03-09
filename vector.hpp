@@ -4,6 +4,7 @@
 *					向量跟空间结构有关系，
 *					如果在时空中建议使用四元数
 */
+#pragma once
 // **********************************************************************
 // 2D
 // **********************************************************************
@@ -668,10 +669,6 @@ struct vector4
 			z /= r;
 			w /= r;
 		}
-		else
-		{
-			ERRORMSG("r == 0");
-		}
 		return r;
 	}
 	vector4 normcopy()
@@ -685,10 +682,6 @@ struct vector4
 				this->z / r,
 				this->w / r
 			);
-		}
-		else
-		{
-			ERRORMSG("r == 0");
 		}
 		return vector4(0, 0, 0, 0);
 	}
@@ -905,7 +898,7 @@ struct vectorn {
 	}
 	real dot(const vectorn& v) const
 	{
-		ASSERT(val.size() == v.val.size());
+		//ASSERT(val.size() == v.val.size());
 		real sum = 0;
 		for (int i = 0; i < val.size(); i++)
 		{
