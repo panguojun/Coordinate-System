@@ -140,7 +140,6 @@ struct ucoord3
 	{
 		*this = (*this) * q;
 	}
-
 	// 除法：向量向坐标系投影
 #ifdef Parallel_Projection
 	// 非正交坐标系下平行投影 Parallel projection
@@ -372,6 +371,10 @@ struct coord3 : ucoord3
 		s = c.s;
 		o = c.o;
 	}
+	coord3(const ucoord3& c)
+	{
+		ux = c.ux; uy = c.uy; uz = c.uz;
+	}
 	coord3(const vec3& _ux, const vec3& _uy, const vec3& _uz)
 	{
 		ux = _ux; uy = _uy; uz = _uz;
@@ -557,9 +560,14 @@ struct coord3 : ucoord3
 		*this = (*this) * v;
 	}
 	coord3 operator * (real s) const
-	{// C*S 缩放乘法
+	{
 		coord3 c = *this;
-		c.s.x *= s; c.s.y *= s; c.s.z *= s;
+		//{// C*S 缩放乘法
+		//	c.s.x *= s; c.s.y *= s; c.s.z *= s;
+		//}
+		{// C*S 移动乘法
+			c.o.x *= s; c.o.y *= s; c.o.z *= s;
+		}
 		return c;
 	}
 	void operator *= (real s)
