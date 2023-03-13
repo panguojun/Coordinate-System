@@ -283,20 +283,6 @@ struct  quaternion
 		return v;
 	}
 	//-----------------------------------------------------------------------
-	// 求导运算
-	quaternion derivative_angle(const quaternion& a, const quaternion& b) const
-	{
-		return quaternion(1, (b / a).axis()); //角度为单位1
-	}
-	quaternion diff_angle(real angle) const
-	{
-		return quaternion(angle, axis());
-	}
-	quaternion diff_angle(const quaternion& deri, real angle) const
-	{
-		return quaternion(angle, deri.axis());
-	}
-	//-----------------------------------------------------------------------
 	static quaternion slerp(const quaternion& qa, const quaternion& qb, double t) {
 		// quaternion to return
 		quaternion qm;

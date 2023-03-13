@@ -128,6 +128,10 @@ struct ucoord3
 	{
 		*this = (*this) * c;
 	}
+	friend quaternion operator * (const quaternion& q, const ucoord3& c)
+	{
+		return q * c.toquat();
+	}
 	ucoord3 operator * (const quaternion& q) const
 	{
 		ucoord3 rc;
@@ -189,6 +193,10 @@ struct ucoord3
 		rc.uz = vec3(uz.dot(c.ux), uz.dot(c.uy), uz.dot(c.uz));
 #endif
 		return rc;
+	}
+	friend quaternion operator / (const quaternion& q, const ucoord3& c)
+	{
+		return q * c.toquat().conjcopy();
 	}
 	void operator /= (const ucoord3& c)
 	{
