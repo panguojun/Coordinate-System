@@ -1,9 +1,9 @@
 # Coordinate System
 
 ### Introduction
-Coordinate system transformations are typically achieved using matrices. However, matrices are not specifically designed for coordinate system changes, and their mathematical nature can lead to ambiguity. *
-*Tensors, while more tailored to coordinate system transformations, are often too abstract and challenging for both human comprehension and computer quantification. Therefore, there is a need for a concept that is specifically designed for coordinate system transformations. *
-*This article presents a straightforward and easily understandable coordinate system object and its corresponding algorithm.*
+Coordinate system transformations are typically achieved using matrices. However, matrices are not specifically designed for coordinate system changes, and their mathematical nature can lead to ambiguity. 
+Tensors, while more tailored to coordinate system transformations, are often too abstract and challenging for both human comprehension and computer quantification. Therefore, there is a need for a concept that is specifically designed for coordinate system transformations. 
+This article presents a straightforward and easily understandable coordinate system object and its corresponding algorithm.
 ## Definition
 A coordinate system in three-dimensional space consists of an origin plus three orientation axes and three scaling components. Corresponding to the three transformations of displacement, rotation, and scaling, respectively.
 We define a structure:
