@@ -144,8 +144,8 @@ auto DXYZ_Fai = [Fai](crvec p)->vec3 {
 }
 ```
 ## Sample 3: Curvature
-Can the Riemann curvature tensor be expressed in this form:
-Ruv = GuGv - GvGu * Gu^wu * Gv^wv
+Can the Riemann curvature tensor be expressed in this form:  
+Ruv = GuGv - GvGu * Gu^wu * Gv^wv  
 W = [U, V], wu = Wu / U, wv = Wv / V
 ```
 coord3 curvature()
