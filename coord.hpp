@@ -22,7 +22,8 @@ corresponding to coordinate systems C1 and C2, respectively, then:
   	V2 = V1 * G12
 In the curved coordinate system, the parallel projections of the x and y axes of the intrinsic coordinate system 
 onto the u and v curves respectively correspond to Gu and Gv in two directions.
-Calculate the difference between the two paths from (u1, v1) to (u2, v2), and add a correction term to obtain the curvature formula:
+Calculate the difference between the two paths from (u1, v1) to (u2, v2), and add a correction term to obtain 
+the curvature formula:
   	Ruv = Gu*Gv - Gv*Gu * Gu^wu * Gv^wv
   	W = [U, V], wu = Wu / U, wv = Wv / V
 */
