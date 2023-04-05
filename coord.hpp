@@ -24,7 +24,7 @@ In the curved coordinate system, the parallel projections of the x and y axes of
 onto the u and v curves respectively correspond to Gu and Gv in two directions.
 Calculate the difference between the two paths from (u1, v1) to (u2, v2), and add a correction term to obtain 
 the curvature formula:
-  	Ruv = Gu*Gv - Gv*Gu * Gu^wu * Gv^wv
+  	Ruv = Gu*Gv - Gv*Gu - Gu^wu * Gv^wv
   	W = [U, V], wu = Wu / U, wv = Wv / V
 */
 
