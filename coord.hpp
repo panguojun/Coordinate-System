@@ -23,7 +23,7 @@
 *	方向上对应Gu,Gv, 从(u1,v1)到(u2,v2) 计算两个路径的差别再加上修正项可
 *	得曲率公式为：
 *			Ruv = Gu*Gv - Gv*Gu * Gu^Wu * Gv^Wv
-*			W = (U + V*Gu) - (V + U*Gv)
+*			W = [U,V]
 */
 
 //#define	Parallel_Projection		 // 非正交坐标系下平行投影
