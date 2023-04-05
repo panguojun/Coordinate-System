@@ -1,36 +1,37 @@
-/*********************************************************************
-*				坐标系
-*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
-* 	坐标系类是我单独封装，用于简化坐标变换，衍生出许多算法，能解决一些
-* 	坐标系变换相关的问题。
-* 	坐标系的运算跟李群很相似。
-*	坐标系由三个部分组成：C = M(位置） + S（缩放） * R（旋转）
-*  *  *  *  *  *  *  *  *  *  详解  *  *  *  *  *  *  *  *  *  *  *  *
-*	坐标系变换分为投影（*), 平移（^), 还原（*）三个步骤，以平移最精深：
-*	坐标系本体符号 C，坐标系之间的变换可以写成G = C1//C2,GRAD梯度的意思
-*			oper(/)  = C1 * C2^-1
-*			oper(//) = C1^-1 * C2, oper(//) = gradcoord()
-*	坐标系的李括号: [C1,C2] = C1*C2 - C2*C1
-*	具体来说：
-*	定义一个内禀坐标系(假设它是平直空间，向量可以随意移动而不变)下V,在弯
-*	曲坐标系下观察V，不同点上V是不同的，故而坐标系跟位置有关，取相邻两点
-*	（1),(2)点处有向量V1,V2，对应坐标系C1,C2，那么：
-*			V = V1 * C1 = V2 * C2 =>
-*			V2 = V1 * C1 / C2, 令 G12 = C1 / C2 =>
-*			V2 = V1 * G12
-*
-*	在弯曲坐标系下内禀坐标系x,y轴的平行线投影得到的u,v曲线上G12分别在两个
-*	方向上对应Gu,Gv, 从(u1,v1)到(u2,v2) 计算两个路径的差别再加上修正项可
-*	得曲率公式为：
-*			Ruv = Gu*Gv - Gv*Gu * Gu^wu * Gv^wv
-*			W = [U,V], wu = Wu / U, wv = Wv / V
+/**********************************************************************************************************************
+  			Coordinate System
+The Coordinate System class is encapsulated for simplifying coordinate transformation,
+deriving many algorithms, and solving some problems related to coordinate transformation.
+The operation of the coordinate system is similar to Lie group.
+The coordinate system consists of three parts: C = M (position) + S (scaling) * R (rotation)
+Detailed Explanation * * * * * * * * * * * *
+Coordinate system transformation consists of three steps: projection (), translation (^), 
+and restoration (), with translation being the most profound.
+The original coordinate system is denoted as C, and the transformation between coordinate systems 
+can be written as G = C1 // C2, meaning gradient.
+  	oper (/) = C1 * C2^-1
+  	oper (//) = C1^-1 * C2, oper (//) = gradcoord()
+The Lie bracket of the coordinate system: [C1, C2] = C1C2 - C2C1
+Specifically:
+Define an intrinsic coordinate system V (assuming it is a flat space, and the vector can move freely 
+without changing) under observation in a curved coordinate system, different points on V are different, 
+so the coordinate system is related to position. Take two adjacent points (1) and (2) with vectors V1 and V2, 
+corresponding to coordinate systems C1 and C2, respectively, then:
+  	V = V1 * C1 = V2 * C2 =>
+  	V2 = V1 * C1 / C2, let G12 = C1 / C2 =>
+  	V2 = V1 * G12
+In the curved coordinate system, the parallel projections of the x and y axes of the intrinsic coordinate system 
+onto the u and v curves respectively correspond to Gu and Gv in two directions.
+Calculate the difference between the two paths from (u1, v1) to (u2, v2), and add a correction term to obtain the curvature formula:
+  	Ruv = Gu*Gv - Gv*Gu * Gu^wu * Gv^wv
+  	W = [U, V], wu = Wu / U, wv = Wv / V
 */
 
 //#define	Parallel_Projection		 // 非正交坐标系下平行投影
-// ******************************************************************
+// *******************************************************************************************************************
 //  |/_
 // UC     3d Rotation Coordinate System
-// ******************************************************************
+// *******************************************************************************************************************
 struct ucoord3
 {
 	static const ucoord3 ZERO;
