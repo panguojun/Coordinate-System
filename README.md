@@ -167,8 +167,8 @@ coord3 curvature()
 	coord_at(c12, q12);
 	vec3 p12= q12 * c12;
 
-	coord3 grad1 = c21 / c11; grad1.norm(false);
-	coord3 grad2 = c12 / c11; grad2.norm(false);
+	coord3 grad1 = c21 / c11 - C11;
+	coord3 grad2 = c12 / c11 - C11;
 
 	vec3 v(1,1,0);
 	vec3 deta = v * grad1 * grad2 - v * grad2 * grad1;
