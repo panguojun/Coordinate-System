@@ -1,32 +1,32 @@
 /*********************************************************************
-*							åæ ‡ç³»
+*						×ø±êÏµ
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
-* 	åæ ‡ç³»ç±»æ˜¯æˆ‘å•ç‹¬å°è£…ï¼Œç”¨äºç®€åŒ–åæ ‡å˜æ¢ï¼Œè¡ç”Ÿå‡ºè®¸å¤šç®—æ³•ï¼Œèƒ½è§£å†³ä¸€äº›
-* 	åæ ‡ç³»å˜æ¢ç›¸å…³çš„é—®é¢˜ã€‚
-* 	åæ ‡ç³»çš„è¿ç®—è·Ÿæç¾¤å¾ˆç›¸ä¼¼ã€‚
-*	åæ ‡ç³»ç”±ä¸‰ä¸ªéƒ¨åˆ†ç»„æˆï¼šC = M(ä½ç½®ï¼‰ + Sï¼ˆç¼©æ”¾ï¼‰ * Rï¼ˆæ—‹è½¬ï¼‰
-*  *  *  *  *  *  *  *  *  *  è¯¦è§£  *  *  *  *  *  *  *  *  *  *  *  *
-*	åæ ‡ç³»å˜æ¢åˆ†ä¸ºæŠ•å½±ï¼ˆ*), å¹³ç§»ï¼ˆ^), è¿˜åŸï¼ˆ*ï¼‰ä¸‰ä¸ªæ­¥éª¤ï¼Œä»¥å¹³ç§»æœ€ç²¾æ·±ï¼š
-*	åæ ‡ç³»æœ¬ä½“ç¬¦å· Cï¼Œåæ ‡ç³»ä¹‹é—´çš„å˜æ¢å¯ä»¥å†™æˆG = C1//C2,GRADæ¢¯åº¦çš„æ„æ€
+* 	×ø±êÏµÀàÊÇÎÒµ¥¶À·â×°£¬ÓÃÓÚ¼ò»¯×ø±ê±ä»»£¬ÑÜÉú³öĞí¶àËã·¨£¬ÄÜ½â¾öÒ»Ğ©
+* 	×ø±êÏµ±ä»»Ïà¹ØµÄÎÊÌâ¡£
+* 	×ø±êÏµµÄÔËËã¸úÀîÈººÜÏàËÆ¡£
+*	×ø±êÏµÓÉÈı¸ö²¿·Ö×é³É£ºC = M(Î»ÖÃ£© + S£¨Ëõ·Å£© * R£¨Ğı×ª£©
+*
+*  *  *  *  *  *  *  *  *  *  Ïê½â  *  *  *  *  *  *  *  *  *  *  *  *
+*	×ø±êÏµ±ä»»·ÖÎªÍ¶Ó°£¨*), Æ½ÒÆ£¨^), »¹Ô­£¨*£©Èı¸ö²½Öè£¬ÒÔÆ½ÒÆ×î¾«Éî£º
+*	×ø±êÏµ±¾Ìå·ûºÅ C£¬×ø±êÏµÖ®¼äµÄ±ä»»¿ÉÒÔĞ´³ÉG = C1//C2,GRADÌİ¶ÈµÄÒâË¼
 *			oper(/)  = C1 * C2^-1
-*			oper(//) = C1^-1 * C2, oper(//) = gradcoord()
-*	åæ ‡ç³»çš„ææ‹¬å·: [C1,C2] = C1*C2 - C2*C1
-*	å…·ä½“æ¥è¯´ï¼š
-*	å®šä¹‰ä¸€ä¸ªå†…ç¦€åæ ‡ç³»(å‡è®¾å®ƒæ˜¯å¹³ç›´ç©ºé—´ï¼Œå‘é‡å¯ä»¥éšæ„ç§»åŠ¨è€Œä¸å˜)ä¸‹V,åœ¨å¼¯
-*	æ›²åæ ‡ç³»ä¸‹è§‚å¯ŸVï¼Œä¸åŒç‚¹ä¸ŠVæ˜¯ä¸åŒçš„ï¼Œæ•…è€Œåæ ‡ç³»è·Ÿä½ç½®æœ‰å…³ï¼Œå–ç›¸é‚»ä¸¤ç‚¹
-*	ï¼ˆ1),(2)ç‚¹å¤„æœ‰å‘é‡V1,V2ï¼Œå¯¹åº”åæ ‡ç³»C1,C2ï¼Œé‚£ä¹ˆï¼š
+*			oper(//) = C1^-1 * C2, oper(//) = grad()
+*	¾ßÌåÀ´Ëµ£º
+*	¶¨ÒåÒ»¸öÄÚÙ÷×ø±êÏµ(¼ÙÉèËüÊÇÆ½Ö±¿Õ¼ä£¬ÏòÁ¿¿ÉÒÔËæÒâÒÆ¶¯¶ø²»±ä)ÏÂV,ÔÚÍä
+*	Çú×ø±êÏµÏÂ¹Û²ìV£¬²»Í¬µãÉÏVÊÇ²»Í¬µÄ£¬¹Ê¶ø×ø±êÏµ¸úÎ»ÖÃÓĞ¹Ø£¬È¡ÏàÁÚÁ½µã
+*	£¨1),(2)µã´¦ÓĞÏòÁ¿V1,V2£¬¶ÔÓ¦×ø±êÏµC1,C2£¬ÄÇÃ´£º
 *			V = V1 * C1 = V2 * C2 =>
-*			V2 = V1 * C1 / C2, ä»¤ G12 = C1 / C2 =>
+*			V2 = V1 * C1 / C2, Áî G12 = C1 / C2 =>
 *			V2 = V1 * G12
 *
-*	åœ¨å¼¯æ›²åæ ‡ç³»ä¸‹å†…ç¦€åæ ‡ç³»x,yè½´çš„å¹³è¡Œçº¿æŠ•å½±å¾—åˆ°çš„u,væ›²çº¿ä¸ŠG12åˆ†åˆ«åœ¨ä¸¤ä¸ª
-*	æ–¹å‘ä¸Šå¯¹åº”Gu,Gv, ä»(u1,v1)åˆ°(u2,v2) è®¡ç®—ä¸¤ä¸ªè·¯å¾„çš„å·®åˆ«å†åŠ ä¸Šä¿®æ­£é¡¹å¯
-*	å¾—æ›²ç‡å…¬å¼ä¸ºï¼š
-*			Ruv = Gu * Gv - Gv * Gu - Gw
-  			W = [U, V]
+*	¿ÉÒÔÊ¹ÓÃ×ø±êÏµ¼ÆËã¿Õ¼äÇúÂÊ£¬ÔÚu,v×ø±êÏµÏÂÀèÂüÇúÂÊÕÅÁ¿Îª£º
+*			Ruv = Gu*Gv - Gv*Gu + Gw
+*			ÆäÖĞ£º	Gu = UG - ONE
+*					UG = C2 / C1;
+*					ÁªÂçÏòÁ¿£ºW = [U, V](ÀîÀ¨ºÅÔËËã)
 */
 
-//#define	Parallel_Projection		 // éæ­£äº¤åæ ‡ç³»ä¸‹å¹³è¡ŒæŠ•å½±
+//#define	Parallel_Projection		 // ·ÇÕı½»×ø±êÏµÏÂÆ½ĞĞÍ¶Ó°
 // *******************************************************************
 //  |_
 // UC     2d Rotation Coordinate System
@@ -36,7 +36,7 @@ struct ucoord2
 	static const ucoord2 ZERO;
 	static const ucoord2 ONE;
 
-	vec2 ux = vec2::UX;		// æ–¹å‘
+	vec2 ux = vec2::UX;		// ·½Ïò
 	vec2 uy = vec2::UY;
 
 	ucoord2() {}
@@ -63,7 +63,7 @@ struct ucoord2
 	{
 		return ux == c.ux && uy == c.uy;
 	}
-	// åœ¨åæ ‡ç³»ä¸‹å®šä¹‰ä¸€ä¸ªå‘é‡
+	// ÔÚ×ø±êÏµÏÂ¶¨ÒåÒ»¸öÏòÁ¿
 	friend vec2 operator * (crvec2 p, const ucoord2& c)
 	{
 		return c.ux * (p.x) + c.uy * (p.y);
@@ -75,11 +75,11 @@ struct ucoord2
 		rc.uy = uy.x * c.ux + uy.y * c.uy;
 		return rc;
 	}
-	// å‘é‡å‘åæ ‡ç³»æŠ•å½±
+	// ÏòÁ¿Ïò×ø±êÏµÍ¶Ó°
 	friend vec2 operator / (crvec2 v, const ucoord2& c)
 	{
 #ifdef Parallel_Projection
-		{// å¯¹äºéæ­£äº¤æƒ…å†µ
+		{// ¶ÔÓÚ·ÇÕı½»Çé¿ö
 			return vec2(pl_dot(v, c.ux, c.uy), pl_dot(v, c.uy, c.ux));
 		}
 #endif
@@ -90,7 +90,7 @@ struct ucoord2
 	{
 		ucoord2 rc;
 #ifdef Parallel_Projection
-		{// å¯¹äºéæ­£äº¤æƒ…å†µ
+		{// ¶ÔÓÚ·ÇÕı½»Çé¿ö
 			rc.ux = vec2(pl_dot(ux, c.ux, c.uy) / c.s.x, pl_dot(ux, c.uy, c.ux) / c.s.y);
 			rc.uy = vec2(pl_dot(uy, c.ux, c.uy) / c.s.x, pl_dot(uy, c.uy, c.ux) / c.s.y);
 		}
@@ -106,7 +106,7 @@ struct ucoord2
 		return (*this).reversed() * c;
 	}
 
-	// å€’ç½®
+	// µ¹ÖÃ
 	void reverse()
 	{
 		(*this) = ONE / (*this);
@@ -115,7 +115,7 @@ struct ucoord2
 	{
 		return ONE / (*this);
 	}
-	// æ¢¯åº¦åæ ‡ç³»
+	// Ìİ¶È×ø±êÏµ
 	static ucoord2 gradcoord(const ucoord2& c1, const ucoord2& c2)
 	{
 		return c1.reversed() * c2;
@@ -143,8 +143,8 @@ struct coord2 : ucoord2
 	static const coord2 ZERO;
 	static const coord2 ONE;
 
-	vec2 s = vec2::ONE;		// ç¼©æ”¾
-	vec2 o;				// åŸç‚¹
+	vec2 s = vec2::ONE;		// Ëõ·Å
+	vec2 o;				// Ô­µã
 
 	coord2() {}
 	coord2(const coord2& c)
@@ -220,13 +220,13 @@ struct coord2 : ucoord2
 	{
 		*this = *this - v;
 	}
-	// åœ¨åæ ‡ç³»ä¸‹å®šä¹‰ä¸€ä¸ªå‘é‡
+	// ÔÚ×ø±êÏµÏÂ¶¨ÒåÒ»¸öÏòÁ¿
 	friend vec2 operator * (crvec2 p, const coord2& c)
 	{
 		return c.ux * (c.s.x * p.x) + c.uy * (c.s.y * p.y) + c.o;
 	}
 	coord2 operator * (crvec2 v) const
-	{// C*V ç¼©æ”¾ä¹˜æ³•
+	{// C*V Ëõ·Å³Ë·¨
 		coord2 c = *this;
 		c.s.x *= v.x; c.s.y *= v.y;
 		c.o.x *= v.x; c.o.y *= v.y;
@@ -242,7 +242,7 @@ struct coord2 : ucoord2
 		return rc;
 	}
 #ifdef Parallel_Projection
-	// éæ­£äº¤åæ ‡ç³»ä¸‹å¹³è¡ŒæŠ•å½± Parallel projection
+	// ·ÇÕı½»×ø±êÏµÏÂÆ½ĞĞÍ¶Ó° Parallel projection
 	static real pl_dot(crvec2 v, crvec2 ax1, crvec2 ax2)
 	{
 		real co = ax1.dot(ax2);
@@ -251,12 +251,12 @@ struct coord2 : ucoord2
 		return (v.dot(ax1) - v.cross(ax1) * sc);
 	}
 #endif
-	// å‘é‡å‘åæ ‡ç³»æŠ•å½±
+	// ÏòÁ¿Ïò×ø±êÏµÍ¶Ó°
 	friend vec2 operator / (crvec2 p, const coord2& c)
 	{
 		vec2 v = p - c.o;
 #ifdef Parallel_Projection
-		{// å¯¹äºéæ­£äº¤æƒ…å†µ
+		{// ¶ÔÓÚ·ÇÕı½»Çé¿ö
 			return vec2(pl_dot(v, c.ux, c.uy) / c.s.x, pl_dot(v, c.uy, c.ux) / c.s.y);
 		}
 #endif
@@ -267,7 +267,7 @@ struct coord2 : ucoord2
 	{
 		coord2 rc;
 #ifdef Parallel_Projection
-		{// å¯¹äºéæ­£äº¤æƒ…å†µ
+		{// ¶ÔÓÚ·ÇÕı½»Çé¿ö
 			rc.ux = vec2(pl_dot(ux, c.ux, c.uy) / c.s.x, pl_dot(ux, c.uy, c.ux) / c.s.y);
 			rc.uy = vec2(pl_dot(uy, c.ux, c.uy) / c.s.x, pl_dot(uy, c.uy, c.ux) / c.s.y);
 		}
@@ -281,7 +281,7 @@ struct coord2 : ucoord2
 		return rc;
 	}
 	coord2 operator / (crvec2 v) const
-	{// C*V ç¼©æ”¾é™¤æ³•
+	{// C*V Ëõ·Å³ı·¨
 		coord2 c = *this;
 		c.s.x /= v.x; c.s.y /= v.y;
 		c.o.x /= v.x; c.o.y /= v.y;
@@ -301,7 +301,7 @@ struct coord2 : ucoord2
 		if (!bscl)
 			s = vec2::ONE;
 	}
-	// å€’ç½®
+	// µ¹ÖÃ
 	void reverse()
 	{
 		(*this) = ONE / (*this);
