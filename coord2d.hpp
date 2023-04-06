@@ -122,7 +122,7 @@ struct ucoord2
 		return ONE / (*this);
 	}
 	// 梯度坐标系
-	static ucoord2 gradcoord(const ucoord2& c1, const ucoord2& c2)
+	static ucoord2 grad(const ucoord2& c1, const ucoord2& c2)
 	{
 		return c1.reversed() * c2;
 	}
@@ -319,6 +319,11 @@ struct coord2 : ucoord2
 	real dot(crvec2 v) const
 	{
 		return v.dot(ux) * s.x + v.dot(uy) * s.y;
+	}
+	// 梯度坐标系
+	static coord2 grad(const coord2& c1, const coord2& c2)
+	{
+		return c1.reversed() * c2 - ONE;
 	}
 	void dump(const std::string& name = "") const
 	{
