@@ -1,32 +1,32 @@
 /*********************************************************************
-*						×ø±êÏµ
+*				åæ ‡ç³»
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
-* 	×ø±êÏµÀàÊÇÎÒµ¥¶À·â×°£¬ÓÃÓÚ¼ò»¯×ø±ê±ä»»£¬ÑÜÉú³öĞí¶àËã·¨£¬ÄÜ½â¾öÒ»Ğ©
-* 	×ø±êÏµ±ä»»Ïà¹ØµÄÎÊÌâ¡£
-* 	×ø±êÏµµÄÔËËã¸úÀîÈººÜÏàËÆ¡£
-*	×ø±êÏµÓÉÈı¸ö²¿·Ö×é³É£ºC = M(Î»ÖÃ£© + S£¨Ëõ·Å£© * R£¨Ğı×ª£©
+* 	åæ ‡ç³»ç±»æ˜¯æˆ‘å•ç‹¬å°è£…ï¼Œç”¨äºç®€åŒ–åæ ‡å˜æ¢ï¼Œè¡ç”Ÿå‡ºè®¸å¤šç®—æ³•ï¼Œèƒ½è§£å†³ä¸€äº›
+* 	åæ ‡ç³»å˜æ¢ç›¸å…³çš„é—®é¢˜ã€‚
+* 	åæ ‡ç³»çš„è¿ç®—è·Ÿæç¾¤å¾ˆç›¸ä¼¼ã€‚
+*	åæ ‡ç³»ç”±ä¸‰ä¸ªéƒ¨åˆ†ç»„æˆï¼šC = M(ä½ç½®ï¼‰ + Sï¼ˆç¼©æ”¾ï¼‰ * Rï¼ˆæ—‹è½¬ï¼‰
 * 
-*  *  *  *  *  *  *  *  *  *  Ïê½â  *  *  *  *  *  *  *  *  *  *  *  *
-*	×ø±êÏµ±ä»»·ÖÎªÍ¶Ó°£¨*), Æ½ÒÆ£¨^), »¹Ô­£¨*£©Èı¸ö²½Öè£¬ÒÔÆ½ÒÆ×î¾«Éî£º
-*	×ø±êÏµ±¾Ìå·ûºÅ C£¬×ø±êÏµÖ®¼äµÄ±ä»»¿ÉÒÔĞ´³ÉG = C1//C2,GRADÌİ¶ÈµÄÒâË¼
+*  *  *  *  *  *  *  *  *  *  è¯¦è§£  *  *  *  *  *  *  *  *  *  *  *  *
+*	åæ ‡ç³»å˜æ¢åˆ†ä¸ºæŠ•å½±ï¼ˆ*), å¹³ç§»ï¼ˆ^), è¿˜åŸï¼ˆ*ï¼‰ä¸‰ä¸ªæ­¥éª¤ï¼Œä»¥å¹³ç§»æœ€ç²¾æ·±ï¼š
+*	åæ ‡ç³»æœ¬ä½“ç¬¦å· Cï¼Œåæ ‡ç³»ä¹‹é—´çš„å˜æ¢å¯ä»¥å†™æˆG = C1//C2,GRADæ¢¯åº¦çš„æ„æ€
 *			oper(/)  = C1 * C2^-1
 *			oper(//) = C1^-1 * C2, oper(//) = grad()
-*	¾ßÌåÀ´Ëµ£º
-*	¶¨ÒåÒ»¸öÄÚÙ÷×ø±êÏµ(¼ÙÉèËüÊÇÆ½Ö±¿Õ¼ä£¬ÏòÁ¿¿ÉÒÔËæÒâÒÆ¶¯¶ø²»±ä)ÏÂV,ÔÚÍä
-*	Çú×ø±êÏµÏÂ¹Û²ìV£¬²»Í¬µãÉÏVÊÇ²»Í¬µÄ£¬¹Ê¶ø×ø±êÏµ¸úÎ»ÖÃÓĞ¹Ø£¬È¡ÏàÁÚÁ½µã
-*	£¨1),(2)µã´¦ÓĞÏòÁ¿V1,V2£¬¶ÔÓ¦×ø±êÏµC1,C2£¬ÄÇÃ´£º
+*	å…·ä½“æ¥è¯´ï¼š
+*	å®šä¹‰ä¸€ä¸ªå†…ç¦€åæ ‡ç³»(å‡è®¾å®ƒæ˜¯å¹³ç›´ç©ºé—´ï¼Œå‘é‡å¯ä»¥éšæ„ç§»åŠ¨è€Œä¸å˜)ä¸‹V,åœ¨å¼¯
+*	æ›²åæ ‡ç³»ä¸‹è§‚å¯ŸVï¼Œä¸åŒç‚¹ä¸ŠVæ˜¯ä¸åŒçš„ï¼Œæ•…è€Œåæ ‡ç³»è·Ÿä½ç½®æœ‰å…³ï¼Œå–ç›¸é‚»ä¸¤ç‚¹
+*	ï¼ˆ1),(2)ç‚¹å¤„æœ‰å‘é‡V1,V2ï¼Œå¯¹åº”åæ ‡ç³»C1,C2ï¼Œé‚£ä¹ˆï¼š
 *			V = V1 * C1 = V2 * C2 =>
-*			V2 = V1 * C1 / C2, Áî G12 = C1 / C2 =>
+*			V2 = V1 * C1 / C2, ä»¤ G12 = C1 / C2 =>
 *			V2 = V1 * G12
 *
-*	¿ÉÒÔÊ¹ÓÃ×ø±êÏµ¼ÆËã¿Õ¼äÇúÂÊ£¬ÔÚu,v×ø±êÏµÏÂÀèÂüÇúÂÊÕÅÁ¿Îª£º
+*	å¯ä»¥ä½¿ç”¨åæ ‡ç³»è®¡ç®—ç©ºé—´æ›²ç‡ï¼Œåœ¨u,våæ ‡ç³»ä¸‹é»æ›¼æ›²ç‡å¼ é‡ä¸ºï¼š
 *			Ruv = Gu*Gv - Gv*Gu + Gw
-*			ÆäÖĞ£º	Gu = UG - ONE
-*					UG = C2 / C1;
-*					ÁªÂçÏòÁ¿£ºW = [U, V](ÀîÀ¨ºÅÔËËã)
+*			å…¶ä¸­ï¼šGu = UG - ONE
+*			     UG = C2 / C1;
+*			è”ç»œå‘é‡ï¼šW = [U, V](ææ‹¬å·è¿ç®—)
 */
 
-//#define	Parallel_Projection		 // ·ÇÕı½»×ø±êÏµÏÂÆ½ĞĞÍ¶Ó°
+//#define	Parallel_Projection	      // éæ­£äº¤åæ ‡ç³»ä¸‹å¹³è¡ŒæŠ•å½±
 // ******************************************************************
 //  |/_
 // UC     3d Rotation Coordinate System
@@ -36,7 +36,7 @@ struct ucoord3
 	static const ucoord3 ZERO;
 	static const ucoord3 ONE;
 
-	vec3 ux = vec3::UX;		// ·½Ïò
+	vec3 ux = vec3::UX;		// æ–¹å‘
 	vec3 uy = vec3::UY;
 	vec3 uz = vec3::UZ;
 
@@ -71,7 +71,7 @@ struct ucoord3
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;
 	}
-	// Ğı×ª²î
+	// æ—‹è½¬å·®
 	void fromvecsR(const vec3& v1, const vec3& v2)
 	{
 		quaternion q;
@@ -110,7 +110,7 @@ struct ucoord3
 		return !is_same_dirs(c);
 	}
 
-	// ³Ë·¨£ºÔÚ×ø±êÏµÏÂ¶¨ÒåÒ»¸öÏòÁ¿£¬»òÕßÏòÁ¿Ïò¸¸¿Õ¼ä»¹Ô­
+	// ä¹˜æ³•ï¼šåœ¨åæ ‡ç³»ä¸‹å®šä¹‰ä¸€ä¸ªå‘é‡ï¼Œæˆ–è€…å‘é‡å‘çˆ¶ç©ºé—´è¿˜åŸ
 	friend vec3 operator * (const vec3& p, const ucoord3& c)
 	{
 		return c.ux * (p.x) + c.uy * (p.y) + c.uz * (p.z);
@@ -144,9 +144,9 @@ struct ucoord3
 	{
 		*this = (*this) * q;
 	}
-	// ³ı·¨£ºÏòÁ¿Ïò×ø±êÏµÍ¶Ó°
+	// é™¤æ³•ï¼šå‘é‡å‘åæ ‡ç³»æŠ•å½±
 #ifdef Parallel_Projection
-	// ·ÇÕı½»×ø±êÏµÏÂÆ½ĞĞÍ¶Ó° Parallel projection
+	// éæ­£äº¤åæ ‡ç³»ä¸‹å¹³è¡ŒæŠ•å½± Parallel projection
 	static real pl_prj(const vec3& v, const vec3& ax1, const vec3& ax2)
 	{
 		vec3 ax = ax1.cross(ax2); ax.norm();
@@ -164,7 +164,7 @@ struct ucoord3
 	friend vec3 operator / (const vec3& v, const ucoord3& c)
 	{
 #ifdef Parallel_Projection
-		{// ¶ÔÓÚ·ÇÕı½»Çé¿ö
+		{// å¯¹äºéæ­£äº¤æƒ…å†µ
 			return vec3(
 				pl_prj(v - c.uz * v.dot(c.uz), c.ux, c.uy) / c.s.x,
 				pl_prj(v - c.ux * v.dot(c.ux), c.uy, c.uz) / c.s.y,
@@ -182,7 +182,7 @@ struct ucoord3
 	{
 		ucoord3 rc;
 #ifdef Parallel_Projection
-		{// ¶ÔÓÚ·ÇÕı½»Çé¿ö
+		{// å¯¹äºéæ­£äº¤æƒ…å†µ
 			rc.ux = PL_PRJ3(ux);
 			rc.uy = PL_PRJ3(uy);
 			rc.uz = PL_PRJ3(uz);
@@ -208,9 +208,9 @@ struct ucoord3
 		return (*this).reversed() * c;
 	}
 	// oper(^)
-	// Ïà¿Õ¼äµÄ³Ë·¨ÔËËã,Ce^(th*v)
-	// ÈçC±íÊ¾Ä³ÏòÁ¿AÔÚÁ½µã¼äµÄĞı×ª£¬
-	// ÈÚºÏÏòÁ¿0<v<1,c=C^v; v=0Ê±c=ONE,v=1Ê±c=C
+	// ç›¸ç©ºé—´çš„ä¹˜æ³•è¿ç®—,Ce^(th*v)
+	// å¦‚Cè¡¨ç¤ºæŸå‘é‡Aåœ¨ä¸¤ç‚¹é—´çš„æ—‹è½¬ï¼Œ
+	// èåˆå‘é‡0<v<1,c=C^v; v=0æ—¶c=ONE,v=1æ—¶c=C
 	ucoord3 operator ^ (const vec3& v) const
 	{
 		ucoord3 c = *this;
@@ -232,14 +232,14 @@ struct ucoord3
 		c.uy = lerp(vec3::UY, c.uy, f); c.uy.norm();
 		c.uz = lerp(vec3::UZ, c.uz, f); c.uz.norm();
 		*/
-		// ËÄÔªÊı·¨
+		// å››å…ƒæ•°æ³•
 		return ucoord3((*this).toquat() ^ f);
 	}
 	ucoord3 operator ^= (real f)
 	{
 		(*this) = (*this) ^ f;
 	}
-	// ×ªÖÃ(×ø±êÖá½»»»£©
+	// è½¬ç½®(åæ ‡è½´äº¤æ¢ï¼‰
 	void transpose()
 	{
 		vec3 _ux = vec3(ux.x, uy.x, uz.x);
@@ -255,7 +255,7 @@ struct ucoord3
 		c.uz = vec3(ux.z, uy.z, uz.z);
 		return c;
 	}
-	// µ¹ÖÃ
+	// å€’ç½®
 	void reverse()
 	{
 		(*this) = ONE / (*this);
@@ -264,7 +264,7 @@ struct ucoord3
 	{
 		return ONE / (*this);
 	}
-	// ·­×ª
+	// ç¿»è½¬
 	void flipX()
 	{
 		ux = -ux;
@@ -287,7 +287,7 @@ struct ucoord3
 	{
 		return (ux + uy + uz).normlized();
 	}
-	// ±¾Õ÷ÏòÁ¿£¨×ø±êÏµ×÷ÎªĞı×ª±ä»»Ê±ºòµÄÌØÕ÷£©
+	// æœ¬å¾å‘é‡ï¼ˆåæ ‡ç³»ä½œä¸ºæ—‹è½¬å˜æ¢æ—¶å€™çš„ç‰¹å¾ï¼‰
 	vec3 eigenvec() const
 	{
 		return toquat().axis();
@@ -300,7 +300,7 @@ struct ucoord3
 	{
 		return c.ux.dot(ux) + c.uy.dot(uy) + c.uz.dot(uz);
 	}
-	// ÓÉµç´Å³¡¼ÆËãÒı³öµÄ²æ³Ë
+	// ç”±ç”µç£åœºè®¡ç®—å¼•å‡ºçš„å‰ä¹˜
 	ucoord3 cross(const ucoord3& c) const
 	{
 		return ucoord3(
@@ -318,7 +318,7 @@ struct ucoord3
 			uz.cross(v)
 		);
 	}
-	// ×ø±êÏµµ½Å·À­½Ç
+	// åæ ‡ç³»åˆ°æ¬§æ‹‰è§’
 	vec3 coord2eulers() const
 	{
 		const ucoord3& rm = *this;
@@ -343,8 +343,8 @@ struct ucoord3
 		return vec3(x, y, z);
 	}
 
-	// Ìİ¶È×ø±êÏµ = Ìİ¶È X ÇĞ¿Õ¼ä
-	// Ïàµ±ÓÚÒ»½××ø±êÏµµÄµ¼Êı
+	// æ¢¯åº¦åæ ‡ç³» = æ¢¯åº¦ X åˆ‡ç©ºé—´
+	// ç›¸å½“äºä¸€é˜¶åæ ‡ç³»çš„å¯¼æ•°
 	// C2 = UG * C1
 	static ucoord3 ugrad(const ucoord3& c1, const ucoord3& c2)
 	{
@@ -370,8 +370,8 @@ struct coord3 : ucoord3
 	static const coord3 ZERO;
 	static const coord3 ONE;
 
-	vec3 s = vec3::ONE;		// Ëõ·Å
-	vec3 o;					// Ô­µã
+	vec3 s = vec3::ONE;		// ç¼©æ”¾
+	vec3 o;					// åŸç‚¹
 
 	coord3() {}
 	coord3(const coord3& c)
@@ -414,7 +414,7 @@ struct coord3 : ucoord3
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;
 	}
-	// ÒÆ¶¯²î
+	// ç§»åŠ¨å·®
 	void fromvecsT(const vec3& v1, const vec3& v2)
 	{
 		o = v2 - v1;
@@ -428,7 +428,7 @@ struct coord3 : ucoord3
 	vec3 Y() const { return uy * s.y + vec3::UY * o.y; }
 	vec3 Z() const { return uz * s.z + vec3::UZ * o.z; }
 
-	// ¹éÒ»»¯µÄÕı½»×ø±êÏµ
+	// å½’ä¸€åŒ–çš„æ­£äº¤åæ ‡ç³»
 	coord3 ucoord() const
 	{
 		coord3 c = *this;
@@ -440,29 +440,29 @@ struct coord3 : ucoord3
 	{
 		ux = ucd.ux; uy = ucd.uy; uz = ucd.uz;
 	}
-	// ÏòÁ¿×ø±êÏµ = ·½Ïò X Ëõ·Å
+	// å‘é‡åæ ‡ç³» = æ–¹å‘ X ç¼©æ”¾
 	inline coord3 vcoord()
 	{
 		coord3 c = *this;
 		c.o = vec3::ZERO;
 		return c;
 	}
-	// Î»ÖÃ
+	// ä½ç½®
 	inline vec3 pos()
 	{
 		return o;
 	}
-	// ×ÜÏòÁ¿
+	// æ€»å‘é‡
 	inline vec3 sumvec()
 	{
 		return o + VX() + VY() + VZ();
 	}
-	// ÏòÁ¿
+	// å‘é‡
 	vec3 tovec() const
 	{
 		return ux * s.x + uy * s.y + uz * s.z;
 	}
-	// ËÄÔªÊı
+	// å››å…ƒæ•°
 	quaternion toquat() const
 	{
 		quaternion q;
@@ -486,7 +486,7 @@ struct coord3 : ucoord3
 	{
 		return o != c.o || s != c.s || !is_same_dirs(c);
 	}
-	// +/- ÔËËã
+	// +/- è¿ç®—
 	coord3 operator + (const coord3& c) const
 	{
 		coord3 rc = *this;
@@ -502,7 +502,7 @@ struct coord3 : ucoord3
 		*this = (*this) + c;
 	}
 	coord3 operator + (const vec3& v) const
-	{// C+V ÒÆ¶¯
+	{// C+V ç§»åŠ¨
 		coord3 rc = (*this);
 		rc.o = o + v;
 		return rc;
@@ -548,7 +548,7 @@ struct coord3 : ucoord3
 		*this = *this - v;
 	}
 
-	// ³Ë·¨£ºÔÚ×ø±êÏµÏÂ¶¨ÒåÒ»¸öÏòÁ¿
+	// ä¹˜æ³•ï¼šåœ¨åæ ‡ç³»ä¸‹å®šä¹‰ä¸€ä¸ªå‘é‡
 	friend vec3 operator * (const vec3& p, const coord3& c)
 	{
 		return c.ux * (c.s.x * p.x) + c.uy * (c.s.y * p.y) + c.uz * (c.s.z * p.z) + c.o;
@@ -558,7 +558,7 @@ struct coord3 : ucoord3
 		p = p * c;
 	}
 	coord3 operator * (const vec3& v) const
-	{// C*V Ëõ·Å³Ë·¨
+	{// C*V ç¼©æ”¾ä¹˜æ³•
 		coord3 c = *this;
 		c.s.x *= v.x; c.s.y *= v.y; c.s.z *= v.z;
 		c.o.x *= v.x; c.o.y *= v.y; c.o.z *= v.z;
@@ -571,10 +571,10 @@ struct coord3 : ucoord3
 	coord3 operator * (real s) const
 	{
 		coord3 c = *this;
-		//{// C*S Ëõ·Å³Ë·¨
+		//{// C*S ç¼©æ”¾ä¹˜æ³•
 		//	c.s.x *= s; c.s.y *= s; c.s.z *= s;
 		//}
-		{// C*S ÒÆ¶¯³Ë·¨
+		{// C*S ç§»åŠ¨ä¹˜æ³•
 			c.o.x *= s; c.o.y *= s; c.o.z *= s;
 		}
 		return c;
@@ -612,9 +612,9 @@ struct coord3 : ucoord3
 		*this = (*this) * q;
 	}
 
-	// ³ı·¨£ºÏòÁ¿Ïò×ø±êÏµÍ¶Ó° ×¢Òâ£ºÒª±£Ö¤ux,uy,uzÊÇµ¥Î»ÏòÁ¿£¡
+	// é™¤æ³•ï¼šå‘é‡å‘åæ ‡ç³»æŠ•å½± æ³¨æ„ï¼šè¦ä¿è¯ux,uy,uzæ˜¯å•ä½å‘é‡ï¼
 #ifdef Parallel_Projection
-	// ·ÇÕı½»×ø±êÏµÏÂÆ½ĞĞÍ¶Ó° Parallel projection
+	// éæ­£äº¤åæ ‡ç³»ä¸‹å¹³è¡ŒæŠ•å½± Parallel projection
 	static real pl_prj(const vec3& v, const vec3& ax1, const vec3& ax2)
 	{
 		vec3 ax = ax1.cross(ax2); ax.norm();
@@ -633,7 +633,7 @@ struct coord3 : ucoord3
 	{
 		vec3 v = p - c.o;
 #ifdef Parallel_Projection
-		{// ¶ÔÓÚ·ÇÕı½»Çé¿ö
+		{// å¯¹äºéæ­£äº¤æƒ…å†µ
 			return vec3(
 				pl_prj(v - c.uz * v.dot(c.uz), c.ux, c.uy) / c.s.x,
 				pl_prj(v - c.ux * v.dot(c.ux), c.uy, c.uz) / c.s.y,
@@ -647,7 +647,7 @@ struct coord3 : ucoord3
 		p = p / c;
 	}
 	coord3 operator / (const vec3& v) const
-	{// C/V Ëõ·Å³ı·¨
+	{// C/V ç¼©æ”¾é™¤æ³•
 		coord3 c = *this;
 		c.s.x /= v.x; c.s.y /= v.y; c.s.z /= v.z;
 		c.o.x /= v.x; c.o.y /= v.y; c.o.z /= v.z;
@@ -659,7 +659,7 @@ struct coord3 : ucoord3
 	}
 
 	coord3 operator / (real s) const
-	{// C/S Ëõ·Å³ı·¨
+	{// C/S ç¼©æ”¾é™¤æ³•
 		coord3 c = *this;
 		c.s.x /= s; c.s.y /= s; c.s.z /= s;
 		return c;
@@ -673,7 +673,7 @@ struct coord3 : ucoord3
 	{
 		coord3 rc;
 #ifdef Parallel_Projection
-		{// ¶ÔÓÚ·ÇÕı½»Çé¿ö
+		{// å¯¹äºéæ­£äº¤æƒ…å†µ
 			rc.ux = PL_PRJ3(ux);
 			rc.uy = PL_PRJ3(uy);
 			rc.uz = PL_PRJ3(uz);
@@ -698,7 +698,7 @@ struct coord3 : ucoord3
 		return (*this).reversed() * c;
 	}
 
-	// ¹éÒ»»¯
+	// å½’ä¸€åŒ–
 	void norm(bool bscl = true)
 	{
 #define ISZERO(a) (fabs(a) < 1e-10)
@@ -708,7 +708,7 @@ struct coord3 : ucoord3
 		if (!bscl)
 			s = vec3::ONE;
 	}
-	// µ¹ÖÃ
+	// å€’ç½®
 	void reverse()
 	{
 		(*this) = ONE / (*this);
@@ -725,12 +725,12 @@ struct coord3 : ucoord3
 	{
 		return c.VX().dot(VX()) + c.VY().dot(VY()) + c.VZ().dot(VZ());
 	}
-	// ÓÉÀî·ûºÅÒı³öµÄ²æ³Ë£¬¸ü¼Ó·ûºÏÈºÂÛ
+	// ç”±æç¬¦å·å¼•å‡ºçš„å‰ä¹˜ï¼Œæ›´åŠ ç¬¦åˆç¾¤è®º
 	coord3 lie_cross(const coord3& c) const
 	{
 		return (*this) * c - c * (*this);
 	}
-	// ÓÉµç´Å³¡¼ÆËãÒı³öµÄ²æ³Ë
+	// ç”±ç”µç£åœºè®¡ç®—å¼•å‡ºçš„å‰ä¹˜
 	coord3 cross(const coord3& c) const
 	{
 		vec3 vx = VX();
@@ -760,8 +760,8 @@ struct coord3 : ucoord3
 			vz.cross(v)
 		);
 	}
-	// Ìİ¶È×ø±êÏµ = Ìİ¶È X ÇĞ¿Õ¼ä
-	// Ïàµ±ÓÚÒ»½××ø±êÏµµÄµ¼Êı
+	// æ¢¯åº¦åæ ‡ç³» = æ¢¯åº¦ X åˆ‡ç©ºé—´
+	// ç›¸å½“äºä¸€é˜¶åæ ‡ç³»çš„å¯¼æ•°
 	// C2 = UG * C1
 	// V2 - V1 = G * V1 = (UG - ONE) * V1
 	// G = UG - ONE
@@ -779,8 +779,8 @@ struct coord3 : ucoord3
 		PRINTV3(o);
 	}
 
-	/// ±ã½İº¯Êı ///
-	// Ğı×ª
+	/// ä¾¿æ·å‡½æ•° ///
+	// æ—‹è½¬
 	void rot(real ang, const vec3& ax)
 	{
 		VX().rot(ang, ax);
@@ -788,7 +788,7 @@ struct coord3 : ucoord3
 		VZ().rot(ang, ax);
 		norm();
 	}
-	// ÈÆÄ³µãĞı×ª
+	// ç»•æŸç‚¹æ—‹è½¬
 	void rot(real ang, const vec3& ax, const vec3& ro)
 	{
 		X().rot(ang, ax);
@@ -796,7 +796,7 @@ struct coord3 : ucoord3
 		Z().rot(ang, ax);
 		norm();
 	}
-	// ³¯Ïò¶ÔÆë
+	// æœå‘å¯¹é½
 	void lookat(const coord3& c, real alpha = 1)
 	{
 		set_ucoord(quat::slerp(Q(), c.Q(), alpha));
