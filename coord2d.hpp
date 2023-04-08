@@ -227,7 +227,7 @@ struct coord2 : ucoord2
 	}
 	coord2 operator * (crvec2 v) const
 	{
-		return (*this) * coord2(v);
+		return (*this) * coord2(ux*v.x, uy*vy);
 	}
 	coord2 operator * (const coord2& c) const
 	{
@@ -279,7 +279,7 @@ struct coord2 : ucoord2
 	}
 	coord2 operator / (crvec2 v) const
 	{
-		return (*this) / coord2(v);
+		return (*this) / coord2(ux*v.x, uy*vy);
 	}
 	// oper(//) = C1^-1 * C2
 	coord2 operator % (const coord2& c) const
