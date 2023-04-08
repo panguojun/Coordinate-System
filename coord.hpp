@@ -555,7 +555,7 @@ struct coord3 : ucoord3
 	}
 	coord3 operator * (const vec3& v) const
 	{
-		return (*this) * coord3(v);
+		return (*this) * coord3(vec3::UX * v.x,vec3::UY * v.y,vec3::UZ * v.z);
 	}
 	void operator *= (const vec3& v)
 	{
@@ -641,7 +641,7 @@ struct coord3 : ucoord3
 	}
 	coord3 operator / (const vec3& v) const
 	{
-		return (*this) / coord3(v);
+		return (*this) / coord3(vec3::UX * v.x,vec3::UY * v.y,vec3::UZ * v.z);
 	}
 	void operator /= (const vec3& v)
 	{
