@@ -1,6 +1,6 @@
-/****************************************************************************
-							四元数
-					(本文件基于OGRE引擎的数学库)
+/**************************************************************************
+							【四元数】
+
 	四元数是在复数基础上的扩展,单位四元数用于旋转操作，向量是源自于四元数，
 	不过二者有差别。目前四元数跟向量之间的关系以及应用存在着争议。
 
@@ -12,7 +12,7 @@
 	四元数存在归一化(normalise)，共轭(conj)，求逆(invert)，乘除法等操作，
 	还规定了单位一（ONE).
 
-****************************************************************************/
+**************************************************************************/
 struct  quaternion
 {
 	real w, x, y, z;
@@ -36,7 +36,7 @@ struct  quaternion
 	}
 	quaternion(const real& rfAngle, const vector3& rkAxis)
 	{
-		this->fromangleaxis(rfAngle, rkAxis);
+		this->ang_axis(rfAngle, rkAxis);
 	}
 	//-----------------------------------------------------------------------
 	quaternion operator+ (const quaternion& rkQ) const
@@ -204,6 +204,7 @@ struct  quaternion
 		vec3 qv = n * (r * sin(th));
 		return quaternion(r * cos(th), qv.x, qv.y, qv.z);
 	}
+	// 指数运算（注意运算符的优先级）
 	quaternion operator ^ (int n) const
 	{
 		quaternion ret = *this;
@@ -221,10 +222,10 @@ struct  quaternion
 	// v1, v2 是单位向量
 	void fromvectors(crvec v1, crvec v2)
 	{
-		fromangleaxis(acos(v1.dot(v2)), v1.cross(v2).normlized());
+		ang_axis(acos(v1.dot(v2)), v1.cross(v2).normlized());
 	}
 	//-----------------------------------------------------------------------
-	void fromangleaxis(real rfAngle, const vector3& rkAxis)
+	void ang_axis(real rfAngle, const vector3& rkAxis)
 	{
 		// assert:  axis[] is unit length
 		//
@@ -281,6 +282,22 @@ struct  quaternion
 			v.z = -atan2(x * y + z * w, 0.5 - x * x - z * z);
 		}
 		return v;
+	}
+	void to_euler(real& roll, real& pitch, real& yaw) const
+	{
+		real sinr_cosp = 2 * (w * x + y * z);
+		real cosr_cosp = 1 - 2 * (x * x + y * y);
+		roll = atan2(sinr_cosp, cosr_cosp);
+
+		real sinp = 2 * (w * y - z * x);
+		if (abs(sinp) >= 1)
+			pitch = copysign(PI / 2, sinp);
+		else
+			pitch = asin(sinp);
+
+		real siny_cosp = 2 * (w * z + x * y);
+		real cosy_cosp = 1 - 2 * (y * y + z * z);
+		yaw = atan2(siny_cosp, cosy_cosp);
 	}
 	//-----------------------------------------------------------------------
 	static quaternion slerp(const quaternion& qa, const quaternion& qb, double t) {
@@ -358,7 +375,7 @@ struct  quaternion
 		}
 	}
 	//-----------------------------------------------------------------------
-	quaternion nlerp(real fT, const quaternion& rkP,
+	static quaternion nlerp(real fT, const quaternion& rkP,
 		const quaternion& rkQ, bool shortestPath)
 	{
 		quaternion result;

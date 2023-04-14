@@ -1,16 +1,18 @@
-// ***********************************************
-//						Point
-//				整数点，在整数空间内
-// ***********************************************
-struct point_t
+// ***************************************************************************
+//							【Point】
+//									
+//						主要指的是整数点，在整数空间内
+// ***************************************************************************
+#pragma once
+struct point2
 {
 	int x = 0, y = 0;
-	point_t()
+	point2()
 	{
 		x = 0;
 		y = 0;
 	}
-	point_t(int ix, int iy)
+	point2(int ix, int iy)
 	{
 		x = ix; y = iy;
 	}
@@ -22,40 +24,40 @@ struct point_t
 	{
 		return vec2(x, y);
 	}
-	bool operator == (const point_t& rp) const
+	bool operator == (const point2& rp) const
 	{
 		return (x == rp.x && y == rp.y);
 	}
-	bool operator != (const point_t& rp) const
+	bool operator != (const point2& rp) const
 	{
 		return (x != rp.x || y != rp.y);
 	}
-	point_t operator + (const point_t& rp) const
+	point2 operator + (const point2& rp) const
 	{
-		point_t p;
+		point2 p;
 		p.x = x + rp.x;
 		p.y = y + rp.y;
 		return  p;
 	}
-	point_t operator - (const point_t& rp) const
+	point2 operator - (const point2& rp) const
 	{
-		point_t p;
+		point2 p;
 		p.x = x - rp.x;
 		p.y = y - rp.y;
 		return  p;
 	}
-	point_t operator / (real factor) const
+	point2 operator / (real factor) const
 	{
-		point_t p;
+		point2 p;
 		p.x = x / factor;
 		p.y = y / factor;
 		return  p;
 	}
-	static real dis(const point_t& p1, const point_t& p2)
+	static real dis(const point2& p1, const point2& p2)
 	{
 		return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 	}
-	static real Mdis(const point_t& p1, const point_t& p2)
+	static real Mdis(const point2& p1, const point2& p2)
 	{
 		return abs(p1.x - p2.x) + abs(p1.y - p2.y);
 	}
@@ -69,8 +71,7 @@ struct point_t
 	}
 	static real angle(int x1, int x2, int y1, int y2)
 	{
-		vec2 v1(x1, y1);
-		vec2 v2(x2, y2);
+		vec2 v1(x1, y1), v2(x2, y2);
 		real ang = v1.normcopy().dot(v2.normcopy());
 		return ang;
 	}
@@ -86,9 +87,9 @@ struct point_t
 		x = v.x;
 		y = v.y;
 	}*/
-	static point_t fromvec(const vec2& v)
+	static point2 fromvec(const vec2& v)
 	{
-		point_t p;
+		point2 p;
 		p.x = v.x;
 		p.y = v.y;
 		return p;
@@ -98,16 +99,18 @@ struct point_t
 // ***********************************************
 // 3D point
 // ***********************************************
-struct point3_t
+struct point3
 {
+	static const point3 ZERO;
+	static const point3 ONE;
 	int x = 0, y = 0, z = 0;
-	point3_t()
+	point3()
 	{
 		x = 0;
 		y = 0;
 		z = 0;
 	}
-	point3_t(int ix, int iy, int iz)
+	point3(int ix, int iy, int iz)
 	{
 		x = ix; y = iy; z = iz;
 	}
@@ -116,29 +119,37 @@ struct point3_t
 		return ((x) * (x)+(y) * (y)+(z) * (z));
 	}
 
-	bool operator == (const point3_t& rp) const
+	bool operator == (const point3& rp) const
 	{
 		return (x == rp.x && y == rp.y && z == rp.z);
 	}
-	point3_t operator + (const point3_t& rp) const
+	point3 operator + (const point3& rp) const
 	{
-		point3_t p;
+		point3 p;
 		p.x = x + rp.x;
 		p.y = y + rp.y;
 		p.z = z + rp.z;
 		return  p;
 	}
-	point3_t operator - (const point3_t& rp) const
+	point3 operator - (const point3& rp) const
 	{
-		point3_t p;
+		point3 p;
 		p.x = x - rp.x;
 		p.y = y - rp.y;
 		p.z = z - rp.z;
 		return  p;
 	}
-	point3_t operator / (real factor) const
+	point3 operator * (real factor) const
 	{
-		point3_t p;
+		point3 p;
+		p.x = x * factor;
+		p.y = y * factor;
+		p.z = z * factor;
+		return  p;
+	}
+	point3 operator / (real factor) const
+	{
+		point3 p;
 		p.x = x / factor;
 		p.y = y / factor;
 		p.z = z / factor;
@@ -149,7 +160,64 @@ struct point3_t
 		return vec3(x, y, z);
 	}
 };
+const point3 point3::ZERO = point3(0,0,0);
+const point3 point3::ONE = point3(1,1,1);
 
+struct point3f
+{
+	real x = 0, y = 0, z = 0;
+	point3f()
+	{
+		x = 0;
+		y = 0;
+		z = 0;
+	}
+	point3f(real _x, real _y, real _z)
+	{
+		x = _x; y = _y; z = _z;
+	}
+	int llen() const
+	{
+		return ((x) * (x)+(y) * (y)+(z) * (z));
+	}
+
+	bool operator == (const point3f& rp) const
+	{
+		return (x == rp.x && y == rp.y && z == rp.z);
+	}
+	point3f operator + (const point3f& rp) const
+	{
+		point3f p;
+		p.x = x + rp.x;
+		p.y = y + rp.y;
+		p.z = z + rp.z;
+		return  p;
+	}
+	point3f operator - (const point3f& rp) const
+	{
+		point3f p;
+		p.x = x - rp.x;
+		p.y = y - rp.y;
+		p.z = z - rp.z;
+		return  p;
+	}
+	point3f operator * (real factor) const
+	{
+		point3f p;
+		p.x = x * factor;
+		p.y = y * factor;
+		p.z = z * factor;
+		return  p;
+	}
+	point3f operator / (real factor) const
+	{
+		point3f p;
+		p.x = x / factor;
+		p.y = y / factor;
+		p.z = z / factor;
+		return  p;
+	}
+};
 // ***********************************************
 // pointn
 // ***********************************************
@@ -219,7 +287,7 @@ struct pointn {
 	pointn operator + (const pointn& _p) const
 	{
 		pointn fp;
-		int steps = MIN(val.size(), _p.val.size());
+		int steps = _MIN(val.size(), _p.val.size());
 		for (int i = 0; i < steps; i++)
 		{
 			fp[i] = val[i] + const_cast<pointn&>(_p)[i];
@@ -228,7 +296,7 @@ struct pointn {
 	}
 	void operator += (const pointn& _p)
 	{
-		int steps = MIN(val.size(), _p.val.size());
+		int steps = _MIN(val.size(), _p.val.size());
 		for (int i = 0; i < steps; i++)
 		{
 			val[i] += const_cast<pointn&>(_p)[i];
@@ -237,7 +305,7 @@ struct pointn {
 	pointn operator - (const pointn& _p) const
 	{
 		pointn fp;
-		int steps = MIN(val.size(), _p.val.size());
+		int steps = _MIN(val.size(), _p.val.size());
 		for (int i = 0; i < steps; i++)
 		{
 			fp[i] = val[i] - const_cast<pointn&>(_p)[i];
@@ -246,7 +314,7 @@ struct pointn {
 	}
 	void operator -= (const pointn& _p)
 	{
-		int steps = MIN(val.size(), _p.val.size());
+		int steps = _MIN(val.size(), _p.val.size());
 		for (int i = 0; i < steps; i++)
 		{
 			val[i] -= const_cast<pointn&>(_p)[i];
