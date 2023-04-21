@@ -193,7 +193,8 @@ struct coord2 : ucoord2
 	}
 	coord2 operator + (const vec2& v) const
 	{
-		return (*this) + coord2(v);
+		coord2 c; c.o = v; c.s = vec2::ZERO;
+		return (*this) + c;
 	}
 	void operator += (const vec2& v)
 	{
@@ -214,7 +215,8 @@ struct coord2 : ucoord2
 	}
 	coord2 operator - (const vec2& v) const
 	{
-		return (*this) - coord2(v);
+		coord2 c; c.o = v; c.s = vec2::ZERO;
+		return (*this) - c;
 	}
 	void operator -= (const vec2& v)
 	{

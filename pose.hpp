@@ -1,6 +1,8 @@
-/**
-	A pose describes a position (see Position ) and an orientation (see Orientation ) in 3D space.
-*/
+/******************************************************************************
+								【Pose】
+
+							包括位置以及旋转
+/*****************************************************************************/
 struct pose3
 {
 	vec3 p;		// position

@@ -1,14 +1,20 @@
 /**
+*							【向量】
+* 
 *					向量的定义是来自于四元数
 *					向量不是完整的数，
 *					向量跟空间结构有关系，
 *					如果在时空中建议使用四元数
 */
-#pragma once
 // **********************************************************************
 // 2D
 // **********************************************************************
 struct vector2 {
+	static const vector2 ZERO;
+	static const vector2 ONE;
+	static const vector2 UX;
+	static const vector2 UY;
+	static const vector2 CENTER;
 	union {
 		real val[2];
 		struct {
@@ -17,16 +23,9 @@ struct vector2 {
 		};
 	};
 
-	static const vector2 ZERO;
-	static const vector2 ONE;
-	static const vector2 UX;
-	static const vector2 UY;
-	static const vector2 CENTER;
-
 	real& operator [](int ind) {
 		return val[ind];
 	}
-
 	vector2() {
 		x = 0;
 		y = 0;
@@ -39,6 +38,10 @@ struct vector2 {
 	vector2(real _x, real _y) {
 		x = _x;
 		y = _y;
+	}
+	static vector2 ang_len(real _angle, real _r)
+	{
+		return vector2(_r * cos(_angle), _r * sin(_angle));
 	}
 	vector2 operator + (const vector2& _p) const
 	{
@@ -154,28 +157,28 @@ struct vector2 {
 	}
 	void rot(real angle)
 	{
-		(*this) = (*this) * vector2::fromanglelength(angle, 1);
+		(*this) = (*this) * vector2::ang_len(angle, 1);
 	}
 	vector2 rotcopy(real angle) const
 	{
-		return (*this) * vector2::fromanglelength(angle, 1);
+		return (*this) * vector2::ang_len(angle, 1);
 	}
 	void rot(real angle, const vector2& o)
 	{
 		vector2 v = (*this) - o;
-		v = v * vector2::fromanglelength(angle, 1);
+		v = v * vector2::ang_len(angle, 1);
 		(*this) = v + o;
 	}
 	vector2 rotcopy(real angle, const vector2& o) const
 	{
 		vector2 v = (*this) - o;
-		v = v * vector2::fromanglelength(angle, 1);
+		v = v * vector2::ang_len(angle, 1);
 		return v + o;
 	}
 	vector2 rotcpy(real angle, const vector2& o) const
 	{
 		vector2 v = (*this) - o;
-		v = v * vector2::fromanglelength(angle, 1);
+		v = v * vector2::ang_len(angle, 1);
 		return v + o;
 	}
 	real dot(const vector2& v) const
@@ -186,19 +189,12 @@ struct vector2 {
 	{
 		return x * v.y - y * v.x;
 	}
-	static vector2 fromanglelength(real _angle, real _r);
 };
-
 const vector2 vector2::ZERO = vector2(0, 0);
 const vector2 vector2::ONE = vector2(1, 1);
 const vector2 vector2::UX = vector2(1, 0);
 const vector2 vector2::UY = vector2(0, 1);
 const vector2 vector2::CENTER = vector2(0.5, 0.5);
-
-vector2 vector2::fromanglelength(real _angle, real _r)
-{
-	return vector2(_r * cos(_angle), _r * sin(_angle));
-}
 
 // **********************************************************************
 // 3D
@@ -467,7 +463,7 @@ struct vector3
 		}
 		return vector3::ZERO;
 	}
-	void fromanglelength(real _angle, real _r)
+	void ang_len(real _angle, real _r)
 	{
 		x = _r * cos(_angle);
 		y = _r * sin(_angle);
@@ -493,12 +489,15 @@ struct vector3
 		n.z = -(x * v.y - y * v.x);
 		return n;
 	}
+	static vector3 rnd(real min = 0, real max = 1){
+		return vector3(rrnd(min, max), rrnd(min, max), rrnd(min, max));
+	}
+	static vector3 rndrad(real r = 1){
+		return rnd(-1, 1).normcopy() * r;
+	}
 	void rot(real angle, const vector3& ax);
 	vector3 rotcopy(real angle, const vector3& ax) const;
 	vector3 rotcpy(real angle, const vector3& ax) const;
-	static vector3 rnd(real min = 0, real max = 1);
-
-	static vector3 rndrad(real r = 1);
 };
 
 const vector3 vector3::ZERO = vector3(0, 0, 0);
@@ -507,19 +506,10 @@ const vector3 vector3::UX = vector3(1, 0, 0);
 const vector3 vector3::UY = vector3(0, 1, 0);
 const vector3 vector3::UZ = vector3(0, 0, 1);
 const vector3 vector3::CENTER = vector3(0.0, 0.0, MAXZ / 2);
-real vector3::sEPSINON = EPSINON;
-// ----------------------------------------
-vector3 vector3::rnd(real min, real max)
-{
-	return vector3(rrnd(min, max), rrnd(min, max), rrnd(min, max));
-}
-// ----------------------------------------
-vector3 vector3::rndrad(real r)
-{
-	return rnd(-1, 1).normcopy() * r;
-}
+real  vector3::sEPSINON = EPSINON;
+
 // **********************************************************************
-// 4D
+// 4D vector
 // **********************************************************************
 struct vector4
 {
@@ -756,6 +746,15 @@ struct vectorn {
 		}
 	}
 	vectorn operator + (vectorn& _p) const
+	{
+		vectorn fp;
+		for (int i = 0; i < val.size(); i++)
+		{
+			fp[i] = val[i] + _p[i];
+		}
+		return fp;
+	}
+	vectorn operator + (vectorn&& _p) const
 	{
 		vectorn fp;
 		for (int i = 0; i < val.size(); i++)
