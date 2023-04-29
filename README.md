@@ -84,10 +84,10 @@ C*k = C.scale * k
 Quaternion multiplication:
 
 ```
-C2 = C1*q 
-C1 = C2/q
-q2 = q1*C
-q1 = q2/C
+C2 = C1 * q 
+C1 = C2 / q
+q2 = q1 * C
+q1 = q2 / C
 ```
 
 Vector addition:
