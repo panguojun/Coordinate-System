@@ -134,3 +134,7 @@ where: Gu = UG - ONE
 ## Combination with Lie Groups and Lie Algebras
 
 Coord can be combined with Lie groups and Lie algebras. The rotation matrix R is an element of the Lie group, and the multiplication operation of the coordinate system is equivalent to the rotation matrix. Therefore, the coordinate system C is an element of the Lie group, with multiplication as the operation and the identity element as ONE. The cross product of two vectors can be expressed using the Lie algebra bracket: [C1, C2] = C1 * C2 – C2 * C1.
+
+## Summary
+
+The text discusses the need for a more suitable language in the computer era to express mathematical problems in a way that is acceptable to both humans and computers. The solution proposed is to overload algebraic operations and redefine them in a coordinate system object, with the aim of achieving a more concise and computer-friendly mathematical language by extending algebraic expression.
