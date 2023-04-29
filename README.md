@@ -125,8 +125,8 @@ The spatial curvature can be calculated using a coordinate system, and the Riema
 ```
 Ruv = Gu*Gv - Gv*Gu - G[uv]
   	where:	Gu = UG - ONE
-  			UG = C2 / C1
-  			Connection vector: [U, V](Lie bracket operation)
+  	UG = C2 / C1
+  	Connection vector: [U, V](Lie bracket operation)
 ```
 ## Combination with Lie Groups and Lie Algebras
 
