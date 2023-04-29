@@ -120,13 +120,16 @@ Curl:
 
 ## Applications in Differential Geometry
 
-Coord can be used to move vectors in a curved space from a natural coordinate system to a curved coordinate system. The coordinate system can be represented in exponential form: C = e^(V). The curvature can be calculated in terms of the difference between two paths projected onto the u and v curves, using Gu and Gv.
-The spatial curvature can be calculated using a coordinate system, and the Riemann curvature tensor in the u,v coordinate system is:
+Coord can be used to transport vectors in a curved space from a natural coordinate system to a curved coordinate system. The coordinate system can be represented in exponential form as C = e^(V). The curvature can be calculated by comparing two paths projected onto the u and v curves, using Gu and Gv.
+
+The spatial curvature can be computed using a coordinate system, and the Riemann curvature tensor in the u,v coordinate system is given by:
+
 ```
 Ruv = Gu*Gv - Gv*Gu - G[uv]
-  	where:	Gu = UG - ONE
-  	UG = C2 / C1
-  	Connection vector: [U, V](Lie bracket operation)
+
+where: Gu = UG - ONE
+       UG = C2 / C1
+       Connection vector: [U, V] (Lie bracket operation)
 ```
 ## Combination with Lie Groups and Lie Algebras
 
