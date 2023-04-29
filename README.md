@@ -84,9 +84,10 @@ C*k = C.scale * k
 Quaternion multiplication:
 
 ```
-C*q = C.ux(q.angle, q.axis);
-C.uy(q.angle, q.axis);
-C.uz(q.angle, q.axis);
+C2 = C1*q 
+C1 = C2/q
+q2 = q1*C
+q1 = q2/C
 ```
 
 Vector addition:
@@ -120,7 +121,13 @@ Curl:
 ## Applications in Differential Geometry
 
 Coord can be used to move vectors in a curved space from a natural coordinate system to a curved coordinate system. The coordinate system can be represented in exponential form: C = e^(V). The curvature can be calculated in terms of the difference between two paths projected onto the u and v curves, using Gu and Gv.
-
+The spatial curvature can be calculated using a coordinate system, and the Riemann curvature tensor in the u,v coordinate system is:
+```
+Ruv = Gu*Gv - Gv*Gu - G[uv]
+  	where:	Gu = UG - ONE
+  			UG = C2 / C1
+  			Connection vector: [U, V](Lie bracket operation)
+```
 ## Combination with Lie Groups and Lie Algebras
 
 Coord can be combined with Lie groups and Lie algebras. The rotation matrix R is an element of the Lie group, and the multiplication operation of the coordinate system is equivalent to the rotation matrix. Therefore, the coordinate system C is an element of the Lie group, with multiplication as the operation and the identity element as ONE. The cross product of two vectors can be expressed using the Lie algebra bracket: [C1, C2] = C1 * C2 – C2 * C1.
