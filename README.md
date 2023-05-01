@@ -18,10 +18,10 @@ struct coord {
 A coordinate system can be constructed using three axes or Euler angles as follows:
 
 ```
-coord C(vec3 ux, vec3 uy, vec3 uz);
-coord C(vec3 ux, vec3 uy);
-coord C(float angle, vec3 axis); 
-coord C(float pitch, float yaw, float roll);
+coord C1(vec3 ux, vec3 uy, vec3 uz);
+coord C2(vec3 ux, vec3 uy);
+coord C3(float angle, vec3 axis); 
+coord C4(float pitch, float yaw, float roll);
 ```
 
 ## Multiplication and Division Operations
