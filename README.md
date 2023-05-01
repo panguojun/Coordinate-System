@@ -109,13 +109,13 @@ Gradient:
 Divergence:
 
 ```
-▽ ∙ F = dF / dxyz ∙ Ic
+▽ ∙ F = dF / dxyz ∙ Ic = Gr ∙ Gr 
 ```
 
 Curl:
 
 ```
-▽ x F = dF / dxyz x Ic
+▽ x F = dF / dxyz x Ic = Gt x Gr
 ```
 
 ## Applications in Differential Geometry
