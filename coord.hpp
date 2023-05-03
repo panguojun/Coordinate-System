@@ -814,7 +814,7 @@ struct coord3 : ucoord3
 	// G = UG - ONE
 	static coord3 grad(const coord3& c1, const coord3& c2)
 	{
-		return c1.reversed() * c2 - ONE;
+		return coord3(c2.ucoord() / c1.ucoord(), c2.s / c1.s, c2.o - c1.o);
 	}
 
 	void dump(const std::string& name = "") const
