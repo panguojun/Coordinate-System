@@ -1,5 +1,5 @@
 /*********************************************************************
-*			【坐标系】
+*						【坐标系】
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 * 	坐标系类是我单独封装，用于简化坐标变换，衍生出许多算法，能解决一些
 * 	坐标系变换相关的问题。
@@ -20,10 +20,10 @@
 *			V2 = V1 * G12
 *
 *	可以使用坐标系计算空间曲率，在u,v坐标系下黎曼曲率张量为：
-*			Ruv = Gu*Gv - Gv*Gu - G[uv]
-*			其中：	Gu = UG - ONE
-*				  UG = C2 / C1
-*				  联络向量：[U, V](李括号运算)
+*			Ruv = Gu*Gv - Gv*Gu - G[u, v]
+*			其中：Gu = UG - ONE
+*			     UG = C2 / C1
+*			     [U, V] : 李括号运算
 */
 
 //#define	Parallel_Projection		 // 非正交坐标系下平行投影
@@ -127,12 +127,14 @@ struct ucoord2
 	void dump(const std::string& name = "") const
 	{
 		PRINT("----" << name << "---");
-		PRINTV2(ux);
-		PRINTV2(uy);
+		PRINTVEC2(ux);
+		PRINTVEC2(uy);
 	}
 };
+#ifdef PMDLL
 const ucoord2 ucoord2::ZERO = { 0 };
 const ucoord2 ucoord2::ONE = ucoord2();
+#endif
 
 // *******************************************************************
 //  |_
@@ -318,11 +320,13 @@ struct coord2 : ucoord2
 	void dump(const std::string& name = "") const
 	{
 		PRINT("----" << name << "---");
-		PRINTV2(ux);
-		PRINTV2(uy);
-		PRINTV2(s);
-		PRINTV2(o);
+		PRINTVEC2(ux);
+		PRINTVEC2(uy);
+		PRINTVEC2(s);
+		PRINTVEC2(o);
 	}
 };
+#ifdef PMDLL
 const coord2 coord2::ZERO = { 0 };
 const coord2 coord2::ONE = coord2();
+#endif

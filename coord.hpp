@@ -1,5 +1,5 @@
 /*********************************************************************
-*			【坐标系】
+*						【坐标系】
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 * 	坐标系类是我单独封装，用于简化坐标变换，衍生出许多算法，能解决一些
 * 	坐标系变换相关的问题。
@@ -22,8 +22,8 @@
 *	可以使用坐标系计算空间曲率，在u,v坐标系下黎曼曲率张量为：
 *			Ruv = Gu*Gv - Gv*Gu - G[uv]
 *			其中：	Gu = UG - ONE
-*				  UG = C2 / C1
-*				  联络向量：[U, V](李括号运算)
+*					UG = C2 / C1
+*					联络向量：[U, V](李括号运算)
 */
 
 //#define	Parallel_Projection		 // 非正交坐标系下平行投影
@@ -194,13 +194,21 @@ struct ucoord3
 #endif
 		return rc;
 	}
+	void operator /= (const ucoord3& c)
+	{
+		*this = (*this) / c;
+	}
 	friend quaternion operator / (const quaternion& q, const ucoord3& c)
 	{
 		return q * c.toquat().conjcopy();
 	}
-	void operator /= (const ucoord3& c)
+	ucoord3 operator / (const quaternion& q) const
 	{
-		*this = (*this) / c;
+		return (*this) * q.conjcopy();
+	}
+	void operator /= (const quaternion& q)
+	{
+		*this = (*this) / q;
 	}
 	// oper(//) = C1^-1 * C2
 	ucoord3 operator % (const ucoord3& c) const
@@ -214,13 +222,13 @@ struct ucoord3
 	ucoord3 operator ^ (const vec3& v) const
 	{
 		ucoord3 c = *this;
-		c.ux = lerp(vec3::UX, c.ux, v.x); c.ux.norm();
-		c.uy = lerp(vec3::UY, c.uy, v.y); c.uy.norm();
-		c.uz = lerp(vec3::UZ, c.uz, v.z); c.uz.norm();
+		c.ux = vec3::lerp(vec3::UX, c.ux, v.x); c.ux.norm();
+		c.uy = vec3::lerp(vec3::UY, c.uy, v.y); c.uy.norm();
+		c.uz = vec3::lerp(vec3::UZ, c.uz, v.z); c.uz.norm();
 
 		return c;
 	}
-	ucoord3 operator ^= (const vec3& v)
+	void operator ^= (const vec3& v)
 	{
 		(*this) = (*this) ^ v;
 	}
@@ -235,7 +243,7 @@ struct ucoord3
 		// 四元数法
 		return ucoord3((*this).toquat() ^ f);
 	}
-	ucoord3 operator ^= (real f)
+	void operator ^= (real f)
 	{
 		(*this) = (*this) ^ f;
 	}
@@ -353,13 +361,15 @@ struct ucoord3
 	void dump(const std::string& name = "") const
 	{
 		PRINT("----" << name << "---");
-		PRINTV3(ux);
-		PRINTV3(uy);
-		PRINTV3(uz);
+		PRINTVEC3(ux);
+		PRINTVEC3(uy);
+		PRINTVEC3(uz);
 	}
 };
+#ifdef PMDLL
 const ucoord3 ucoord3::ZERO = { 0 };
 const ucoord3 ucoord3::ONE = ucoord3();
+#endif
 
 // ******************************************************************
 //  |/_
@@ -371,7 +381,7 @@ struct coord3 : ucoord3
 	static const coord3 ONE;
 
 	vec3 s = vec3::ONE;		// 缩放
-	vec3 o;				// 原点
+	vec3 o;					// 原点
 
 	coord3() {}
 	coord3(const coord3& c)
@@ -392,7 +402,7 @@ struct coord3 : ucoord3
 	{
 		ux = _ux; uy = _uy; uz = ux.cross(uy);
 	}
-	explicit coord3(const vec3& _p)
+	coord3(const vec3& _p)
 	{
 		o = _p;
 	}
@@ -408,11 +418,9 @@ struct coord3 : ucoord3
 		uy.rot(ang, ax);
 		uz.rot(ang, ax);
 	}
-	coord3(real pit, real yaw, real rol)
+	coord3(real x, real y, real z)
 	{
-		ux.rot(pit, vec3::UX);
-		uy.rot(yaw, vec3::UY);
-		uz.rot(rol, vec3::UZ);
+		o = vec3(x,y,z);
 	}
 	coord3(const quaternion& q)
 	{
@@ -420,13 +428,14 @@ struct coord3 : ucoord3
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;
 	}
-	coord3(const vec3& p, const quaternion& q)
+	coord3(const vec3& p, const quaternion& q, const vec3& _s = vec3::ONE)
 	{
 		ux = q * vec3::UX;
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;
 
 		o = p;
+		s = _s;
 	}
 	// 移动差
 	void fromvecsT(const vec3& v1, const vec3& v2)
@@ -440,10 +449,6 @@ struct coord3 : ucoord3
 	operator vec3 () const
 	{
 		return o;
-	}
-	operator ucoord3 () const
-	{
-		return ucoord();
 	}
 	vec3 VX() const { return ux * s.x; }
 	vec3 VY() const { return uy * s.y; }
@@ -622,10 +627,10 @@ struct coord3 : ucoord3
 	coord3 operator * (const quaternion& q) const
 	{
 		coord3 rc = *this;
-		rc.ux = q * VX();
-		rc.uy = q * VY();
-		rc.uz = q * VZ();
-		rc.norm();
+		rc.ux = q * ux;
+		rc.uy = q * uy;
+		rc.uz = q * uz;
+		rc.o = q * rc.o;
 		return rc;
 	}
 	void operator *= (const quaternion& q)
@@ -679,7 +684,8 @@ struct coord3 : ucoord3
 	coord3 operator / (real s) const
 	{// C/S 缩放除法
 		coord3 c = *this;
-		c.s.x /= s; c.s.y /= s; c.s.z /= s;
+		c.s /= s;
+		c.o /= s;
 		return c;
 	}
 	void operator /= (real s)
@@ -710,38 +716,41 @@ struct coord3 : ucoord3
 	{
 		*this = (*this) / c;
 	}
+	coord3 operator / (const quaternion& q) const
+	{
+		return (*this) * q.conjcopy();
+	}
+	void operator /= (const quaternion& q)
+	{
+		*this = (*this) / q;
+	}
 	// oper(//) = C1^-1 * C2
 	coord3 operator % (const coord3& c) const
 	{
 		return (*this).reversed() * c;
 	}
-	// 注意c++的^算符优先级
 	coord3 operator ^ (const vec3& v) const
 	{
 		coord3 c = *this;
-		c.ux = lerp(vec3::UX, c.ux, v.x); c.ux.norm();
-		c.uy = lerp(vec3::UY, c.uy, v.y); c.uy.norm();
-		c.uz = lerp(vec3::UZ, c.uz, v.z); c.uz.norm();
+		c.ux = vec3::lerp(vec3::UX, c.ux, v.x); c.ux.norm();
+		c.uy = vec3::lerp(vec3::UY, c.uy, v.y); c.uy.norm();
+		c.uz = vec3::lerp(vec3::UZ, c.uz, v.z); c.uz.norm();
 
-		c.s.x = lerp(1.0, c.s.x, v.x);
-		c.s.y = lerp(1.0, c.s.y, v.y);
-		c.s.z = lerp(1.0, c.s.z, v.z);
+		c.s = vec3::lerp(vec3::ONE, c, v);
 
-		c.o.x = lerp(0, c.o.x, v.x);
-		c.o.y = lerp(0, c.o.y, v.y);
-		c.o.z = lerp(0, c.o.z, v.z);
+		c.o = vec3::lerp(vec3::ZERO, c.o, v);
 
 		return c;
 	}
 	coord3 operator ^ (real t) const
 	{
 		coord3 c = *this;
-		c.ux = lerp(vec3::UX, c.ux, t); c.ux.norm();
-		c.uy = lerp(vec3::UY, c.uy, t); c.uy.norm();
-		c.uz = lerp(vec3::UZ, c.uz, t); c.uz.norm();
+		c.ux = vec3::lerp(vec3::UX, c.ux, t); c.ux.norm();
+		c.uy = vec3::lerp(vec3::UY, c.uy, t); c.uy.norm();
+		c.uz = vec3::lerp(vec3::UZ, c.uz, t); c.uz.norm();
 
-		c.s = lerp(vec3::ONE, c.s, t);
-		c.o = lerp(vec3::ZERO, c.o, t);
+		c.s = vec3::lerp(vec3::ONE, c.s, t);
+		c.o = vec3::lerp(vec3::ZERO, c.o, t);
 
 		return c;
 	}
@@ -820,11 +829,11 @@ struct coord3 : ucoord3
 	void dump(const std::string& name = "") const
 	{
 		PRINT("----" << name << "---");
-		PRINTV3(ux);
-		PRINTV3(uy);
-		PRINTV3(uz);
-		PRINTV3(s);
-		PRINTV3(o);
+		PRINTVEC3(ux);
+		PRINTVEC3(uy);
+		PRINTVEC3(uz);
+		PRINTVEC3(s);
+		PRINTVEC3(o);
 	}
 
 	/// 便捷函数 ///
@@ -842,8 +851,10 @@ struct coord3 : ucoord3
 	}
 	void moveto(const coord3& c, real alpha = 1)
 	{
-		o = blend(o, c.o, alpha);
+		o = vec3::lerp(o, c.o, alpha);
 	}
 };
+#ifdef PMDLL
 const coord3 coord3::ZERO = { 0 };
 const coord3 coord3::ONE = coord3();
+#endif
