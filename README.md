@@ -78,7 +78,8 @@ V2 = V1 * C1 / C2
 Scalar multiplication:
 
 ```
-C*k = C.scale * k
+C*k = {C.o, C.s * k, C.u}
+C.u = {C1.ux,C1.uy,C1.uz}
 ```
 
 Quaternion multiplication:
@@ -93,7 +94,8 @@ q1 = q2 / C
 Vector addition:
 
 ```
-C1 + o = C1’{C1.o + o, C1.v + C2.v}.normalized
+C2 = C1 + o;
+where C2 = {C1.o + o, C1.v}, C1.v = {C1.ux*C1.s.x, C1.uy*C1.s.y, C1.uz*C1.s.z}
 ```
 
 ## Coordinate System Differentiation
@@ -120,9 +122,8 @@ Curl:
 
 ## Applications in Differential Geometry
 
-Coord can be used to transport vectors in a curved space from a natural coordinate system to a curved coordinate system. The coordinate system can be represented in exponential form as C = e^(V). The curvature can be calculated by comparing two paths projected onto the u and v curves, using Gu and Gv.
-
-The spatial curvature can be computed using a coordinate system, and the Riemann curvature tensor in the u,v coordinate system is given by:
+Coord can transport vectors from a natural coordinate system to a curved coordinate system in a curved space. The curvature can be determined by comparing two paths projected onto the u and v curves, which is done using Gu and Gv. Gu and Gv represent the gradients of rotational changes of vectors along the u and v.
+By using a coordinate system, the spatial curvature can be calculated, and the Riemann curvature tensor in the u,v coordinate system is given by:
 
 ```
 Ruv = Gu*Gv - Gv*Gu - G[uv]
