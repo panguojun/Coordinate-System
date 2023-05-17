@@ -122,8 +122,7 @@ Curl:
 
 ## Applications in Differential Geometry
 
-Coord can transport vectors from a natural coordinate system to a curved coordinate system in a curved space. The curvature can be determined by comparing two paths projected onto the u and v curves, which is done using Gu and Gv. Gu and Gv represent the gradients of rotational changes of vectors along the u and v.
-By using a coordinate system, the spatial curvature can be calculated, and the Riemann curvature tensor in the u,v coordinate system is given by:
+Coord can transport vectors from a natural coordinate system to a curved coordinate system in a curved space. The curvature can be determined by comparing two paths projected onto the u and v curves, which is done using Gu and Gv. Gu and Gv represent the gradients of rotational changes of vectors along the u and v. By using a coordinate system, the spatial curvature can be calculated, and the Riemann curvature tensor in the u,v coordinate system is given by:
 
 ```
 Ruv = Gu*Gv - Gv*Gu - G[uv]
