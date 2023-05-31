@@ -40,8 +40,8 @@
 // ********************************************************************************************
 struct ucoord3
 {
-	static const ucoord3 ZERO;
-	static const ucoord3 ONE;
+	static const ucoord3 ZERO = {};
+	static const ucoord3 ONE = {};
 
 	vec3 ux = vec3::UX;		// 方向
 	vec3 uy = vec3::UY;
@@ -383,10 +383,6 @@ struct ucoord3
 		PRINTVEC3(uz);
 	}
 };
-#ifdef PMDLL
-const ucoord3 ucoord3::ZERO = {};
-const ucoord3 ucoord3::ONE = {};
-#endif
 
 // ******************************************************************
 //  |/_
