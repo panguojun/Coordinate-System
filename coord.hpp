@@ -1,5 +1,5 @@
 /************************************************************************************************
-*									[Coordinate System]
+*					[Coordinate System]
 * 
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 *   The coordinate system class is separately encapsulated by me for
