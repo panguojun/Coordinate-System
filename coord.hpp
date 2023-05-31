@@ -1,36 +1,43 @@
-/*********************************************************************
-*						【坐标系】
-*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
-* 	坐标系类是我单独封装，用于简化坐标变换，衍生出许多算法，能解决一些
-* 	坐标系变换相关的问题。
-* 	坐标系的运算跟李群很相似。
-*	坐标系由三个部分组成：C = M(位置） + S（缩放） * R（旋转）
+/************************************************************************************************
+*									[Coordinate System]
+* 
+*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
+*   The coordinate system class is separately encapsulated by me for
+*   simplifying coordinate transformation and deriving many algorithms,
+*   which can solve some problems related to coordinate system transformation.
+*   The operation of the coordinate system is similar to Lie group.
+*   The coordinate system consists of three parts: C = M (position) + S (scaling) * R (rotation).
 *
-*  *  *  *  *  *  *  *  *  *  详解  *  *  *  *  *  *  *  *  *  *  *  *
-*	坐标系变换分为投影（*), 平移（^), 还原（*）三个步骤，以平移最精深：
-*	坐标系本体符号 C，坐标系之间的变换可以写成G = C1//C2,GRAD梯度的意思
-*			oper(/)  = C1 * C2^-1
-*			oper(//) = C1^-1 * C2, oper(//) = grad()
-*	具体来说：
-*	定义一个内禀坐标系(假设它是平直空间，向量可以随意移动而不变)下V,在弯
-*	曲坐标系下观察V，不同点上V是不同的，故而坐标系跟位置有关，取相邻两点
-*	（1),(2)点处有向量V1,V2，对应坐标系C1,C2，那么：
-*			V = V1 * C1 = V2 * C2 =>
-*			V2 = V1 * C1 / C2, 令 G12 = C1 / C2 =>
-*			V2 = V1 * G12
+*  *  *  *  *  *  *  *  *  *  *  *  Detailed Explanation  *  *  *  *  *  *  *  *  *  *  *  *  *  *	
+*   The coordinate system transformation is divided into three steps: projection (*), translation (^),
+*   and restoration (*), with translation being the most profound.
+*   The symbol of the coordinate system itself is C. The transformation between coordinate systems
+*   can be written as G = C1 // C2, where GRAD means gradient.
+*           oper(/)  = C1 * C2^-1
+*           oper(//) = C1^-1 * C2, oper(//) = grad()
+*   Specifically:
+*   Define an intrinsic coordinate system (assuming it is a flat space, and the vector can move freely
+*   without changing) under V. Observing V in a curved coordinate system, V is different at different points.
+*   Therefore, the coordinate system is related to the position.
+*   Take vectors V1 and V2 at adjacent points (1) and (2) respectively,
+*   corresponding to coordinate systems C1 and C2. Then:
+*           V = V1 * C1 = V2 * C2 =>
+*           V2 = V1 * C1 / C2, let G12 = C1 / C2 =>
+*           V2 = V1 * G12
 *
-*	可以使用坐标系计算空间曲率，在u,v坐标系下黎曼曲率张量为：
-*			Ruv = Gu*Gv - Gv*Gu - G[uv]
-*			其中：	Gu = UG - ONE
-*					UG = C2 / C1
-*					联络向量：[U, V](李括号运算)
+*   The coordinate system can be used to calculate spatial curvature. In the u,v coordinate system,
+*   the Riemann curvature tensor is:
+*           Ruv = Gu*Gv - Gv*Gu - G[uv]
+*           where:  Gu = UG - ONE
+*                   UG = C2 / C1
+*                   Connection vector: [U, V] (Lie bracket operation)
 */
 
 //#define	Parallel_Projection		 // 非正交坐标系下平行投影
-// ******************************************************************
+// ********************************************************************************************
 //  |/_
 // UC     3d Rotation Coordinate System
-// ******************************************************************
+// ********************************************************************************************
 struct ucoord3
 {
 	static const ucoord3 ZERO;
@@ -89,6 +96,16 @@ struct ucoord3
 		ux = q * vec3::UX;
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;;
+	}
+	void fromquat(const quaternion& q)
+	{
+		ux = q * vec3::UX;
+		uy = q * vec3::UY;
+		uz = q * vec3::UZ;
+	}
+	void frompyr(real pit, real yaw, real rol)
+	{
+		fromquat(quaternion(pit, yaw, rol));
 	}
 	quaternion toquat() const
 	{
@@ -367,8 +384,8 @@ struct ucoord3
 	}
 };
 #ifdef PMDLL
-const ucoord3 ucoord3::ZERO = { 0 };
-const ucoord3 ucoord3::ONE = ucoord3();
+const ucoord3 ucoord3::ZERO = {};
+const ucoord3 ucoord3::ONE = {};
 #endif
 
 // ******************************************************************
@@ -855,6 +872,6 @@ struct coord3 : ucoord3
 	}
 };
 #ifdef PMDLL
-const coord3 coord3::ZERO = { 0 };
-const coord3 coord3::ONE = coord3();
+const coord3 coord3::ZERO = {};
+const coord3 coord3::ONE = {};
 #endif
