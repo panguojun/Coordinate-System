@@ -394,8 +394,8 @@ const ucoord3 ucoord3::ONE = {};
 // ******************************************************************
 struct coord3 : ucoord3
 {
-	static const coord3 ZERO;
-	static const coord3 ONE;
+	static const coord3 ZERO = {};
+	static const coord3 ONE = {};
 
 	vec3 s = vec3::ONE;		// 缩放
 	vec3 o;					// 原点
@@ -871,7 +871,3 @@ struct coord3 : ucoord3
 		o = vec3::lerp(o, c.o, alpha);
 	}
 };
-#ifdef PMDLL
-const coord3 coord3::ZERO = {};
-const coord3 coord3::ONE = {};
-#endif
