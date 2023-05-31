@@ -1,5 +1,5 @@
 /*********************************************************************
-*						【坐标系】
+*				【坐标系】
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 * 	坐标系类是我单独封装，用于简化坐标变换，衍生出许多算法，能解决一些
 * 	坐标系变换相关的问题。
@@ -131,10 +131,8 @@ struct ucoord2
 		PRINTVEC2(uy);
 	}
 };
-#ifdef PMDLL
 const ucoord2 ucoord2::ZERO = { 0 };
 const ucoord2 ucoord2::ONE = ucoord2();
-#endif
 
 // *******************************************************************
 //  |_
@@ -326,7 +324,5 @@ struct coord2 : ucoord2
 		PRINTVEC2(o);
 	}
 };
-#ifdef PMDLL
 const coord2 coord2::ZERO = { 0 };
 const coord2 coord2::ONE = coord2();
-#endif
