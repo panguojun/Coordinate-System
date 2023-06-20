@@ -1,5 +1,5 @@
 /************************************************************************************************
-*					[Coordinate System]
+*									[Coordinate System]
 * 
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 *   The coordinate system class is separately encapsulated by me for
@@ -40,8 +40,8 @@
 // ********************************************************************************************
 struct ucoord3
 {
-	static const ucoord3 ZERO = {};
-	static const ucoord3 ONE = {};
+	static const ucoord3 ZERO;
+	static const ucoord3 ONE;
 
 	vec3 ux = vec3::UX;		// 方向
 	vec3 uy = vec3::UY;
@@ -383,6 +383,10 @@ struct ucoord3
 		PRINTVEC3(uz);
 	}
 };
+#ifdef PMDLL
+const ucoord3 ucoord3::ZERO = {};
+const ucoord3 ucoord3::ONE = {};
+#endif
 
 // ******************************************************************
 //  |/_
@@ -390,18 +394,18 @@ struct ucoord3
 // ******************************************************************
 struct coord3 : ucoord3
 {
-	static const coord3 ZERO = {};
-	static const coord3 ONE = {};
+	static const coord3 ZERO;
+	static const coord3 ONE;
 
-	vec3 s = vec3::ONE;		// 缩放
 	vec3 o;					// 原点
+	vec3 s = vec3::ONE;		// 缩放
 
 	coord3() {}
 	coord3(const coord3& c)
 	{
 		ux = c.ux; uy = c.uy; uz = c.uz;
-		s = c.s;
 		o = c.o;
+		s = c.s;
 	}
 	coord3(const ucoord3& c)
 	{
@@ -419,11 +423,16 @@ struct coord3 : ucoord3
 	{
 		o = _p;
 	}
-	coord3(const ucoord3& c, const vec3& _s, const vec3& _p)
+	coord3(const ucoord3& c,const vec3& _p)
+	{
+		ux = c.ux; uy = c.uy; uz = c.uz;
+		o = _p;
+	}
+	coord3(const ucoord3& c, const vec3& _s, const vec3& _o)
 	{
 		ux = c.ux; uy = c.uy; uz = c.uz;
 		s = _s;
-		o = _p;
+		o = _o;
 	}
 	coord3(real ang, const vec3& ax)
 	{
@@ -434,6 +443,14 @@ struct coord3 : ucoord3
 	coord3(real x, real y, real z)
 	{
 		o = vec3(x,y,z);
+	}	
+	coord3(real x, real y, real z, real rx, real ry, real rz)
+	{
+		quaternion q(rx, ry, rz);
+		ux = q * vec3::UX;
+		uy = q * vec3::UY;
+		uz = q * vec3::UZ;
+		o = vec3(x, y, z);
 	}
 	coord3(const quaternion& q)
 	{
@@ -463,24 +480,28 @@ struct coord3 : ucoord3
 	{
 		return o;
 	}
-	vec3 VX() const { return ux * s.x; }
-	vec3 VY() const { return uy * s.y; }
-	vec3 VZ() const { return uz * s.z; }
+	inline vec3 VX() const { return ux * s.x; }
+	inline vec3 VY() const { return uy * s.y; }
+	inline vec3 VZ() const { return uz * s.z; }
 
-	vec3 X() const { return ux * s.x + vec3::UX * o.x; }
-	vec3 Y() const { return uy * s.y + vec3::UY * o.y; }
-	vec3 Z() const { return uz * s.z + vec3::UZ * o.z; }
+	inline vec3 X() const { return ux * s.x + vec3::UX * o.x; }
+	inline vec3 Y() const { return uy * s.y + vec3::UY * o.y; }
+	inline vec3 Z() const { return uz * s.z + vec3::UZ * o.z; }
 
 	// 归一化的正交坐标系
-	ucoord3 ucoord() const
+	inline const ucoord3& ucoord() const
 	{
-		ucoord3 uc;
-		uc.ux = ux.normlized();
-		uc.uy = uy.normlized();
-		uc.uz = uz.normlized();
-		return uc;
+		return *(ucoord3*)this;
 	}
-	void set_ucoord(const ucoord3& ucd)
+	inline ucoord3& UC()
+	{
+		return *(ucoord3*)this;
+	}
+	inline void ucoord(const ucoord3& ucd)
+	{
+		ux = ucd.ux; uy = ucd.uy; uz = ucd.uz;
+	}
+	inline ucoord3 UC(const ucoord3& ucd)
 	{
 		ux = ucd.ux; uy = ucd.uy; uz = ucd.uz;
 	}
@@ -510,13 +531,27 @@ struct coord3 : ucoord3
 	quaternion toquat() const
 	{
 		quaternion q;
-		vec3 pyr = ucoord().coord2eulers();
+		vec3 pyr = ucoord3::coord2eulers();
 		q.fromeuler(pyr.x, pyr.y, pyr.z);
 		return q;
 	}
-	quaternion Q() const // 【过时】
+	quaternion Q() const
 	{
 		return toquat();
+	}
+	quaternion Q(const quaternion& q)
+	{
+		ux = q * vec3::UX;
+		uy = q * vec3::UY;
+		uz = q * vec3::UZ;
+	}
+
+	coord3 operator = (const coord3& c)
+	{
+		o = c.o;
+		s = c.s;
+		ux = c.ux; uy = c.uy; uz = c.uz;
+		return (*this);
 	}
 	inline bool is_same_dirs(const coord3& c) const
 	{
@@ -749,23 +784,23 @@ struct coord3 : ucoord3
 		c.uy = vec3::lerp(vec3::UY, c.uy, v.y); c.uy.norm();
 		c.uz = vec3::lerp(vec3::UZ, c.uz, v.z); c.uz.norm();
 
-		c.s = vec3::lerp(vec3::ONE, c, v);
-
+		c.s = vec3::lerp(vec3::ONE, c.s, v);
 		c.o = vec3::lerp(vec3::ZERO, c.o, v);
 
 		return c;
 	}
 	coord3 operator ^ (real t) const
 	{
-		coord3 c = *this;
-		c.ux = vec3::lerp(vec3::UX, c.ux, t); c.ux.norm();
+		ucoord3 uc = ucoord();
+		uc ^= t;
+		/*c.ux = vec3::lerp(vec3::UX, c.ux, t); c.ux.norm();
 		c.uy = vec3::lerp(vec3::UY, c.uy, t); c.uy.norm();
-		c.uz = vec3::lerp(vec3::UZ, c.uz, t); c.uz.norm();
+		c.uz = vec3::lerp(vec3::UZ, c.uz, t); c.uz.norm();*/
 
-		c.s = vec3::lerp(vec3::ONE, c.s, t);
-		c.o = vec3::lerp(vec3::ZERO, c.o, t);
+		vec3 s = vec3::lerp(vec3::ONE, s, t);
+		vec3 o = vec3::lerp(vec3::ZERO, o, t);
 
-		return c;
+		return coord3(uc, s, o);
 	}
 	// 归一化
 	void norm(bool bscl = true)
@@ -834,7 +869,7 @@ struct coord3 : ucoord3
 	// C2 = UG * C1
 	// V2 - V1 = G * V1 = (UG - ONE) * V1
 	// G = UG - ONE
-	static coord3 grad(const coord3& c1, const coord3& c2)
+	static coord3 grad(coord3& c1, coord3& c2)
 	{
 		return coord3(c2.ucoord() / c1.ucoord(), c2.s / c1.s, c2.o - c1.o);
 	}
@@ -850,20 +885,24 @@ struct coord3 : ucoord3
 	}
 
 	/// 便捷函数 ///
-	// 旋转
 	void rot(real ang, const vec3& ax)
 	{
 		ux.rot(ang, ax);
 		uy.rot(ang, ax);
 		uz.rot(ang, ax);
 	}
-	// 朝向对齐
-	void lookat(const coord3& c, real alpha = 1)
+	void rot(const quaternion& q)
 	{
-		set_ucoord(quat::slerp(Q(), c.Q(), alpha));
+		ux = q * ux;
+		uy = q * uy;
+		uz = q * uz;
 	}
 	void moveto(const coord3& c, real alpha = 1)
 	{
 		o = vec3::lerp(o, c.o, alpha);
 	}
 };
+#ifdef PMDLL
+const coord3 coord3::ZERO = {};
+const coord3 coord3::ONE = {};
+#endif

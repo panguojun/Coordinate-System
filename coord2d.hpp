@@ -1,5 +1,5 @@
 /*********************************************************************
-*				【坐标系】
+*						【坐标系】
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 * 	坐标系类是我单独封装，用于简化坐标变换，衍生出许多算法，能解决一些
 * 	坐标系变换相关的问题。
@@ -105,7 +105,6 @@ struct ucoord2
 	{
 		return (*this).reversed() * c;
 	}
-
 	// 倒置
 	void reverse()
 	{
@@ -131,8 +130,10 @@ struct ucoord2
 		PRINTVEC2(uy);
 	}
 };
+#ifdef PMDLL
 const ucoord2 ucoord2::ZERO = { 0 };
 const ucoord2 ucoord2::ONE = ucoord2();
+#endif
 
 // *******************************************************************
 //  |_
@@ -170,6 +171,12 @@ struct coord2 : ucoord2
 	{
 		ux.rot(ang);
 		uy.rot(ang);
+	}
+	coord2(real ang, real _r)
+	{
+		ux.rot(ang);
+		uy.rot(ang);
+		s *= _r;
 	}
 	vec2 VX() const { return ux * s.x; }
 	vec2 VY() const { return uy * s.y; }
@@ -229,7 +236,11 @@ struct coord2 : ucoord2
 	}
 	coord2 operator * (crvec2 v) const
 	{
-		return (*this) * coord2(ux * v.x, uy * v.y);
+		return  (*this) * coord2(vec2::UX * v.x, vec2::UY * v.y);
+	}
+	void operator *= (crvec2 v)
+	{
+		(*this) *= coord2(vec2::UX * v.x, vec2::UY * v.y);
 	}
 	coord2 operator * (const coord2& c) const
 	{
@@ -239,6 +250,10 @@ struct coord2 : ucoord2
 		rc.s = s * c.s;
 		rc.o = c.o + o.x * c.s.x * c.ux + o.y * c.s.y * c.uy;
 		return rc;
+	}
+	void operator *= (const coord2& c)
+	{
+		(*this) *= c;
 	}
 #ifdef Parallel_Projection
 	// 非正交坐标系下平行投影 Parallel projection
@@ -288,6 +303,12 @@ struct coord2 : ucoord2
 	{
 		return (*this).reversed() * c;
 	}
+	coord2 operator ^ (real f) const
+	{
+		real ang = ux.angle() * f;
+		real rad = exp(log(ux.len()) * f);
+		return coord2(ang, rad);
+	}
 	void norm(bool bscl = true)
 	{
 #define ISZERO(a) (fabs(a) < 1e-10)
@@ -324,5 +345,7 @@ struct coord2 : ucoord2
 		PRINTVEC2(o);
 	}
 };
+#ifdef PMDLL
 const coord2 coord2::ZERO = { 0 };
 const coord2 coord2::ONE = coord2();
+#endif
