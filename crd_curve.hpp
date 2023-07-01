@@ -1,64 +1,37 @@
 struct crd_curve 
 {
-
     std::vector<coord3> crdlist;
-
-
 
     // Default constructor
 
     crd_curve() {}
 
-
-
     // Constructor with coordinates
-
     crd_curve(const std::vector<coord3>& crds) {
-
         crdlist = crds;
-
     }
-
-
 
     // Add a coordinate to the curve
-
     void add(const coord3& crd) {
-
         crdlist.push_back(crd);
-
     }
 
-
-
     // Concatenate two curves
-
-    crd_curve operator + (const crd_curve& other) const {
-
+    crd_curve operator + (const crd_curve& other) const 
+    {
         crd_curve result = *this;
 
         for (const auto& crd : other.crdlist) {
-
             result.add(crd);
-
         }
-
         return result;
-
     }
 
-
-
     // Subtract another curve from this curve
-
     crd_curve operator - (const crd_curve& other) const {
-
         crd_curve result = *this;
-
         result.crdlist.erase(result.crdlist.end() - other.crdlist.size(), result.crdlist.end());
-
         return result;
-
     }
 
 
