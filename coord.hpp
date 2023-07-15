@@ -97,15 +97,15 @@ struct ucoord3
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;;
 	}
+	void frompyr(real pit, real yaw, real rol)
+	{
+		fromquat(quaternion(pit, yaw, rol));
+	}
 	void fromquat(const quaternion& q)
 	{
 		ux = q * vec3::UX;
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;
-	}
-	void frompyr(real pit, real yaw, real rol)
-	{
-		fromquat(quaternion(pit, yaw, rol));
 	}
 	quaternion toquat() const
 	{
@@ -539,7 +539,7 @@ struct coord3 : ucoord3
 	{
 		return toquat();
 	}
-	quaternion Q(const quaternion& q)
+	void Q(const quaternion& q)
 	{
 		ux = q * vec3::UX;
 		uy = q * vec3::UY;
