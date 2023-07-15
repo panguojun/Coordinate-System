@@ -85,10 +85,10 @@ C.u = {C.ux, C.uy, C.uz}
 Quaternion multiplication:
 
 ```
-C2 = C1 * q1 
-C1 = C2 / q1
-q2 = q1 * C1
-q1 = q2 / C1
+C0 = C1 * q1 
+C1 = C0 / q1
+q0 = q1 * C1
+q1 = q0 / C1
 ```
 
 Vector addition:
