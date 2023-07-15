@@ -8,7 +8,7 @@ In C++, a coordinate system in three-dimensional space is defined by an origin, 
 ```
 struct coord {
     vec3 ux, uy, uz;   // Three unit vectors
-    vec3 scale;        // Scaling
+    vec3 s;            // Scaling
     vec3 o;            // Origin
 };
 ```
@@ -61,7 +61,7 @@ VL = Vw / C
 
 ```
 V2 = V5 * C5 * C4 * C3 
-V3 = V2 / C3 / C4 / C5
+V5 = V2 / C3 / C4 / C5
 ```
 
 4. Convert between parallel coordinate systems:
@@ -79,16 +79,16 @@ Scalar multiplication:
 
 ```
 C*k = {C.o, C.s * k, C.u}
-C.u = {C1.ux,C1.uy,C1.uz}
+C.u = {C.ux, C.uy, C.uz}
 ```
 
 Quaternion multiplication:
 
 ```
-C2 = C1 * q 
-C1 = C2 / q
-q2 = q1 * C
-q1 = q2 / C
+C2 = C1 * q1 
+C1 = C2 / q1
+q2 = q1 * C1
+q1 = q2 / C1
 ```
 
 Vector addition:
