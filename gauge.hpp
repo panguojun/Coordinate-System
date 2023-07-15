@@ -9,7 +9,7 @@
 * 
 *				规范变换本质上是相位变换，然后合成不同频率总体效应
 */
-scope gauge_math
+namespace gauge_math
 {
 	// 向量向某个相位"投影"变换（注意是单位复数!)
 	compx phase(const compx& v, const compx& z)
