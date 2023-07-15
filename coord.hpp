@@ -897,10 +897,6 @@ struct coord3 : ucoord3
 		uy = q * uy;
 		uz = q * uz;
 	}
-	void moveto(const coord3& c, real alpha = 1)
-	{
-		o = vec3::lerp(o, c.o, alpha);
-	}
 };
 #ifdef PMDLL
 const coord3 coord3::ZERO = {};
