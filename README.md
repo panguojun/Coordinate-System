@@ -79,7 +79,7 @@ Scalar multiplication:
 
 ```
 C*k = {C.o, C.s * k, C.u}
-C.u = {C.ux, C.uy, C.uz}
+where: C.u = {C.ux, C.uy, C.uz}
 ```
 
 Quaternion multiplication:
