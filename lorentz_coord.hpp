@@ -107,7 +107,7 @@ struct lorentz_coord
 	 */
 	friend vec3 operator * (const vec3& p, const lorentz_coord& c)
 	{
-		return c.ux * p.x + c.uy * p.y + c.uz * p.z;
+		return c.ux * p.x + c.uy * p.y + c.uz * p.z - c.dir() * exp(c.power);
 	}
 
 	/**
@@ -121,7 +121,7 @@ struct lorentz_coord
 		rc.ux = ux.x * c.ux + ux.y * c.uy + ux.z * c.uz;
 		rc.uy = uy.x * c.ux + uy.y * c.uy + uy.z * c.uz;
 		rc.uz = uz.x * c.ux + uz.y * c.uy + uz.z * c.uz;
-		rc.power = power * c.power;
+		rc.power = power + c.power;
 		return rc;
 	}
 
@@ -147,7 +147,7 @@ struct lorentz_coord
 		rc.ux = q * ux;
 		rc.uy = q * uy;
 		rc.uz = q * uz;
-		rc.power = power * q.power;
+		rc.power = power + q.angle();
 		return rc;
 	}
 
@@ -173,7 +173,7 @@ struct lorentz_coord
 		rc.ux = vec3(ux.dot(c.ux), ux.dot(c.uy), ux.dot(c.uz));
 		rc.uy = vec3(uy.dot(c.ux), uy.dot(c.uy), uy.dot(c.uz));
 		rc.uz = vec3(uz.dot(c.ux), uz.dot(c.uy), uz.dot(c.uz));
-		rc.power = power / c.power;
+		rc.power = power - c.power;
 		return rc;
 	}
 
@@ -209,7 +209,7 @@ struct lorentz_coord
 			ux.cross(c.uz) - ux.cross(c.uy),
 			uy.cross(c.ux) - uy.cross(c.uz),
 			uz.cross(c.uy) - uz.cross(c.ux),
-			power * c.power
+			power + c.power
 		);
 	}
 
