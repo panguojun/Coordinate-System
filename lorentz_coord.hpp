@@ -1,40 +1,68 @@
-/*
-	Lorentz Coordinate System
-	The Lorentz Coordinate System is a coordinate system designed to describe space-time transformations and handle the time dimension. It is an extension of the complex coordinate system, where the rotation of the coordinate system can be represented by a quaternion composed of a vector and a complex angle.
-	The Lorentz Coordinate System consists of three vectors, ux, uy, and uz, which represent the x, y, and z-axis directions respectively. Additionally, it includes a complex number power, which represents the power in the time dimension.
-	The Lorentz Coordinate System allows for operations such as multiplication, division, cross product, transpose, reverse, flip, rotation, and conversion to Euler angles. These operations enable the transformation of vectors between different coordinate systems and the calculation of relativistic effects.
-	To calculate relativistic effects using the Lorentz Coordinate System, you can perform the following steps:
-	Define the initial Lorentz Coordinate System, c1, representing the current state.
-	Define the transformed Lorentz Coordinate System, c2, representing the desired state.
-	Calculate the Lorentz Coordinate System gradient, gc, using the formula gc = c1.gradient(c1, c2). This represents the change in the coordinate system from c1 to c2.
-	Apply the gradient to a vector, v, using the formula v' = v / gc, to transform the vector from c1 to c2.
-	The design philosophy of the Lorentz Coordinate System is to provide a flexible and intuitive way to handle space-time transformations and relativistic effects. By incorporating complex numbers and quaternions, it allows for a more comprehensive representation of rotations and transformations in 3D space.
-*/
+/**
+ * Lorentz Coordinate System
+ *
+ * The Lorentz Coordinate System is a coordinate system designed to describe space-time transformations and handle the time dimension.
+ * It is an extension of the complex coordinate system, where the rotation of the coordinate system can be represented by a quaternion composed of a vector and a complex angle.
+ * The Lorentz Coordinate System consists of three vectors, ux, uy, and uz, which represent the x, y, and z-axis directions respectively.
+ * Additionally, it includes a complex number power, which represents the power in the time dimension.
+ * The Lorentz Coordinate System allows for operations such as multiplication, division, cross product, transpose, reverse, flip, rotation, and conversion to Euler angles.
+ * These operations enable the transformation of vectors between different coordinate systems and the calculation of relativistic effects.
+ * The design philosophy of the Lorentz Coordinate System is to provide a flexible and intuitive way to handle space-time transformations and relativistic effects.
+ * By incorporating complex numbers and quaternions, it allows for a more comprehensive representation of rotations and transformations in 3D space.
+ */
+
 struct lorentz_coord
 {
 	static const lorentz_coord ZERO;
 	static const lorentz_coord ONE;
-	vec3 ux = vec3::UX;		// x-axis direction
-	vec3 uy = vec3::UY;		// y-axis direction
-	vec3 uz = vec3::UZ;		// z-axis direction
-	complex power;			// power in the time dimension
+	vec3 ux = vec3::UX; // x-axis direction
+	vec3 uy = vec3::UY; // y-axis direction
+	vec3 uz = vec3::UZ; // z-axis direction
+	complex power; // power in the time dimension
 
 	lorentz_coord() {}
+
+	/**
+	 * Constructor
+	 * @param c - lorentz_coord object
+	 */
 	lorentz_coord(const lorentz_coord& c)
 	{
 		ux = c.ux; uy = c.uy; uz = c.uz;
 		power = c.power;
 	}
+
+	/**
+	 * Constructor
+	 * @param _ux - x-axis direction
+	 * @param _uy - y-axis direction
+	 * @param _uz - z-axis direction
+	 * @param _power - power in the time dimension
+	 */
 	lorentz_coord(const vec3& _ux, const vec3& _uy, const vec3& _uz, const complex& _power)
 	{
 		ux = _ux; uy = _uy; uz = _uz;
 		power = _power;
 	}
+
+	/**
+	 * Constructor
+	 * @param _ux - x-axis direction
+	 * @param _uy - y-axis direction
+	 * @param _power - power in the time dimension
+	 */
 	lorentz_coord(const vec3& _ux, const vec3& _uy, const complex& _power)
 	{
 		ux = _ux; uy = _uy; uz = ux.cross(uy);
 		power = _power;
 	}
+
+	/**
+	 * Constructor
+	 * @param ang - angle
+	 * @param ax - axis
+	 * @param _power - power in the time dimension
+	 */
 	lorentz_coord(real ang, const vec3& ax, const complex& _power)
 	{
 		ux.rot(ang, ax);
@@ -42,6 +70,14 @@ struct lorentz_coord
 		uz.rot(ang, ax);
 		power = _power;
 	}
+
+	/**
+	 * Constructor
+	 * @param pit - pitch
+	 * @param yaw - yaw
+	 * @param rol - roll
+	 * @param _power - power in the time dimension
+	 */
 	lorentz_coord(real pit, real yaw, real rol, const complex& _power)
 	{
 		ux.rot(pit, vec3::UX);
@@ -49,6 +85,12 @@ struct lorentz_coord
 		uz.rot(rol, vec3::UZ);
 		power = _power;
 	}
+
+	/**
+	 * Constructor
+	 * @param q - quaternion
+	 * @param _power - power in the time dimension
+	 */
 	lorentz_coord(const quaternion& q, const complex& _power)
 	{
 		ux = q * vec3::UX;
@@ -57,13 +99,22 @@ struct lorentz_coord
 		power = _power;
 	}
 
-	// Multiplication: define a vector in the coordinate system or restore a vector to the parent space
+	/**
+	 * Multiplication: define a vector in the coordinate system or restore a vector to the parent space
+	 * @param p - vector
+	 * @param c - lorentz_coord object
+	 * @return result of the multiplication
+	 */
 	friend vec3 operator * (const vec3& p, const lorentz_coord& c)
 	{
 		return c.ux * p.x + c.uy * p.y + c.uz * p.z;
 	}
 
-	// Multiplication: Cchild * Cparent * ...
+	/**
+	 * Multiplication: Cchild * Cparent * ...
+	 * @param c - lorentz_coord object
+	 * @return result of the multiplication
+	 */
 	lorentz_coord operator * (const lorentz_coord& c) const
 	{
 		lorentz_coord rc;
@@ -74,13 +125,22 @@ struct lorentz_coord
 		return rc;
 	}
 
-	// Multiplication: q * C
+	/**
+	 * Multiplication: q * C
+	 * @param q - quaternion
+	 * @param c - lorentz_coord object
+	 * @return result of the multiplication
+	 */
 	friend quaternion operator * (const quaternion& q, const lorentz_coord& c)
 	{
 		return q * c.to_quaternion();
 	}
 
-	// Multiplication: C * q
+	/**
+	 * Multiplication: C * q
+	 * @param q - quaternion
+	 * @return result of the multiplication
+	 */
 	lorentz_coord operator * (const quaternion& q) const
 	{
 		lorentz_coord rc;
@@ -91,13 +151,22 @@ struct lorentz_coord
 		return rc;
 	}
 
-	// Division: vector projection onto the coordinate system
+	/**
+	 * Division: vector projection onto the coordinate system
+	 * @param v - vector
+	 * @param c - lorentz_coord object
+	 * @return result of the division
+	 */
 	friend vec3 operator / (const vec3& v, const lorentz_coord& c)
 	{
 		return vec3(v.dot(c.ux), v.dot(c.uy), v.dot(c.uz));
 	}
 
-	// Division: C1 * C2^-1
+	/**
+	 * Division: C1 * C2^-1
+	 * @param c - lorentz_coord object
+	 * @return result of the division
+	 */
 	lorentz_coord operator / (const lorentz_coord& c) const
 	{
 		lorentz_coord rc;
@@ -108,19 +177,32 @@ struct lorentz_coord
 		return rc;
 	}
 
-	// Division: q / C
+	/**
+	 * Division: q / C
+	 * @param q - quaternion
+	 * @param c - lorentz_coord object
+	 * @return result of the division
+	 */
 	friend quaternion operator / (const quaternion& q, const lorentz_coord& c)
 	{
 		return q * c.to_quaternion().conjugate();
 	}
 
-	// Division: C / q
+	/**
+	 * Division: C / q
+	 * @param q - quaternion
+	 * @return result of the division
+	 */
 	lorentz_coord operator / (const quaternion& q) const
 	{
 		return (*this) * q.conjugate();
 	}
 
-	// Cross product: C1 x C2
+	/**
+	 * Cross product: C1 x C2
+	 * @param c - lorentz_coord object
+	 * @return result of the cross product
+	 */
 	lorentz_coord cross(const lorentz_coord& c) const
 	{
 		return lorentz_coord(
@@ -131,7 +213,11 @@ struct lorentz_coord
 		);
 	}
 
-	// Cross product: C x v
+	/**
+	 * Cross product: C x v
+	 * @param v - vector
+	 * @return result of the cross product
+	 */
 	lorentz_coord cross(const vec3& v) const
 	{
 		return lorentz_coord(
@@ -142,7 +228,9 @@ struct lorentz_coord
 		);
 	}
 
-	// Transpose (axis exchange)
+	/**
+	 * Transpose (axis exchange)
+	 */
 	void transpose()
 	{
 		vec3 _ux = vec3(ux.x, uy.x, uz.x);
@@ -151,7 +239,10 @@ struct lorentz_coord
 		ux = _ux; uy = _uy; uz = _uz;
 	}
 
-	// Transpose (axis exchange)
+	/**
+	 * Transpose (axis exchange)
+	 * @return transposed lorentz_coord object
+	 */
 	lorentz_coord transposed() const
 	{
 		lorentz_coord c = (*this);
@@ -161,37 +252,52 @@ struct lorentz_coord
 		return c;
 	}
 
-	// Reverse
+	/**
+	 * Reverse
+	 */
 	void reverse()
 	{
 		(*this) = ONE / (*this);
 	}
 
-	// Reverse
+	/**
+	 * Reverse
+	 * @return reversed lorentz_coord object
+	 */
 	lorentz_coord reversed() const
 	{
 		return ONE / (*this);
 	}
 
-	// Flip X-axis
+	/**
+	 * Flip X-axis
+	 */
 	void flipX()
 	{
 		ux = -ux;
 	}
 
-	// Flip Y-axis
+	/**
+	 * Flip Y-axis
+	 */
 	void flipY()
 	{
 		uy = -uy;
 	}
 
-	// Flip Z-axis
+	/**
+	 * Flip Z-axis
+	 */
 	void flipZ()
 	{
 		uz = -uz;
 	}
 
-	// Rotation
+	/**
+	 * Rotation
+	 * @param ang - angle
+	 * @param ax - axis
+	 */
 	void rotate(real ang, const vec3& ax)
 	{
 		ux.rotate(ang, ax);
@@ -199,7 +305,10 @@ struct lorentz_coord
 		uz.rotate(ang, ax);
 	}
 
-	// Convert coordinate system to Euler angles
+	/**
+	 * Convert coordinate system to Euler angles
+	 * @return Euler angles
+	 */
 	vec3 coord_to_eulers() const
 	{
 		const lorentz_coord& rm = *this;
@@ -222,25 +331,41 @@ struct lorentz_coord
 		return vec3(x, y, z);
 	}
 
-	// Dot product with a vector
+	/**
+	 * Dot product with a vector
+	 * @param v - vector
+	 * @return dot product
+	 */
 	real dot(const vec3& v) const
 	{
 		return v.dot(ux) + v.dot(uy) + v.dot(uz);
 	}
 
-	// Dot product with another coordinate system
+	/**
+	 * Dot product with another coordinate system
+	 * @param c - lorentz_coord object
+	 * @return dot product
+	 */
 	real dot(const lorentz_coord& c) const
 	{
 		return c.ux.dot(ux) + c.uy.dot(uy) + c.uz.dot(uz);
 	}
 
-	// Gradient coordinate system = Gradient X Tangent space
+	/**
+	 * Gradient coordinate system = Gradient X Tangent space
+	 * @param c1 - initial lorentz_coord object
+	 * @param c2 - transformed lorentz_coord object
+	 * @return gradient lorentz_coord object
+	 */
 	lorentz_coord gradient(const lorentz_coord& c1, const lorentz_coord& c2)
 	{
 		return c1.reversed() * c2;
 	}
 
-	// Convert to quaternion
+	/**
+	 * Convert to quaternion
+	 * @return quaternion
+	 */
 	quaternion to_quaternion() const
 	{
 		vec3 pyr = coord_to_eulers();
@@ -249,7 +374,11 @@ struct lorentz_coord
 		return q;
 	}
 
-	// Lerp operator
+	/**
+	 * Lerp operator
+	 * @param v - vector
+	 * @return lerped lorentz_coord object
+	 */
 	lorentz_coord operator ^ (const vec3& v) const
 	{
 		lorentz_coord c = *this;
@@ -259,7 +388,11 @@ struct lorentz_coord
 		return c;
 	}
 
-	// Lerp operator
+	/**
+	 * Lerp operator
+	 * @param f - factor
+	 * @return lerped lorentz_coord object
+	 */
 	lorentz_coord operator ^ (real f) const
 	{
 		return lorentz_coord((*this).to_quaternion() ^ f);
