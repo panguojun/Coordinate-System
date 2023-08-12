@@ -107,7 +107,7 @@ struct lorentz_coord
 	 */
 	friend vec3 operator * (const vec3& p, const lorentz_coord& c)
 	{
-		return c.ux * p.x + c.uy * p.y + c.uz * p.z - c.dir() * exp(c.power);
+		return c.ux * p.x + c.uy * p.y + c.uz * p.z + c.dir() * exp(c.power);
 	}
 
 	/**
