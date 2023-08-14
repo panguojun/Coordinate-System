@@ -227,31 +227,6 @@ struct lorentz_coord
 			power
 		);
 	}
-
-	/**
-	 * Transpose (axis exchange)
-	 */
-	void transpose()
-	{
-		vec3 _ux = vec3(ux.x, uy.x, uz.x);
-		vec3 _uy = vec3(ux.y, uy.y, uz.y);
-		vec3 _uz = vec3(ux.z, uy.z, uz.z);
-		ux = _ux; uy = _uy; uz = _uz;
-	}
-
-	/**
-	 * Transpose (axis exchange)
-	 * @return transposed lorentz_coord object
-	 */
-	lorentz_coord transposed() const
-	{
-		lorentz_coord c = (*this);
-		c.ux = vec3(ux.x, uy.x, uz.x);
-		c.uy = vec3(ux.y, uy.y, uz.y);
-		c.uz = vec3(ux.z, uy.z, uz.z);
-		return c;
-	}
-
 	/**
 	 * Reverse
 	 */
@@ -268,31 +243,6 @@ struct lorentz_coord
 	{
 		return ONE / (*this);
 	}
-
-	/**
-	 * Flip X-axis
-	 */
-	void flipX()
-	{
-		ux = -ux;
-	}
-
-	/**
-	 * Flip Y-axis
-	 */
-	void flipY()
-	{
-		uy = -uy;
-	}
-
-	/**
-	 * Flip Z-axis
-	 */
-	void flipZ()
-	{
-		uz = -uz;
-	}
-
 	/**
 	 * Rotation
 	 * @param ang - angle
@@ -372,30 +322,6 @@ struct lorentz_coord
 		quaternion q;
 		q.from_euler(pyr.x, pyr.y, pyr.z);
 		return q;
-	}
-
-	/**
-	 * Lerp operator
-	 * @param v - vector
-	 * @return lerped lorentz_coord object
-	 */
-	lorentz_coord operator ^ (const vec3& v) const
-	{
-		lorentz_coord c = *this;
-		c.ux = vec3::lerp(vec3::UX, c.ux, v.x); c.ux.normalize();
-		c.uy = vec3::lerp(vec3::UY, c.uy, v.y); c.uy.normalize();
-		c.uz = vec3::lerp(vec3::UZ, c.uz, v.z); c.uz.normalize();
-		return c;
-	}
-
-	/**
-	 * Lerp operator
-	 * @param f - factor
-	 * @return lerped lorentz_coord object
-	 */
-	lorentz_coord operator ^ (real f) const
-	{
-		return lorentz_coord((*this).to_quaternion() ^ f);
 	}
 };
 
