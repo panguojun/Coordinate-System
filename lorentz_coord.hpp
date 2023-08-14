@@ -106,8 +106,8 @@ struct lorentz_coord
 	 * @return result of the multiplication
 	 */
 	friend vec3 operator * (const vec3& p, const lorentz_coord& c)
-	{
-		return c.ux * p.x + c.uy * p.y + c.uz * p.z + c.dir() * exp(c.power);
+	{  
+		return (c.ux * p.x + c.uy * p.y + c.uz * p.z) * cos(c.power);
 	}
 
 	/**
@@ -159,7 +159,7 @@ struct lorentz_coord
 	 */
 	friend vec3 operator / (const vec3& v, const lorentz_coord& c)
 	{
-		return vec3(v.dot(c.ux), v.dot(c.uy), v.dot(c.uz));
+		return vec3(v.dot(c.ux), v.dot(c.uy), v.dot(c.uz)) * cos(-c.power);
 	}
 
 	/**
