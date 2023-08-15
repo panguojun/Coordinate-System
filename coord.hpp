@@ -1,5 +1,5 @@
 /************************************************************************************************
-*				 [Coordinate System]
+*									[Coordinate System]
 * 
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 *   The coordinate system class is separately encapsulated by me for
@@ -87,6 +87,7 @@ struct ucoord3
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;
 	}
+	// 轴，向量1，2
 	void fromaxvecs(const vec3& ax, const vec3& v1, const vec3& v2)
 	{
 		vec3 pv1 = v1.crossdot(ax);
@@ -97,15 +98,34 @@ struct ucoord3
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;;
 	}
-	void frompyr(real pit, real yaw, real rol)
+	// uy方向 推测ux,uz
+	void fromuy(const vec3& _uy)
 	{
-		fromquat(quaternion(pit, yaw, rol));
+		quat q; q.fromvectors(uy, _uy);
+		ux = q * vec3::UX;
+		uy = q * vec3::UY;
+		uz = q * vec3::UZ;
 	}
 	void fromquat(const quaternion& q)
 	{
 		ux = q * vec3::UX;
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;
+	}
+	void frompyr(real pit, real yaw, real rol)
+	{
+		quaternion q(pit, yaw, rol);
+		ux = q * vec3::UX;
+		uy = q * vec3::UY;
+		uz = q * vec3::UZ;
+	}
+	inline void frompyr(crvec pyr)
+	{
+		fromquat(quaternion(pyr.x, pyr.y, pyr.z));
+	}
+	inline vec3 topyr()
+	{
+		return coord2eulers();
 	}
 	quaternion toquat() const
 	{
@@ -114,17 +134,17 @@ struct ucoord3
 		q.fromeuler(pyr.x, pyr.y, pyr.z);
 		return q;
 	}
-	inline bool is_same_dirs(const ucoord3& c) const
+	inline bool same_dirs(const ucoord3& c) const
 	{
 		return ux == c.ux && uy == c.uy && uz == c.uz;
 	}
 	bool operator == (const ucoord3& c) const
 	{
-		return is_same_dirs(c);
+		return same_dirs(c);
 	}
 	bool operator != (const ucoord3& c) const
 	{
-		return !is_same_dirs(c);
+		return !same_dirs(c);
 	}
 
 	// 乘法：在坐标系下定义一个向量，或者向量向父空间还原
@@ -141,10 +161,6 @@ struct ucoord3
 
 		return rc;
 	}
-	void operator *= (const ucoord3& c)
-	{
-		*this = (*this) * c;
-	}
 	friend quaternion operator * (const quaternion& q, const ucoord3& c)
 	{
 		return q * c.toquat();
@@ -156,6 +172,14 @@ struct ucoord3
 		rc.uy = q * uy;
 		rc.uz = q * uz;
 		return rc;
+	}
+	friend void operator *= (vec3& p, const ucoord3& c)
+	{
+		p = p * c;
+	}
+	void operator *= (const ucoord3& c)
+	{
+		*this = (*this) * c;
 	}
 	void operator *= (const quaternion& q)
 	{
@@ -174,9 +198,9 @@ struct ucoord3
 	}
 
 #define PL_PRJ3(v) vec3( \
-				pl_prj(v-c.uz*v.dot(c.uz), c.ux, c.uy) / c.s.x, \
-				pl_prj(v-c.ux*v.dot(c.ux), c.uy, c.uz) / c.s.y, \
-				pl_prj(v-c.uy*v.dot(c.uy), c.uz, c.ux) / c.s.z)
+				pl_prj(v - c.uz * v.dot(c.uz), c.ux, c.uy) / c.s.x, \
+				pl_prj(v - c.ux * v.dot(c.ux), c.uy, c.uz) / c.s.y, \
+				pl_prj(v - c.uy * v.dot(c.uy), c.uz, c.ux) / c.s.z)
 #endif
 	friend vec3 operator / (const vec3& v, const ucoord3& c)
 	{
@@ -346,9 +370,11 @@ struct ucoord3
 	// 坐标系到欧拉角
 	vec3 coord2eulers() const
 	{
+		real c_eps = 1e-5;
+
 		const ucoord3& rm = *this;
 		float sy = sqrt(rm.ux.x * rm.ux.x + rm.uy.x * rm.uy.x);
-		bool singular = sy < 1e-6;
+		bool singular = sy < c_eps;
 
 		float x, y, z;
 		if (!singular)
@@ -410,6 +436,14 @@ struct coord3 : ucoord3
 	coord3(const ucoord3& c)
 	{
 		ux = c.ux; uy = c.uy; uz = c.uz;
+	}
+	coord3(const vec3& _o, const vec3& _s, const vec3& _ux, const vec3& _uy, const vec3& _uz)
+	{
+		o = _o; s = _s; ux = _ux; uy = _uy; uz = _uz;
+	}
+	coord3(const vec3& _o, const vec3& _ux, const vec3& _uy, const vec3& _uz)
+	{
+		o = _o; ux = _ux; uy = _uy; uz = _uz;
 	}
 	coord3(const vec3& _ux, const vec3& _uy, const vec3& _uz)
 	{
@@ -513,12 +547,12 @@ struct coord3 : ucoord3
 		return c;
 	}
 	// 位置
-	inline vec3 pos()
+	inline vec3 pos() const
 	{
 		return o;
 	}
 	// 总向量
-	inline vec3 sumvec()
+	inline vec3 sumvec() const
 	{
 		return o + VX() + VY() + VZ();
 	}
@@ -642,15 +676,19 @@ struct coord3 : ucoord3
 	{
 		*this = (*this) * v;
 	}
+	friend real operator * (const real& s, const coord3& c)
+	{
+		return s * ((c.s.x + c.s.y + c.s.z) / 3.0);
+	}
 	coord3 operator * (real s) const
 	{
 		coord3 c = *this;
-		//{// C*S 缩放乘法
-		//	c.s.x *= s; c.s.y *= s; c.s.z *= s;
-		//}
-		{// C*S 移动乘法
-			c.o.x *= s; c.o.y *= s; c.o.z *= s;
+		{// C*S 缩放乘法
+			c.s.x *= s; c.s.y *= s; c.s.z *= s;
 		}
+		//{// C*S 移动乘法
+		//	c.o.x *= s; c.o.y *= s; c.o.z *= s;
+		//}
 		return c;
 	}
 	void operator *= (real s)
@@ -873,7 +911,11 @@ struct coord3 : ucoord3
 	{
 		return coord3(c2.ucoord() / c1.ucoord(), c2.s / c1.s, c2.o - c1.o);
 	}
-
+	std::string serialise()
+	{
+		vec3 eu = coord2eulers();
+		return o.serialise() + "," + eu.serialise();
+	}
 	void dump(const std::string& name = "") const
 	{
 		PRINT("----" << name << "---");
@@ -885,17 +927,38 @@ struct coord3 : ucoord3
 	}
 
 	/// 便捷函数 ///
-	void rot(real ang, const vec3& ax)
+	void rot(real angle, const vec3& ax)
 	{
-		ux.rot(ang, ax);
-		uy.rot(ang, ax);
-		uz.rot(ang, ax);
+		quaternion q(angle, ax);
+		ux *= q;
+		uy *= q;
+		uz *= q;
 	}
 	void rot(const quaternion& q)
 	{
 		ux = q * ux;
 		uy = q * uy;
 		uz = q * uz;
+	}
+	coord3 rotcopy(real ang, const vec3& ax) const
+	{
+		coord3 c = *this;
+		c.ux.rot(ang, ax);
+		c.uy.rot(ang, ax);
+		c.uz.rot(ang, ax);
+		return c;
+	}
+	coord3 rotcopy(const quaternion& q) const
+	{
+		coord3 c = *this;
+		c.ux *= q;
+		c.uy *= q;
+		c.uz *= q;
+		return c;
+	}
+	void moveto(const coord3& c, real alpha = 1)
+	{
+		o = vec3::lerp(o, c.o, alpha);
 	}
 };
 #ifdef PMDLL
