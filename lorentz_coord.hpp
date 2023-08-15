@@ -109,7 +109,10 @@ struct lorentz_coord
 	{  
 		return (c.ux * p.x + c.uy * p.y + c.uz * p.z) * cos(c.power);
 	}
-
+	friend vec4 operator * (const vec4& p, const lorentz_coord& c)
+	{  
+		return vec4((c.ux * p.x + c.uy * p.y + c.uz * p.z) * cos(c.power), p.w + c.power);
+	}
 	/**
 	 * Multiplication: Cchild * Cparent * ...
 	 * @param c - lorentz_coord object
