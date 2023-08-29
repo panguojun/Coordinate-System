@@ -909,7 +909,7 @@ struct coord3 : ucoord3
 	// G = UG - ONE
 	static coord3 grad(coord3& c1, coord3& c2)
 	{
-		return coord3(c2.ucoord() / c1.ucoord(), c2.s / c1.s, c2.o - c1.o);
+		return c2 / c1 - ONE;
 	}
 	std::string serialise()
 	{
