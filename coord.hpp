@@ -28,8 +28,7 @@
 *   The coordinate system can be used to calculate spatial curvature. In the u,v coordinate system,
 *   the Riemann curvature tensor is:
 *           Ruv = Gu*Gv - Gv*Gu - G[uv]
-*           where:  Gu = UG - ONE
-*                   UG = C2 / C1
+*           where:  Gu = C2 / C1 - ONE
 *                   Connection vector: [U, V] (Lie bracket operation)
 */
 
