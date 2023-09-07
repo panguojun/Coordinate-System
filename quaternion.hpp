@@ -1,5 +1,5 @@
 /**************************************************************************
-				【四元数】
+							【四元数】
 
 	四元数是在复数基础上的扩展,单位四元数用于旋转操作，向量是源自于四元数，
 	不过二者有差别。目前四元数跟向量之间的关系以及应用存在着争议。
@@ -15,17 +15,26 @@
 **************************************************************************/
 struct  quaternion
 {
-	real w, x, y, z;
+	real w = 1, x = 0, y = 0, z = 0;
 	static const quaternion ONE;
 	//-----------------------------------------------------------------------
+	quaternion() { }
 	quaternion(
-		real fW = 1.0,
-		real fX = 0.0, real fY = 0.0, real fZ = 0.0)
+		real fW,
+		real fX, real fY, real fZ)
 	{
 		w = fW;
 		x = fX;
 		y = fY;
 		z = fZ;
+	}
+	quaternion(real pitch, real yaw, real roll)
+	{
+		fromeuler(pitch, yaw, roll);
+	}
+	quaternion(const vector3& pyr)
+	{
+		fromeuler(pyr.x, pyr.y, pyr.z);
 	}
 	quaternion(const quaternion& rkQ)
 	{
@@ -36,7 +45,11 @@ struct  quaternion
 	}
 	quaternion(const real& rfAngle, const vector3& rkAxis)
 	{
-		this->ang_axis(rfAngle, rkAxis);
+		ang_axis(rfAngle, rkAxis);
+	}	
+	quaternion(crvec v1, crvec v2)
+	{
+		ang_axis(acos(v1.dot(v2)), v1.cross(v2).normalized());
 	}
 	//-----------------------------------------------------------------------
 	quaternion operator+ (const quaternion& rkQ) const
@@ -149,9 +162,18 @@ struct  quaternion
 	{
 		return vec3(x, y, z).normcopy();
 	}
-	real angle() const
+	real angle() const // fixed
 	{
-		return acos(w) * 2;
+		if (w >= 1.0)
+			return 0.0;
+		if (w <= -1.0)
+			return PI;
+		real ang = acos(w) * 2;
+		if (ang > PI)
+			return ang - PI * 2;
+		if (ang < -PI)
+			return ang + PI * 2;
+		return ang;
 	}
 	//-----------------------------------------------------------------------
 	void normalize(void)
@@ -204,6 +226,11 @@ struct  quaternion
 		vec3 qv = n * (r * sin(th));
 		return quaternion(r * cos(th), qv.x, qv.y, qv.z);
 	}
+	quaternion log() const {
+		quaternion src = *this;
+		vec3 src_v = src.axis() * src.angle();
+		return quaternion(src_v.x, src_v.y, src_v.z, 0);
+	}
 	// 指数运算（注意运算符的优先级）
 	quaternion operator ^ (int n) const
 	{
@@ -222,9 +249,10 @@ struct  quaternion
 	// v1, v2 是单位向量
 	void fromvectors(crvec v1, crvec v2)
 	{
-		ang_axis(acos(v1.dot(v2)), v1.cross(v2).normlized());
+		ang_axis(acos(v1.dot(v2)), v1.cross(v2).normalized());
 	}
 	//-----------------------------------------------------------------------
+	// 角度，轴向定义
 	void ang_axis(real rfAngle, const vector3& rkAxis)
 	{
 		// assert:  axis[] is unit length
@@ -283,7 +311,7 @@ struct  quaternion
 		}
 		return v;
 	}
-	void to_euler(real& roll, real& pitch, real& yaw) const
+	void toeuler(real& roll, real& pitch, real& yaw) const
 	{
 		real sinr_cosp = 2 * (w * x + y * z);
 		real cosr_cosp = 1 - 2 * (x * x + y * y);
@@ -391,6 +419,54 @@ struct  quaternion
 		result.normalize();
 		return result;
 	}
+	quaternion spherical_cubic_interpolate(const quaternion& p_b, const quaternion& p_pre_a, const quaternion& p_post_b, const real& p_weight) const {
+
+		quaternion from_q = *this;
+		quaternion pre_q = p_pre_a;
+		quaternion to_q = p_b;
+		quaternion post_q = p_post_b;
+
+		// Align flip phases.
+		from_q = from_q.normalized();
+		pre_q = pre_q.normalized();
+		to_q = to_q.normalized();
+		post_q = post_q.normalized();
+
+		// Flip quaternions to shortest path if necessary.
+		bool flip1 = sign(from_q.dot(pre_q));
+		pre_q = flip1 ? -pre_q : pre_q;
+		bool flip2 = sign(from_q.dot(to_q));
+		to_q = flip2 ? -to_q : to_q;
+		bool flip3 = flip2 ? to_q.dot(post_q) <= 0 : sign(to_q.dot(post_q));
+		post_q = flip3 ? -post_q : post_q;
+
+		// Calc by Expmap in from_q space.
+		quaternion ln_from = quaternion(0, 0, 0, 0);
+		quaternion ln_to = (from_q.conjcopy() * to_q).log();
+		quaternion ln_pre = (from_q.conjcopy() * pre_q).log();
+		quaternion ln_post = (from_q.conjcopy() * post_q).log();
+		quaternion ln = quaternion(0, 0, 0, 0);
+		ln.x = cubic_interpolate(ln_from.x, ln_to.x, ln_pre.x, ln_post.x, p_weight);
+		ln.y = cubic_interpolate(ln_from.y, ln_to.y, ln_pre.y, ln_post.y, p_weight);
+		ln.z = cubic_interpolate(ln_from.z, ln_to.z, ln_pre.z, ln_post.z, p_weight);
+		quaternion q1 = from_q * ln.exp();
+
+		// Calc by Expmap in to_q space.
+		ln_from = (to_q.conjcopy() * from_q).log();
+		ln_to = quaternion(0, 0, 0, 0);
+		ln_pre = (to_q.conjcopy() * pre_q).log();
+		ln_post = (to_q.conjcopy() * post_q).log();
+		ln = quaternion(0, 0, 0, 0);
+		ln.x = cubic_interpolate(ln_from.x, ln_to.x, ln_pre.x, ln_post.x, p_weight);
+		ln.y = cubic_interpolate(ln_from.y, ln_to.y, ln_pre.y, ln_post.y, p_weight);
+		ln.z = cubic_interpolate(ln_from.z, ln_to.z, ln_pre.z, ln_post.z, p_weight);
+		quaternion q2 = to_q * ln.exp();
+
+		// To cancel error made by Expmap ambiguity, do blends.
+		return quaternion::slerp(q1, q2, p_weight);
+	}
 };
 // **********************************************************************
+#ifdef PMDLL
 const quaternion quaternion::ONE = quaternion(1, 0, 0, 0);
+#endif

@@ -1,10 +1,10 @@
 /**
-*				【向量】
+*							【向量】
 * 
-*			向量的定义是来自于四元数
-*			向量不是完整的数，
-*			向量跟空间结构有关系，
-*			如果在时空中建议使用四元数
+*					向量的定义是来自于四元数
+*					向量不是完整的数，
+*					向量跟空间结构有关系，
+*					如果在时空中建议使用四元数
 */
 // **********************************************************************
 // 2D
@@ -273,6 +273,12 @@ struct vector3
 		y = v;
 		z = v;
 	}
+	explicit vector3(real* v)
+	{
+		x = v[0];
+		y = v[1];
+		z = v[2];
+	}
 	vector3(real _x, real _y, real _z = 0.0f)
 	{
 		x = _x;
@@ -340,7 +346,9 @@ struct vector3
 	vector3 zzx() const { return vector3(z, z, x); }
 	vector3 zzy() const { return vector3(z, z, y); }
 	vector3 zzz() const { return vector3(z, z, z); }
-
+	vector3 xyo() const { return vector3(x, y, 0); }
+	vector3 xoz() const { return vector3(x, 0, z); }
+	vector3 oyz() const { return vector3(0, y, z); }
 	vector3 operator + (const vector3& _p) const
 	{
 		vector3 fp;
@@ -521,7 +529,7 @@ struct vector3
 		}
 		return vector3::ZERO;
 	}
-	vector3 normlized() const
+	vector3 normalized() const
 	{
 		real r = len();
 		if (r > 0)
@@ -774,7 +782,7 @@ struct vector4
 		}
 		return vector4(0, 0, 0, 0);
 	}
-	vector4 normlized()
+	vector4 normalized()
 	{
 		float r = len();
 		if (r > 0)
@@ -841,7 +849,7 @@ const vector4 vector4::CENTER = vector4(0.5, 0.5, 0.5, 0.5);
 // 注意，在物理学中（粒子物理学）至今没有观察到超过（3+1）自由度的高维粒子
 // 所以说上层的高维的属性（比如尺寸与颜色）必然是某种非独立变量的某种权重组合。
 // **********************************************************************
-struct vectorn 
+struct vectorn
 {
 	std::vector<real> val;
 
@@ -871,6 +879,46 @@ struct vectorn
 			val[i] = v;
 		}
 	}
+	vectorn& operator<<(float v)
+	{
+		val.push_back(v);
+		return *this;
+	}
+	vectorn& operator>>(float& v)
+	{
+		v = val.back();
+		val.pop_back();
+		return *this;
+	}
+	vectorn& operator<<(double v)
+	{
+		val.push_back(v);
+		return *this;
+	}
+	vectorn& operator>>(double& v)
+	{
+		v = val.back();
+		val.pop_back();
+		return *this;
+	}
+	vectorn& operator<<(const vec3& v)
+	{
+		val.push_back(v.x);
+		val.push_back(v.y);
+		val.push_back(v.z);
+		return *this;
+	}
+	vectorn& operator>>(vec3& v)
+	{
+		v.x = val.back();
+		val.pop_back();
+		v.z = val.back();
+		val.pop_back();
+		v.z = val.back();
+		val.pop_back();
+		return *this;
+	}
+
 	void operator = (crvec v)
 	{
 		val[0] = v.x;

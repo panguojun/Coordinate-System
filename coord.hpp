@@ -1,5 +1,5 @@
 /************************************************************************************************
-*				[Coordinate System]
+*									[Coordinate System]
 * 
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 *   The coordinate system class is separately encapsulated by me for
@@ -13,7 +13,7 @@
 *   and restoration (*), with translation being the most profound.
 *   The symbol of the coordinate system itself is C. The transformation between coordinate systems
 *   can be written as G = C1 // C2, where GRAD means gradient.
-*           oper(/)  = C1 * C2^-1
+*           oper(/)  = C1 * C2^ - 1
 *           oper(//) = C1^-1 * C2, oper(//) = grad()
 *   Specifically:
 *   Define an intrinsic coordinate system (assuming it is a flat space, and the vector can move freely
@@ -28,7 +28,7 @@
 *   The coordinate system can be used to calculate spatial curvature. In the u,v coordinate system,
 *   the Riemann curvature tensor is:
 *           Ruv = Gu*Gv - Gv*Gu - G[uv]
-*           where:  Gu = C2 / C1 - ONE
+*           where:  Gu = C2 / C1 - I
 *                   Connection vector: [U, V] (Lie bracket operation)
 */
 
@@ -474,34 +474,13 @@ struct vcoord3 : ucoord3
 	vec3 s = vec3::ONE;		// 缩放
 
 	vcoord3() {}
-	vcoord3(const vcoord3& c) : ucoord3(c.ux, c.uy, c.uz)
-	{
-		s = c.s;
-	}
-	vcoord3(const ucoord3& c) : ucoord3(c)
-	{
-	}
-	vcoord3(const ucoord3& c, const vec3& _s) : ucoord3(c)
-	{
-		s = _s;
-	}
-	vcoord3( const vec3& _ux, const vec3& _uy, const vec3& _uz, const vec3& _s) : ucoord3(_ux, _uy, _uz)
-	{
-		s = _s; 
-	}
-	vcoord3( const vec3& _vx, const vec3& _vy, const vec3& _vz)
-	{
-#define ISZERO(a) (fabs(a) < 1e-10)
-
-		s.x = ux.len(); if (!ISZERO(s.x)) ux /= s.x;
-		s.y = uy.len(); if (!ISZERO(s.y)) uy /= s.y;
-		s.z = uz.len(); if (!ISZERO(s.z)) uz /= s.z;
-	}
+	vcoord3(const vcoord3& c) : ucoord3(c.ux, c.uy, c.uz), s(c.s)	{}
+	vcoord3(const ucoord3& c) : ucoord3(c){}
+	vcoord3(const ucoord3& c, const vec3& _s) : ucoord3(c), s(_s){}
+	vcoord3( const vec3& _ux, const vec3& _uy, const vec3& _uz, const vec3& _s) : ucoord3(_ux, _uy, _uz), s(_s){ }
+	vcoord3( const vec3& _ux, const vec3& _uy, const vec3& _uz) : ucoord3(_ux, _uy, _uz){}
 	vcoord3(const quaternion& q) : ucoord3(q){}
-	vcoord3(const quaternion& q, const vec3& _s) : ucoord3(q)
-	{
-		s = _s;
-	}
+	vcoord3(const quaternion& q, const vec3& _s) : ucoord3(q), s(_s) {}
 
 	// 乘法：在坐标系下定义一个向量
 	inline friend vec3 operator * (const vec3& p, const vcoord3& c)
@@ -665,7 +644,7 @@ const vcoord3 vcoord3::ONE = {};
 #endif
 
 // ******************************************************************
-//  o|/_
+//  |/_
 // C     3d Coordinate System
 // ******************************************************************
 struct coord3 : vcoord3
@@ -676,36 +655,17 @@ struct coord3 : vcoord3
 	vec3 o;					// 原点
 
 	coord3() {}
-	coord3(const coord3& c) : vcoord3(c.ux, c.uy, c.uz, c.s), o(c.o)
-	{
-	}
-	coord3(const ucoord3& c) : vcoord3(c)
-	{
-	}
-	coord3(const vec3& _o, const vec3& _s, const vec3& _ux, const vec3& _uy, const vec3& _uz) : vcoord3(_ux, _uy, _uz, _s), o(_o)
-	{
-	}
-	coord3(const vec3& _o, const vec3& _ux, const vec3& _uy, const vec3& _uz) : vcoord3(_ux, _uy, _uz), o(_o)
-	{ 
-	}
-	coord3(const vec3& _ux, const vec3& _uy, const vec3& _uz) : vcoord3(_ux, _uy, _uz)
-	{
-	}
-	coord3(const vec3& _ux, const vec3& _uy) : vcoord3(_ux, _uy, ux.cross(uy))
-	{
-	}
-	coord3(const vec3& _p) : o(_p)
-	{
-	}
-	coord3(const ucoord3& c,const vec3& _o) : vcoord3(c), o(_o)
-	{
-	}
-	coord3(const vec3& _o, const ucoord3& c) : vcoord3(c), o(_o)
-	{
-	}
-	coord3(const ucoord3& c, const vec3& _s, const vec3& _o) : vcoord3(c, _s), o(_o)
-	{
-	}
+	coord3(const coord3& c) : vcoord3(c.ux, c.uy, c.uz, c.s), o(c.o){}
+	coord3(const ucoord3& c) : vcoord3(c){}
+	coord3(const vec3& _o, const vec3& _s, const vec3& _ux, const vec3& _uy, const vec3& _uz) : vcoord3(_ux, _uy, _uz, _s), o(_o){}
+	coord3(const vec3& _o, const vec3& _ux, const vec3& _uy, const vec3& _uz) : vcoord3(_ux, _uy, _uz), o(_o){ }
+	coord3(const vec3& _ux, const vec3& _uy, const vec3& _uz) : vcoord3(_ux, _uy, _uz){}
+	coord3(const vec3& _ux, const vec3& _uy) : vcoord3(_ux, _uy, ux.cross(uy)){}
+	coord3(const vec3& _p) : o(_p){}
+	coord3(const ucoord3& c,const vec3& _o) : vcoord3(c), o(_o){}
+	coord3(const vec3& _o, const ucoord3& c) : vcoord3(c), o(_o){}
+	coord3(const ucoord3& c, const vec3& _s, const vec3& _o) : vcoord3(c, _s), o(_o){}
+	coord3(const vec3& _o, const vec3& _s, const ucoord3& c) : vcoord3(c, _s), o(_o) {}
 	coord3(real ang, const vec3& ax)
 	{
 		ux.rot(ang, ax);
@@ -725,9 +685,8 @@ struct coord3 : vcoord3
 		o = vec3(x, y, z);
 	}
 	coord3(const quaternion& q) : vcoord3(q){}
-	coord3(const vec3& p, const quaternion& q, const vec3& _s = vec3::ONE) : vcoord3(q, _s), o(p)
-	{
-	}
+	coord3(const vec3& p, const quaternion& q, const vec3& _s = vec3::ONE) : vcoord3(q, _s), o(p){}
+
 	// 移动差
 	inline void fromvecsT(const vec3& v1, const vec3& v2)
 	{
@@ -771,6 +730,14 @@ struct coord3 : vcoord3
 		return static_cast<const ucoord3&>(*this);
 	}
 	inline ucoord3 UC(const ucoord3& ucd)
+	{
+		ux = ucd.ux; uy = ucd.uy; uz = ucd.uz;
+	}
+	inline const ucoord3& RC() const
+	{
+		return static_cast<const ucoord3&>(*this);
+	}
+	inline ucoord3 RC(const ucoord3& ucd)
 	{
 		ux = ucd.ux; uy = ucd.uy; uz = ucd.uz;
 	}
@@ -1088,14 +1055,10 @@ struct coord3 : vcoord3
 		if (!bscl)
 			s = vec3::ONE;
 	}
-	coord3 normcopy(bool bscl = true)
+	coord3 normcopy(bool bscl = true) const
 	{
 		coord3 c = *this;
-		c.s.x = c.ux.len(); if (!ISZERO(c.s.x)) c.ux /= c.s.x;
-		c.s.y = c.uy.len(); if (!ISZERO(c.s.y)) c.uy /= c.s.y;
-		c.s.z = c.uz.len(); if (!ISZERO(c.s.z)) c.uz /= c.s.z;
-		if (!bscl)
-			c.s = vec3::ONE;
+		c.norm();
 		return c;
 	}
 
@@ -1204,6 +1167,18 @@ struct coord3 : vcoord3
 		c.uy *= q;
 		c.uz *= q;
 		return c;
+	}
+	void uxto(const vec3& _ux)
+	{
+		*this *= quat(ux, _ux);
+	}
+	void uyto(const vec3& _uy)
+	{
+		*this *= quat(uy, _uy);
+	}
+	void uzto(const vec3& _uz)
+	{
+		*this *= quat(uz, _uz);
 	}
 	void moveto(const coord3& c, real alpha = 1)
 	{
