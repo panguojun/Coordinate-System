@@ -10,12 +10,12 @@
 *
 *  *  *  *  *  *  *  *  *  *  *  *  Detailed Explanation  *  *  *  *  *  *  *  *  *  *  *  *  *  *	
 *   The coordinate system transformation is divided into three steps: 
-*   		projection (/), translation (^), and restoration (*).
+*   			projection (/), translation (^), and restoration (*).
 *
 *   The symbol of the coordinate system itself is C. The transformation between coordinate systems
 *   can be written as G = C2 / C1 - I, where G means gradient.
-*           	oper(/)  =  C1 * C2^-1
-*           	oper(\)  =  C1^-1 * C2
+*           		oper(/)  =  C1 * C2^-1
+*           		oper(\)  =  C1^-1 * C2
 *
 *   Specifically:
 *   Define an intrinsic coordinate system (assuming it is a flat space, and the vector can move freely
@@ -23,16 +23,16 @@
 *   Therefore, the coordinate system is related to the position.
 *   Take vectors V1 and V2 at adjacent points (1) and (2) respectively,
 *   corresponding to coordinate systems C1 and C2. Then:
-*           	V  = V1 * C1 = V2 * C2 =>
-*           	V2 = V1 * C1 / C2, let G12 = C1 / C2 =>
-*           	V2 = V1 * G12
+*           		V  = V1 * C1 = V2 * C2 =>
+*           		V2 = V1 * C1 / C2, let G12 = C1 / C2 =>
+*           		V2 = V1 * G12
 *
 *   The coordinate system can be used to calculate spatial curvature. In the u,v coordinate system,
 *   the Riemann curvature tensor is:
-*           Ruv = Gu*Gv - Gv*Gu - G[u,v]
-*           where:  Gu = C2 / C1 - I
-*                   Connection vector: W = [U, V] (Lie bracket operation)
-*                   G[u,v] = GuˆWu * GvˆWv 
+*           	Ruv  = 	Gu*Gv - Gv*Gu - G[u,v]
+*           	where:  Gu = C2 / C1 - I
+*                   	Connection vector: W = [U, V] (Lie bracket operation)
+*                   	G[u,v] = GuˆWu * GvˆWv 
 */
 
 //#define	Parallel_Projection		 // 非正交坐标系下平行投影
