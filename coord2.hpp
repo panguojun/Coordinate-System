@@ -40,10 +40,6 @@ struct ucoord2
 	vec2 uy = vec2::UY;
 
 	ucoord2() {}
-	ucoord2(crvec2 _ux, crvec2 _uy, crvec2 _uz)
-	{
-		ux = _ux; uy = _uy;
-	}
 	ucoord2(crvec2 _ux, crvec2 _uy)
 	{
 		ux = _ux;
