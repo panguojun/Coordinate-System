@@ -67,9 +67,7 @@ V5 = V2 / C3 / C4 / C5
 4. Convert between parallel coordinate systems:
 
 ```
-C0{ 
-    C1, C2; 
-}
+C0{ C1, C2 }
 V2 = V1 * C1 / C2
 ```
 
