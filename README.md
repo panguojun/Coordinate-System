@@ -21,6 +21,7 @@ A coordinate system can be constructed using three axes or Euler angles as follo
 coord C1(vec3 ux, vec3 uy, vec3 uz);
 coord C2(float angle, vec3 axis); 
 coord C3(float pitch, float yaw, float roll);
+coord C4(vec3 o, vec3 s, quat q); 
 ```
 
 ## Multiplication and Division Operations
