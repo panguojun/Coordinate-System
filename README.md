@@ -127,9 +127,9 @@ Coord can transport vectors from a natural coordinate system to a curved coordin
 ```
 Ruv = Gu*Gv - Gv*Gu - G[u,v]
 
-where: Gu = C2 / C1 - I
-       Connection vector: [u, v] (Lie bracket operation)
-       W = Wu + Wv = [u, v]
+where:  Gu = C2 / C1 - I
+        Connection vector: [u, v] (Lie bracket operation)
+        W = Wu + Wv = [u, v]
         G[u,v] = Gu^Wu*Gv^Wv
 ```
 ## Combination with Lie Groups and Lie Algebras
