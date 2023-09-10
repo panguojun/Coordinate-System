@@ -1,6 +1,6 @@
 /**
-*				ÈÚºÏº¯Êı
-*				°üÀ¨·ÇÏßĞÔÈÚºÏ£¬ÏßĞÔ²åÖµµÈ
+*				[èåˆå‡½æ•°]
+*			åŒ…æ‹¬éçº¿æ€§èåˆï¼Œçº¿æ€§æ’å€¼ç­‰
 */
 // **********************************************************************
 // shape blend
@@ -289,7 +289,7 @@ inline real roundblend2(real h1, real h2, real alpha, real power = 1)
 	}
 }
 // -----------------------------------------------------------------------
-// Èı½Çº¯Êı²åÖµ
+// ä¸‰è§’å‡½æ•°æ’å€¼
 inline real BlendSin(real h1, real h2, real alpha)
 {
 	alpha = alpha < 0 ? 0 : alpha;
@@ -300,7 +300,7 @@ inline real BlendSin(real h1, real h2, real alpha)
 	return h1 * (1 - alpha) + h2 * alpha;
 }
 // -----------------------------------------------------------------------
-// ¸µÁ¢Ò¶¼¶Êı
+// å‚…ç«‹å¶çº§æ•°
 inline real FT(real angle, real t[] = 0, real dt = 0)
 {
 	if (t == 0)
@@ -508,7 +508,7 @@ inline vectorn lerp(const vectorn& v1, const vectorn& v2, real alpha, real power
 	return v1 * (1.0f - alpha) + v2 * alpha;
 }
 // ----------------------------------------------------------------------
-// Ä£°åÊµÏÖ 
+// æ¨¡æ¿å®ç° 
 // ----------------------------------------------------------------------
 template<typename T>
 inline T blend(const T& v1, const T& v2, real alpha, real power = 1.0)
