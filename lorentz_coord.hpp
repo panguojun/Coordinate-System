@@ -1,5 +1,5 @@
 /**
- * 				Lorentz Coordinate System
+ * 				[Lorentz Coordinate System]
  *
  * The Lorentz Coordinate System is a coordinate system designed to describe space-time transformations and handle the time dimension.
  * It is an extension of the complex coordinate system, where the rotation of the coordinate system can be represented by a quaternion composed of a vector and a complex angle.
