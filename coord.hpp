@@ -35,7 +35,7 @@
 *                   	G[u,v] = GuˆWu * GvˆWv 
 */
 
-//#define	Parallel_Projection		 // 非正交坐标系下平行投影
+//#define	Parallel_Projection
 // ********************************************************************************************
 //  |/_
 // UC     3d Rotation Coordinate System
