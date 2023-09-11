@@ -108,23 +108,23 @@ Coord can be used to differentiate coordinate systems in space in three ways:
 Gradient: 
 
 ```
-▽f = (U * df * Cuv) / dxyz
+▽f = (U * df * Cuv) / Dxyz
 Where:
 Cuv = {U, V, 0}
-dxyz = {ux * dx, uy * dy, uz * dz}
+Dxyz = {ux * dx, uy * dy, uz * dz}
 ```
 
 Divergence:
 
 ```
-▽ ∙ F = dF / dxyz ∙ Ic
+▽ ∙ F = dF / Dxyz ∙ Ic
 Where: Ic = {ux, uy, uz}
 ```
 
 Curl:
 
 ```
-▽ x F = dF / dxyz x Ic
+▽ x F = dF / Dxyz x Ic
 ```
 
 ## Applications in Differential Geometry
