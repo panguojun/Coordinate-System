@@ -92,14 +92,14 @@ q1 = q0 / C1
 Vector addition:
 
 ```
-C2 = C1 + o;
-where C2 = {C1.o + o, C1.v}, C1.v = {C1.ux*C1.s.x, C1.uy*C1.s.y, C1.uz*C1.s.z}
+C2 = C1 + o
+Where C2 = {C1.o + o, C1.v}, C1.v = {C1.ux*C1.s.x, C1.uy*C1.s.y, C1.uz*C1.s.z}
 ```
 
 Coordinate Gradient:
 ```
 G = C1 / C2 - I
-where C1 and C2 are coordinate systems on two points on a unit length distance.
+Where C1 and C2 are coordinate systems on two points on a unit length distance.
 ```
 ## Coordinate System Differentiation
 
@@ -109,14 +109,14 @@ Gradient:
 
 ```
 ▽f = (U * df * Cuv) / dxyz
-where: dxyz = {ux * dx, uy * dy, uz * dz}
+Where: dxyz = {ux * dx, uy * dy, uz * dz}
 ```
 
 Divergence:
 
 ```
 ▽ ∙ F = dF / dxyz ∙ Ic
-where: Ic = {ux, uy, uz}
+Where: Ic = {ux, uy, uz}
 ```
 
 Curl:
