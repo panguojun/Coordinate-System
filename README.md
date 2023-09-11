@@ -109,7 +109,9 @@ Gradient:
 
 ```
 ▽f = (U * df * Cuv) / dxyz
-Where: dxyz = {ux * dx, uy * dy, uz * dz}
+Where:
+Cuv = {U, V, 0}
+dxyz = {ux * dx, uy * dy, uz * dz}
 ```
 
 Divergence:
