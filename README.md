@@ -67,7 +67,7 @@ V5 = V2 / C3 / C4 / C5
 4. Convert between parallel coordinate systems:
 
 ```
-C0{ C1, C2 }
+C0 { C1, C2 }
 V2 = V1 * C1 / C2
 ```
 
@@ -76,7 +76,7 @@ V2 = V1 * C1 / C2
 Scalar multiplication:
 
 ```
-C*k = {C.o, C.s * k, C.u}
+C * k = {C.o, C.s * k, C.u}
 where: C.u = {C.ux, C.uy, C.uz}
 ```
 
@@ -128,7 +128,7 @@ Ruv = Gu*Gv - Gv*Gu - G[u,v]
 where:  Gu = C2 / C1 - I
         Connection vector: [u, v] (Lie bracket operation)
         W = Wu + Wv = [u, v]
-        G[u,v] = Gu^Wu*Gv^Wv
+        G[u,v] = Gu^Wu * Gv^Wv
 ```
 ## Combination with Lie Groups and Lie Algebras
 
