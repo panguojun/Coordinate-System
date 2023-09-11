@@ -116,6 +116,7 @@ Divergence:
 
 ```
 ▽ ∙ F = dF / dxyz ∙ Ic
+where: Ic = {ux, uy, uz}
 ```
 
 Curl:
