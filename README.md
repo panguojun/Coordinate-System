@@ -103,7 +103,7 @@ Coord can be used to differentiate coordinate systems in space in three ways:
 Gradient: 
 
 ```
-▽f = dF(U * df * Cuv) / dxyz
+▽f = (U * df * Cuv) / dxyz
 ```
 
 Divergence:
