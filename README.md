@@ -96,7 +96,7 @@ C2 = C1 + o;
 where C2 = {C1.o + o, C1.v}, C1.v = {C1.ux*C1.s.x, C1.uy*C1.s.y, C1.uz*C1.s.z}
 ```
 
-Gradient:
+Coordinate Gradient:
 ```
 G = C1 / C2 - I
 where C1 and C2 are coordinate systems on two points on a unit length distance.
