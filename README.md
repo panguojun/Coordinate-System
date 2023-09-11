@@ -60,8 +60,8 @@ VL = Vw / C
 3. Use in multi-node hierarchies:
 
 ```
-V2 = V5 * C5 * C4 * C3 
-V5 = V2 / C3 / C4 / C5
+V1 = V4 * C4 * C3 * C2 
+V4 = V1 / C2 / C3 / C4
 ```
 
 4. Convert between parallel coordinate systems:
