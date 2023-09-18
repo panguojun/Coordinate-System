@@ -25,7 +25,7 @@
 *			Ruv = Gu*Gv - Gv*Gu - G[u,v]
 *			其中：Gu = C2 / C1 - I
 *			     W = [u, v] : 李括号运算
-*			     G[u,v] = Gu*Wu * Gv*Wv
+*			     G[u,v] = Gu^Wu * Gv^Wv
 */
 
 //#define	Parallel_Projection		 // 非正交坐标系下平行投影
