@@ -32,7 +32,7 @@
 *           	Ruv  = 	Gu*Gv - Gv*Gu - G[u,v]
 *           	where:  Gu = C2 / C1 - I
 *                   	Connection vector: W = [U, V] (Lie bracket operation)
-*                   	G[u,v] = Gu^Wu * Gv^Wv 
+*                   	G[u,v] = Gu*Wu * Gv*Wv 
 */
 
 //#define	Parallel_Projection
