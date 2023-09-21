@@ -23,9 +23,9 @@
 *
 *	可以使用坐标系计算空间曲率，在u,v坐标系下黎曼曲率张量为：
 *			Ruv = Gu*Gv - Gv*Gu - G[u,v]
-*			其中：Gu = C2 / C1 - I
+*			其中：Gu = C2 / C1
 *			     W = [u, v] : 李括号运算
-*			     G[u,v] = Gu*Wu * Gv*Wv
+*			     G[u,v] = Gu^Wu * Gv^Wv
 */
 
 //#define	Parallel_Projection		 // 非正交坐标系下平行投影
