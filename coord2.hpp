@@ -38,7 +38,7 @@ struct ucoord2
 	static const ucoord2 ZERO;
 	static const ucoord2 ONE;
 
-	vec2 ux = vec2::UX;		// 方向
+	vec2 ux = vec2::UX;		// basis 单位化基向量
 	vec2 uy = vec2::UY;
 
 	ucoord2() {}
@@ -46,6 +46,11 @@ struct ucoord2
 	{
 		ux = _ux;
 		uy = _uy;
+	}
+	ucoord2(crvec2 _ux)
+	{
+		ux = _ux;
+		uy = ux.rotcopy(PI / 2);
 	}
 	ucoord2(real ang)
 	{
@@ -146,20 +151,20 @@ struct coord2 : ucoord2
 	vec2 o;				// 原点
 
 	coord2() {}
-	coord2(const coord2& c)
+	coord2(const ucoord2& c) : ucoord2(c)
 	{
-		ux = c.ux; uy = c.uy;
+	}
+	coord2(const ucoord2& c, crvec2 _s) : ucoord2(c)
+	{
+		s = _s;
+	}
+	coord2(const coord2& c) : ucoord2(c.ux, c.uy)
+	{
 		s = c.s;
 		o = c.o;
 	}
-	coord2(crvec2 _ux, crvec2 _uy, crvec2 _uz)
+	coord2(crvec2 _ux, crvec2 _uy) : ucoord2(_ux, _uy)
 	{
-		ux = _ux; uy = _uy;
-	}
-	coord2(crvec2 _ux, crvec2 _uy)
-	{
-		ux = _ux;
-		uy = _uy;
 	}
 	coord2(crvec2 p)
 	{
@@ -167,14 +172,23 @@ struct coord2 : ucoord2
 	}
 	coord2(real ang)
 	{
-		ux.rot(ang);
-		uy.rot(ang);
+		vec2 z = vector2::ang_len(ang, 1);
+		ux = complex_mul(ux, z);
+		uy = complex_mul(uy, z);
 	}
 	coord2(real ang, real _r)
 	{
-		ux.rot(ang);
-		uy.rot(ang);
+		vec2 z = vector2::ang_len(ang, 1);
+		ux = complex_mul(ux, z);
+		uy = complex_mul(uy, z);
 		s *= _r;
+	}
+	coord2(crvec2 p, real ang)
+	{
+		o = p;
+		vec2 z = vector2::ang_len(ang, 1);
+		ux = complex_mul(ux, z);
+		uy = complex_mul(uy, z);
 	}
 	vec2 VX() const { return ux * s.x; }
 	vec2 VY() const { return uy * s.y; }
@@ -256,12 +270,12 @@ struct coord2 : ucoord2
 	coord2 operator * (real s) const
 	{
 		coord2 c = *this;
-		{// C*S 缩放乘法
-			c.s.x *= s; c.s.y *= s;
-		}
-		//{// C*S 移动乘法
-		//	c.o.x *= s; c.o.y *= s;
+		//{// C*S 缩放乘法
+		//	c.s.x *= s; c.s.y *= s;
 		//}
+		{// C*S 移动乘法
+			c.o.x *= s; c.o.y *= s;
+		}
 		return c;
 	}
 	void operator *= (real s)
@@ -355,24 +369,30 @@ struct coord2 : ucoord2
 		return o;
 	}
 	// 角度
-	inline real angle()
+	inline real angle() const
 	{
 		return ux.angle();
 	}
 	// 旋转
 	void rot(real angle)
 	{
-		ux.rot(angle);
-		uy.rot(angle);
+		vec2 z = vector2::ang_len(angle, 1);
+		ux = complex_mul(ux, z);
+		uy = complex_mul(uy, z);
 	}
-	coord2 rotcopy(real angle)
+	coord2 rotcopy(real angle) const
 	{
 		coord2 c = (*this);
-		c.ux.rot(angle);
-		c.uy.rot(angle);
+		vec2 z = vector2::ang_len(angle, 1);
+		c.ux = complex_mul(c.ux, z);
+		c.uy = complex_mul(c.uy, z);
 		return c;
 	}
-	std::string serialise()
+	void rot2dir(crvec2 _dir)
+	{
+		ux = _dir; uy = _dir.rotcopy(PI / 2);
+	}
+	std::string serialise() const
 	{
 		return o.serialise() + "," + std::to_string(angle());
 	}
@@ -386,6 +406,6 @@ struct coord2 : ucoord2
 	}
 };
 #ifdef PMDLL
-const coord2 coord2::ZERO = { 0 };
+const coord2 coord2::ZERO = { ucoord2::ZERO, vec2::ZERO };
 const coord2 coord2::ONE = coord2();
 #endif
