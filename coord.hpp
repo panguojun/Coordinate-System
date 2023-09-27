@@ -45,7 +45,7 @@ struct ucoord3
 	static const ucoord3 ZERO;
 	static const ucoord3 ONE;
 
-	vec3 ux = vec3::UX;		// base 单位化向量
+	vec3 ux = vec3::UX;		// basis 单位化基向量
 	vec3 uy = vec3::UY;
 	vec3 uz = vec3::UZ;
 
@@ -178,7 +178,9 @@ struct ucoord3
 	}
 	inline void operator *= (const quaternion& q)
 	{
-		*this = (*this) * q;
+		ux = q * ux;
+		uy = q * uy;
+		uz = q * uz;
 	}
 	// 除法：向量向坐标系投影
 #ifdef Parallel_Projection
@@ -404,47 +406,12 @@ struct ucoord3
 		return vec3(x, y, z);
 	}
 
-	// 转化为四元数
+	// 转化为四元数, 注意四元数的乘法顺序
 	quat toquat() const
 	{
-		const ucoord3& rm = *this;
-		float trace = rm.ux.x + rm.uy.y + rm.uz.z;
-		float w, x, y, z;
-
-		if (trace > 0)
-		{
-			float s = 0.5f / sqrt(trace + 1.0f);
-			w = 0.25f / s;
-			x = (rm.uy.z - rm.uz.y) * s;
-			y = (rm.uz.x - rm.ux.z) * s;
-			z = (rm.ux.y - rm.uy.x) * s;
-		}
-		else if (rm.ux.x > rm.uy.y && rm.ux.x > rm.uz.z)
-		{
-			float s = 2.0f * sqrt(1.0f + rm.ux.x - rm.uy.y - rm.uz.z);
-			w = (rm.uy.z - rm.uz.y) / s;
-			x = 0.25f * s;
-			y = (rm.uy.x + rm.ux.y) / s;
-			z = (rm.uz.x + rm.ux.z) / s;
-		}
-		else if (rm.uy.y > rm.uz.z)
-		{
-			float s = 2.0f * sqrt(1.0f + rm.uy.y - rm.ux.x - rm.uz.z);
-			w = (rm.uz.x - rm.ux.z) / s;
-			x = (rm.uy.x + rm.ux.y) / s;
-			y = 0.25f * s;
-			z = (rm.uz.y + rm.uy.z) / s;
-		}
-		else
-		{
-			float s = 2.0f * sqrt(1.0f + rm.uz.z - rm.ux.x - rm.uy.y);
-			w = (rm.ux.y - rm.uy.x) / s;
-			x = (rm.uz.x + rm.ux.z) / s;
-			y = (rm.uz.y + rm.uy.z) / s;
-			z = 0.25f * s;
-		}
-		return quat(w, x, y, z);
+		return quat(coord2eulers());
 	}
+
 	// 梯度坐标系 = 梯度 X 切空间
 	// 相当于一阶坐标系的导数
 	// C2 = UG * C1
@@ -458,6 +425,32 @@ struct ucoord3
 		PRINTVEC3(ux);
 		PRINTVEC3(uy);
 		PRINTVEC3(uz);
+	}
+
+	// 方便函数, 注意 angle(u,_u) != +/-PI
+	void uxto(const vec3& _ux) 
+	{
+		*this *= quat(ux, _ux);
+	}
+	void uyto(const vec3& _uy)
+	{
+		*this *= quat(uy, _uy);
+	}
+	void uzto(const vec3& _uz)
+	{
+		*this *= quat(uz, _uz);
+	}
+	ucoord3 uxtoed(const vec3& _ux) const
+	{
+		return (*this) * quat(ux, _ux);
+	}
+	ucoord3 uytoed(const vec3& _uy) const
+	{
+		return (*this) * quat(uy, _uy);
+	}
+	ucoord3 uztoed(const vec3& _uz) const
+	{
+		return (*this) * quat(uz, _uz);
 	}
 };
 #ifdef PMDLL
@@ -642,7 +635,7 @@ struct vcoord3 : ucoord3
 	}
 };
 #ifdef PMDLL
-const vcoord3 vcoord3::ZERO = {};
+const vcoord3 vcoord3::ZERO = {ucoord3::ZERO, vec3::ZERO};
 const vcoord3 vcoord3::ONE = {};
 #endif
 
@@ -1018,7 +1011,7 @@ struct coord3 : vcoord3
 	{
 		*this = (*this) / q;
 	}
-	// oper(//) = C1^-1 * C2
+	// oper(\) = C1^-1 * C2
 	coord3 operator % (const coord3& c) const
 	{
 		return (*this).reversed() * c;
@@ -1155,7 +1148,7 @@ struct coord3 : vcoord3
 		uy = q * uy;
 		uz = q * uz;
 	}
-	coord3 rotcopy(real ang, const vec3& ax) const
+	coord3 roted(real ang, const vec3& ax) const
 	{
 		coord3 c = *this;
 		c.ux.rot(ang, ax);
@@ -1163,7 +1156,7 @@ struct coord3 : vcoord3
 		c.uz.rot(ang, ax);
 		return c;
 	}
-	coord3 rotcopy(const quaternion& q) const
+	coord3 roted(const quaternion& q) const
 	{
 		coord3 c = *this;
 		c.ux *= q;
@@ -1171,24 +1164,12 @@ struct coord3 : vcoord3
 		c.uz *= q;
 		return c;
 	}
-	void uxto(const vec3& _ux)
-	{
-		*this *= quat(ux, _ux);
-	}
-	void uyto(const vec3& _uy)
-	{
-		*this *= quat(uy, _uy);
-	}
-	void uzto(const vec3& _uz)
-	{
-		*this *= quat(uz, _uz);
-	}
 	void moveto(const coord3& c, real alpha = 1)
 	{
 		o = vec3::lerp(o, c.o, alpha);
 	}
 };
 #ifdef PMDLL
-const coord3 coord3::ZERO = {};
+const coord3 coord3::ZERO = {ucoord3::ZERO, vec3::ZERO, vec3::ZERO };
 const coord3 coord3::ONE = {};
 #endif
