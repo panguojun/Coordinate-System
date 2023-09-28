@@ -1,6 +1,6 @@
 /************************************************************************************************
-*				[Coordinate System]
-* 
+*								[Coordinate System]
+*
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 *   The coordinate system class is separately encapsulated by me for
 *   simplifying coordinate transformation and deriving many algorithms,
@@ -8,8 +8,8 @@
 *   The operation of the coordinate system is similar to Lie group.
 *   The coordinate system consists of three parts: C = M (position) + S (scaling) * R (rotation).
 *
-*  *  *  *  *  *  *  *  *  *  *  *  Detailed Explanation  *  *  *  *  *  *  *  *  *  *  *  *  *  *	
-*   The coordinate system transformation is divided into three steps: 
+*  *  *  *  *  *  *  *  *  *  *  *  Detailed Explanation  *  *  *  *  *  *  *  *  *  *  *  *  *  *
+*   The coordinate system transformation is divided into three steps:
 *   			projection (/), translation (^), and restoration (*).
 *
 *   The symbol of the coordinate system itself is C. The transformation between coordinate systems
@@ -30,9 +30,9 @@
 *   The coordinate system can be used to calculate spatial curvature. In the u,v coordinate system,
 *   the Riemann curvature tensor is:
 *           	Ruv  = 	Gu*Gv - Gv*Gu - G[u,v]
-*           	where:  Gu = C2 / C1
+*           	where:  Gu = C2 / C1 - I
 *                   	Connection vector: W = [U, V] (Lie bracket operation)
-*                   	G[u,v] = Gu^Wu * Gv^Wv 
+*                   	G[u,v] = Gu*Wu + Gv*Wv
 */
 
 //#define	Parallel_Projection
