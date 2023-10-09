@@ -24,8 +24,8 @@
 *   Take vectors V1 and V2 at adjacent points (1) and (2) respectively,
 *   corresponding to coordinate systems C1 and C2. Then:
 *           		V  = V1 * C1 = V2 * C2 =>
-*           		V2 = V1 * C1 / C2, let G12 = C1 / C2 =>
-*           		V2 = V1 * G12
+*           		V2 = V1 * C1 / C2, let R12 = C1 / C2 =>
+*           		V2 = V1 * R12
 *
 *   The coordinate system can be used to calculate spatial curvature. In the u,v coordinate system,
 *   the Riemann curvature tensor is:
@@ -416,6 +416,10 @@ struct ucoord3
 	// 相当于一阶坐标系的导数
 	// C2 = UG * C1
 	static inline ucoord3 ugrad(const ucoord3& c1, const ucoord3& c2)
+	{
+		return c1.reversed() * c2;
+	}
+	static inline ucoord3 R(const ucoord3& c1, const ucoord3& c2)
 	{
 		return c1.reversed() * c2;
 	}
@@ -1118,6 +1122,10 @@ struct coord3 : vcoord3
 	static coord3 G(const coord3& c1, const coord3& c2)
 	{
 		return c2 / c1 - ONE;
+	}
+	static coord3 R(const coord3& c1, const coord3& c2)
+	{
+		return c2 / c1;
 	}
 	std::string serialise()
 	{
