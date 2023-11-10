@@ -1,6 +1,6 @@
 /************************************************************************************************
 *				[Coordinate System]
-*				   by Guojun.Pan
+*				   by Guojun Pan
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 *   The coordinate system class is separately encapsulated by me for
 *   simplifying coordinate transformation and deriving many algorithms,
