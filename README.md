@@ -7,7 +7,7 @@ In C++, a coordinate system in three-dimensional space is defined by an origin, 
 
 ```
 struct coord {
-    vec3 ux, uy, uz;   // Three unit vectors
+    vec3 ux, uy, uz;   // Three basis vectors
     vec3 s;            // Scaling
     vec3 o;            // Origin
 };
