@@ -1,6 +1,6 @@
 /************************************************************************************************
 *				[Coordinate System]
-*
+*				   by Guojun Pan
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 *   The coordinate system class is separately encapsulated by me for
 *   simplifying coordinate transformation and deriving many algorithms,
@@ -19,7 +19,7 @@
 *
 *   Specifically:
 *   Define an intrinsic coordinate system (assuming it is a flat space, and the vector can move freely
-*   without changing) under V. Observing V in a curved coordinate system, V is different at different points.
+*   without changing) under V. Observing V in a curved coordinate system, V is different at points.
 *   Therefore, the coordinate system is related to the position.
 *   Take vectors V1 and V2 at adjacent points (1) and (2) respectively,
 *   corresponding to coordinate systems C1 and C2. Then:
@@ -37,7 +37,7 @@
 
 // ********************************************************************************************
 //  |/_
-// UC     3d Rotation Coordinate System
+// UC     3D Rotation Coordinate System
 // ********************************************************************************************
 struct ucoord3
 {
@@ -182,8 +182,7 @@ struct ucoord3
 		uz = q * uz;
 	}
 	// 除法：向量向坐标系投影
-#ifdef Parallel_Projection
-	// 非正交坐标系下平行投影 Parallel projection
+#ifdef Parallel_Projection // 非正交坐标系下平行投影 Parallel projection
 	static real pl_prj(const vec3& v, const vec3& ax1, const vec3& ax2)
 	{
 		vec3 ax = ax1.cross(ax2); ax.norm();
@@ -463,7 +462,7 @@ const ucoord3 ucoord3::ONE = {};
 
 // ******************************************************************
 //  |/_
-// VC     3d Rotation & Scaling Coordinate System
+// VC     3D Rotation & Scaling Coordinate System
 // ******************************************************************
 struct vcoord3 : ucoord3
 {
@@ -644,7 +643,7 @@ const vcoord3 vcoord3::ONE = {};
 
 // ******************************************************************
 //  |/_
-// C     3d Coordinate System
+// C     3D Coordinate System
 // ******************************************************************
 struct coord3 : vcoord3
 {
@@ -775,6 +774,7 @@ struct coord3 : vcoord3
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;
 	}
+
 	coord3 operator = (const coord3& c)
 	{
 		o = c.o;
@@ -1114,7 +1114,7 @@ struct coord3 : vcoord3
 	{
 		return c2 / c1;
 	}
-	std::string serialise() const
+	std::string serialise()
 	{
 		vec3 eu = coord2eulers();
 		return o.serialise() + "," + eu.serialise();
@@ -1127,41 +1127,6 @@ struct coord3 : vcoord3
 		PRINTVEC3(uz);
 		PRINTVEC3(s);
 		PRINTVEC3(o);
-	}
-
-	/// 便捷函数 ///
-	void rot(real angle, const vec3& ax)
-	{
-		quaternion q(angle, ax);
-		ux *= q;
-		uy *= q;
-		uz *= q;
-	}
-	void rot(const quaternion& q)
-	{
-		ux = q * ux;
-		uy = q * uy;
-		uz = q * uz;
-	}
-	coord3 roted(real ang, const vec3& ax) const
-	{
-		coord3 c = *this;
-		c.ux.rot(ang, ax);
-		c.uy.rot(ang, ax);
-		c.uz.rot(ang, ax);
-		return c;
-	}
-	coord3 roted(const quaternion& q) const
-	{
-		coord3 c = *this;
-		c.ux *= q;
-		c.uy *= q;
-		c.uz *= q;
-		return c;
-	}
-	void moveto(const coord3& c, real alpha = 1)
-	{
-		o = vec3::lerp(o, c.o, alpha);
 	}
 };
 #ifdef PMDLL
