@@ -73,42 +73,13 @@ public struct UCoord3
     }
 
     /// <summary>
-    /// Sets the UCoord3 instance based on the rotation between an axis vector and two vectors.
-    /// </summary>
-    /// <param name="axis">The rotation axis vector.</param>
-    /// <param name="v1">The first vector.</param>
-    /// <param name="v2">The second vector.</param>
-    public void FromAxVecs(Vector3 axis, Vector3 v1, Vector3 v2)
-    {
-        Vector3 pv1 = Vector3.Cross(v1, axis);
-        Vector3 pv2 = Vector3.Cross(v2, axis);
-        float angle = Mathf.Acos(Vector3.Dot(pv1, pv2));
-        Quaternion q = Quaternion.AngleAxis(angle, axis);
-        this.right = q * Vector3.right;
-        this.up = q * Vector3.up;
-        this.forward = q * Vector3.forward;
-    }
-
-    /// <summary>
-    /// Sets the UCoord3 instance based on the rotation from the current y-axis vector to the specified y-axis vector.
-    /// </summary>
-    /// <param name="_up">The new y-axis vector.</param>
-    public void FromUp(Vector3 _up)
-    {
-        Quaternion q = Quaternion.FromToRotation(this.up, _up);
-        this.right = q * Vector3.right;
-        this.up = q * Vector3.up;
-        this.forward = q * Vector3.forward;
-    }
-
-    /// <summary>
     /// Converts the UCoord3 instance to a Quaternion.
     /// </summary>
     /// <returns>The Quaternion representation of the UCoord3 instance.</returns>
     public Quaternion ToQuaternion()
     {
-        Quaternion q = new Quaternion();
-        q.SetFromToRotation(Vector3.right, this.right);
+        Vector3 eulers = ToEulerAngles();
+        Quaternion q = Quaternion.Euler(eulers);
         return q;
     }
 
@@ -228,23 +199,12 @@ public struct UCoord3
     /// <returns>The Euler angles representation of the UCoord3 instance.</returns>
     public Vector3 ToEulerAngles()
     {
-        float sy = Mathf.Sqrt(right.x * right.x + up.x * up.x);
-        bool singular = sy < 1e-5f;
-
-        float x, y, z;
-        if (!singular)
-        {
-            x = Mathf.Atan2(forward.y, forward.z);
-            y = Mathf.Atan2(-forward.x, sy);
-            z = Mathf.Atan2(up.x, right.x);
-        }
-        else
-        {
-            x = Mathf.Atan2(-up.z, up.y);
-            y = Mathf.Atan2(-forward.x, sy);
-            z = 0;
-        }
-        return new Vector3(x, y, z);
+        Quaternion q = Quaternion.LookRotation(forward, up);
+        Vector3 eulerAngles = q.eulerAngles;
+        float pitch = eulerAngles.x;
+        float yaw = eulerAngles.y;
+        float roll = eulerAngles.z;
+        return new Vector3(pitch, yaw, roll);
     }
 }
 

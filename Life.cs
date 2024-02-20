@@ -1,34 +1,31 @@
 using UnityEngine;
 using System;
 
-public class Life : MonoBehaviour
+public struct Life
 {
-    private int lifespan; // 寿命
-    private string status; // 状态（活着/死亡）
-    private long boundaryStart; // 有效时间段的起始时间（毫秒）
-    private long boundaryEnd; // 有效时间段的结束时间（毫秒）
+    public int lifespan; // 寿命
+    public string status; // 状态（活着/死亡）
+    public long boundaryStart; // 有效时间段的起始时间（毫秒）
+    public long boundaryEnd; // 有效时间段的结束时间（毫秒）
 
     public Life(int lifespan, long boundaryStart, long boundaryEnd)
     {
         this.lifespan = lifespan;
         this.boundaryStart = boundaryStart;
         this.boundaryEnd = boundaryEnd;
-        this.status = "活着";
+        this.status = "alive";
     }
 
-    public void UpdateStatus(long currentDate)
+    public void UpdateStatus(long currentTime)
     {
          if (currentTime < boundaryStart || currentTime > boundaryEnd)
         {
-            this.status = "死亡";
-        }
-        else if ((currentTime - boundaryStart) >= lifespan)
-        {
-            this.status = "死亡";
+            this.status = "dead";
+            lifespan ++;
         }
         else
         {
-            this.status = "活着";
+            this.status = "alive";
         }
     }
 
@@ -42,13 +39,13 @@ public class Life : MonoBehaviour
     {
         if (value)
         {
-            life.boundaryStart = life.boundaryStart.AddDays(1);
-            life.boundaryEnd = life.boundaryEnd.AddDays(1);
+            life.boundaryStart = life.boundaryStart+(1);
+            life.boundaryEnd = life.boundaryEnd+(1);
         }
         else
         {
-            life.boundaryStart = life.boundaryStart.AddDays(-1);
-            life.boundaryEnd = life.boundaryEnd.AddDays(-1);
+            life.boundaryStart = life.boundaryStart+(-1);
+            life.boundaryEnd = life.boundaryEnd+(-1);
         }
 
         return life;
@@ -59,13 +56,13 @@ public class Life : MonoBehaviour
     {
         if (value)
         {
-            life.boundaryStart = life.boundaryStart.AddDays(-1);
-            life.boundaryEnd = life.boundaryEnd.AddDays(-1);
+            life.boundaryStart = life.boundaryStart+(-1);
+            life.boundaryEnd = life.boundaryEnd+(-1);
         }
         else
         {
-            life.boundaryStart = life.boundaryStart.AddDays(1);
-            life.boundaryEnd = life.boundaryEnd.AddDays(1);
+            life.boundaryStart = life.boundaryStart+(1);
+            life.boundaryEnd = life.boundaryEnd+(1);
         }
 
         return life;
@@ -73,8 +70,8 @@ public class Life : MonoBehaviour
     // 重载加法运算符
     public static Life operator +(Life life1, Life life2)
     {
-        long newBoundaryStart = Mathf.Min(life1.boundaryStart, life2.boundaryStart);
-        long newBoundaryEnd = Mathf.Max(life1.boundaryEnd, life2.boundaryEnd);
+        long newBoundaryStart = Math.Min(life1.boundaryStart, life2.boundaryStart);
+        long newBoundaryEnd = Math.Max(life1.boundaryEnd, life2.boundaryEnd);
 
         Life newLife = new Life(life1.lifespan, newBoundaryStart, newBoundaryEnd);
         return newLife;
