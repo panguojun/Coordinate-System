@@ -17,6 +17,7 @@ struct  quaternion
 {
 	real w = 1, x = 0, y = 0, z = 0;
 	static const quaternion ONE;
+	static const quaternion UX, UY, UZ;
 	//-----------------------------------------------------------------------
 	quaternion() { }
 	quaternion(
@@ -30,11 +31,11 @@ struct  quaternion
 	}
 	quaternion(real pitch, real yaw, real roll)
 	{
-		fromeuler(pitch, yaw, roll);
+		from_eulers(pitch, yaw, roll);
 	}
 	quaternion(const vector3& pyr)
 	{
-		fromeuler(pyr.x, pyr.y, pyr.z);
+		from_eulers(pyr.x, pyr.y, pyr.z);
 	}
 	quaternion(const quaternion& rkQ)
 	{
@@ -43,13 +44,26 @@ struct  quaternion
 		y = rkQ.y;
 		z = rkQ.z;
 	}
-	quaternion(const real& rfAngle, const vector3& rkAxis)
+	quaternion(real rfAngle, const vector3& rkAxis)
 	{
 		ang_axis(rfAngle, rkAxis);
 	}	
-	quaternion(crvec v1, crvec v2)
+	quaternion(const vec3& v1, const vec3& v2)
 	{
-		ang_axis(acos(v1.dot(v2)), v1.cross(v2).normalized());
+		real dot = v1.dot(v2);
+		if (dot == -1.0) // 处理180度的情况
+		{
+			vec3 ax;
+			vec3 uz = vec3::UZ;
+			if (v1.x < EPSINON && v1.x > -EPSINON && v1.y < EPSINON && v1.y > -EPSINON)
+				uz = vec3::UX;
+			ax = uz.cross(v1).normalized();
+			ang_axis(PI, ax.normalized());
+		}
+		else if (dot > -1.0 && dot <= 1.0)
+		{
+			ang_axis(acos(dot), v1.cross(v2).normalized());
+		}
 	}
 	//-----------------------------------------------------------------------
 	quaternion operator+ (const quaternion& rkQ) const
@@ -112,7 +126,6 @@ struct  quaternion
 	{
 		return quaternion(fScalar * w, fScalar * x, fScalar * y, fScalar * z);
 	}
-	//-----------------------------------------------------------------------
 	quaternion friend operator* (real fScalar, const quaternion& rkQ)
 	{
 		return quaternion(fScalar * rkQ.w, fScalar * rkQ.x, fScalar * rkQ.y,
@@ -162,7 +175,7 @@ struct  quaternion
 	{
 		return vec3(x, y, z).normcopy();
 	}
-	real angle() const // fixed
+	real angle() const 
 	{
 		if (w >= 1.0)
 			return 0.0;
@@ -170,10 +183,14 @@ struct  quaternion
 			return PI;
 		real ang = acos(w) * 2;
 		if (ang > PI)
-			return ang - PI * 2;
+			return ang - PI * 2; // fixed
 		if (ang < -PI)
-			return ang + PI * 2;
+			return ang + PI * 2; 
 		return ang;
+	}
+	void angle(real ang)
+	{
+		ang_axis(ang, axis());
 	}
 	//-----------------------------------------------------------------------
 	void normalize(void)
@@ -185,18 +202,18 @@ struct  quaternion
 			*this = *this * factor;
 		}
 	}
-	quaternion normalized(void)
+	quaternion normalized(void) const
 	{
 		real len = length();
-		if (len != 0)
+		if (len == 0)
 		{
-			return (*this) / len;
+			return quaternion::ONE;
 		}
+		return (*this) / len;
 	}
 	//-----------------------------------------------------------------------
 	void conj() // 共轭
 	{
-		this->w = w;
 		this->x = -x; this->y = -y; this->z = -z;
 	}
 	quaternion conjcopy() const
@@ -247,13 +264,13 @@ struct  quaternion
 	}
 	//-----------------------------------------------------------------------
 	// v1, v2 是单位向量
-	void fromvectors(crvec v1, crvec v2)
+	void fromvectors(const vec3& v1, const vec3& v2)
 	{
 		ang_axis(acos(v1.dot(v2)), v1.cross(v2).normalized());
 	}
 	//-----------------------------------------------------------------------
 	// 角度，轴向定义
-	void ang_axis(real rfAngle, const vector3& rkAxis)
+	void ang_axis(real rfAngle, const vec3& rkAxis)
 	{
 		// assert:  axis[] is unit length
 		//
@@ -268,7 +285,7 @@ struct  quaternion
 		z = fSin * rkAxis.z;
 	}
 	//-----------------------------------------------------------------------
-	void fromeuler(real roll, real pitch, real yaw)
+	void from_eulers(real roll, real pitch, real yaw)
 	{
 		real t0 = cos(yaw * 0.5);
 		real t1 = sin(yaw * 0.5);
@@ -283,7 +300,8 @@ struct  quaternion
 		z = t2 * t4 * t1 - t3 * t5 * t0;
 	}
 	//-----------------------------------------------------------------------
-	vec3 toeuler() const
+	// roll, pitch, yaw
+	vec3 toeulers() const
 	{
 		vec3 v;
 
@@ -328,19 +346,19 @@ struct  quaternion
 		yaw = atan2(siny_cosp, cosy_cosp);
 	}
 	//-----------------------------------------------------------------------
-	static quaternion slerp(const quaternion& qa, const quaternion& qb, double t) {
+	static quaternion slerp(const quaternion& qa, const quaternion& qb, real t) {
 		// quaternion to return
 		quaternion qm;
 		// Calculate angle between them.
-		double cosHalfTheta = qa.w * qb.w + qa.x * qb.x + qa.y * qb.y + qa.z * qb.z;
+		real cosHalfTheta = qa.w * qb.w + qa.x * qb.x + qa.y * qb.y + qa.z * qb.z;
 		// if qa=qb or qa=-qb then theta = 0 and we can return qa
 		if (abs(cosHalfTheta) >= 1.0) {
 			qm.w = qa.w; qm.x = qa.x; qm.y = qa.y; qm.z = qa.z;
 			return qm;
 		}
 		// Calculate temporary values.
-		double halfTheta = acos(cosHalfTheta);
-		double sinHalfTheta = sqrt(1.0 - cosHalfTheta * cosHalfTheta);
+		real halfTheta = acos(cosHalfTheta);
+		real sinHalfTheta = sqrt(1.0 - cosHalfTheta * cosHalfTheta);
 		// if theta = 180 degrees then result is not fully defined
 		// we could rotate around any axis normal to qa or qb
 		if (fabs(sinHalfTheta) < 0.001) { // fabs is floating point absolute
@@ -350,8 +368,8 @@ struct  quaternion
 			qm.z = (qa.z * 0.5 + qb.z * 0.5);
 			return qm;
 		}
-		double ratioA = sin((1 - t) * halfTheta) / sinHalfTheta;
-		double ratioB = sin(t * halfTheta) / sinHalfTheta;
+		real ratioA = sin((1 - t) * halfTheta) / sinHalfTheta;
+		real ratioB = sin(t * halfTheta) / sinHalfTheta;
 		//calculate Quaternion.
 		qm.w = (qa.w * ratioA + qb.w * ratioB);
 		qm.x = (qa.x * ratioA + qb.x * ratioB);
@@ -419,6 +437,7 @@ struct  quaternion
 		result.normalize();
 		return result;
 	}
+	//-----------------------------------------------------------------------
 	quaternion spherical_cubic_interpolate(const quaternion& p_b, const quaternion& p_pre_a, const quaternion& p_post_b, const real& p_weight) const {
 
 		quaternion from_q = *this;
@@ -467,6 +486,9 @@ struct  quaternion
 	}
 };
 // **********************************************************************
-#ifdef PMDLL
+#if  defined(PMDLL) || !defined(PM_IMPLEMENTED)
 const quaternion quaternion::ONE = quaternion(1, 0, 0, 0);
+const quaternion quaternion::UX = quaternion(1, vec3::UX);
+const quaternion quaternion::UY = quaternion(1, vec3::UY);
+const quaternion quaternion::UZ = quaternion(1, vec3::UZ);
 #endif
