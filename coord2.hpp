@@ -34,6 +34,8 @@
 *                   	Connection vector: W = [U, V] (Lie bracket operation)
 *                   	G[u,v] = Gu*Wu + Gv*Wv
 */
+
+//#define	NON_UNIFORM_SCALE		 // 非均匀缩放
 // *******************************************************************
 //  |_
 // UC     2d Rotation Coordinate System
@@ -62,11 +64,6 @@ struct ucoord2
 		ux.rot(ang);
 		uy.rot(ang);
 	}
-	void rot(real ang)
-	{
-		ux.rot(ang);
-		uy.rot(ang);
-	}
 	bool is_same_dirs(const ucoord2& c) const
 	{
 		return ux == c.ux && uy == c.uy;
@@ -83,29 +80,18 @@ struct ucoord2
 		rc.uy = uy.x * c.ux + uy.y * c.uy;
 		return rc;
 	}
+
 	// 向量向坐标系投影
 	friend vec2 operator / (crvec2 v, const ucoord2& c)
 	{
-#ifdef Parallel_Projection
-		{// 对于非正交情况
-			return vec2(pl_dot(v, c.ux, c.uy), pl_dot(v, c.uy, c.ux));
-		}
-#endif
 		return vec2(v.dot(c.ux), v.dot(c.uy));
 	}
 	// oper(/) = C1 * C2^-1
 	ucoord2 operator / (const ucoord2& c) const
 	{
 		ucoord2 rc;
-#ifdef Parallel_Projection
-		{// 对于非正交情况
-			rc.ux = vec2(pl_dot(ux, c.ux, c.uy) / c.s.x, pl_dot(ux, c.uy, c.ux) / c.s.y);
-			rc.uy = vec2(pl_dot(uy, c.ux, c.uy) / c.s.x, pl_dot(uy, c.uy, c.ux) / c.s.y);
-		}
-#else
 		rc.ux = vec2(ux.dot(c.ux), ux.dot(c.uy));
 		rc.uy = vec2(uy.dot(c.ux), uy.dot(c.uy));
-#endif
 		return rc;
 	}
 	// oper(//) = C1^-1 * C2
@@ -131,6 +117,31 @@ struct ucoord2
 	{
 		return v.dot(ux) + v.dot(uy);
 	}
+
+	// 角度
+	real angle() const
+	{
+		return ux.angle();
+	}
+	// 旋转
+	void rot(real angle)
+	{
+		vec2 z = vector2::ang_len(angle, 1);
+		ux = complex_mul(ux, z);
+		uy = complex_mul(uy, z);
+	}
+	ucoord2 rotcopy(real angle) const
+	{
+		ucoord2 c = (*this);
+		vec2 z = vector2::ang_len(angle, 1);
+		c.ux = complex_mul(c.ux, z);
+		c.uy = complex_mul(c.uy, z);
+		return c;
+	}
+	void rot2dir(crvec2 _dir)
+	{
+		ux = _dir; uy = _dir.rotcopy(PI / 2);
+	}
 	void dump(const std::string& name = "") const
 	{
 		PRINT("----" << name << "---");
@@ -138,7 +149,7 @@ struct ucoord2
 		PRINTVEC2(uy);
 	}
 };
-#ifdef PMDLL
+#if defined(PMDLL) || !defined(PM_IMPLEMENTED)
 const ucoord2 ucoord2::ZERO = { 0 };
 const ucoord2 ucoord2::ONE = ucoord2();
 #endif
@@ -195,12 +206,41 @@ struct coord2 : ucoord2
 		ux = complex_mul(ux, z);
 		uy = complex_mul(uy, z);
 	}
+	coord2(crvec2 p, crvec2 _s, real ang)
+	{
+		o = p;
+		s = _s;
+
+		vec2 z = vector2::ang_len(ang, 1);
+		ux = complex_mul(ux, z);
+		uy = complex_mul(uy, z);
+	}
+	operator vec2 () const
+	{
+		return o;
+	}
 	vec2 VX() const { return ux * s.x; }
 	vec2 VY() const { return uy * s.y; }
-
-	bool is_same_dirs(const coord2& c) const
+	coord2 VC() const
+	{
+		return { VX(), VY() };
+	}
+	ucoord2 UC() const
+	{
+		return {ux, uy};
+	}
+	void UC(const ucoord2& uc)
+	{
+		ux = uc.ux;
+		uy = uc.uy;
+	}
+	bool equal_dirs(const coord2& c) const
 	{
 		return ux == c.ux && uy == c.uy && o == c.o && s == c.s;
+	}
+	bool operator == (const coord2& c) const
+	{
+		return o == c.o && s == c.s && equal_dirs(c);
 	}
 	coord2 operator + (const coord2& c) const
 	{
@@ -217,8 +257,9 @@ struct coord2 : ucoord2
 	}
 	coord2 operator + (const vec2& v) const
 	{
-		coord2 c; c.o = v; c.s = vec2::ZERO;
-		return (*this) + c;
+		coord2 c = (*this);
+		c.o += v;
+		return c;
 	}
 	void operator += (const vec2& v)
 	{
@@ -239,8 +280,9 @@ struct coord2 : ucoord2
 	}
 	coord2 operator - (const vec2& v) const
 	{
-		coord2 c; c.o = v; c.s = vec2::ZERO;
-		return (*this) - c;
+		coord2 c = (*this);
+		c.o -= v;
+		return c;
 	}
 	void operator -= (const vec2& v)
 	{
@@ -262,9 +304,14 @@ struct coord2 : ucoord2
 	coord2 operator * (const coord2& c) const
 	{
 		coord2 rc;
-		rc.ux = ux.x * c.ux + ux.y * c.uy;
-		rc.uy = uy.x * c.ux + uy.y * c.uy;
+#ifdef	NON_UNIFORM_SCALE
+		rc.ux = (ux.x * s.x) * (c.ux * c.s.x) + (ux.y * s.x) * (c.uy * c.s.y);
+		rc.uy = (uy.x * s.y) * (c.ux * c.s.x) + (uy.y * s.y) * (c.uy * c.s.y);
+		rc.norm();
+#else
+		rc = ucoord2::operator*(c);
 		rc.s = s * c.s;
+#endif
 		rc.o = c.o + o.x * c.s.x * c.ux + o.y * c.s.y * c.uy;
 		return rc;
 	}
@@ -279,7 +326,7 @@ struct coord2 : ucoord2
 		//	c.s.x *= s; c.s.y *= s;
 		//}
 		{// C*S 移动乘法
-			c.o.x *= s; c.o.y *= s;
+			c.o *= s;
 		}
 		return c;
 	}
@@ -287,41 +334,32 @@ struct coord2 : ucoord2
 	{
 		*this = (*this) * s;
 	}
-#ifdef Parallel_Projection
-	// 非正交坐标系下平行投影 Parallel projection
-	static real pl_dot(crvec2 v, crvec2 ax1, crvec2 ax2)
-	{
-		real co = ax1.dot(ax2);
-		real si = sqrt(1 - co * co);
-		real sc = (co / si);
-		return (v.dot(ax1) - v.cross(ax1) * sc);
-	}
-#endif
 	// 向量向坐标系投影
 	friend vec2 operator / (crvec2 p, const coord2& c)
 	{
 		vec2 v = p - c.o;
-#ifdef Parallel_Projection
-		{// 对于非正交情况
-			return vec2(pl_dot(v, c.ux, c.uy) / c.s.x, pl_dot(v, c.uy, c.ux) / c.s.y);
-		}
-#endif
-		return vec2(v.dot(c.ux) / c.s.x, v.dot(c.uy) / c.s.y);
+		v /= c.s;
+		return vec2(v.dot(c.ux), v.dot(c.uy));
 	}
 	// oper(/) = C1 * C2^-1
 	coord2 operator / (const coord2& c) const
 	{
 		coord2 rc;
-#ifdef Parallel_Projection
-		{// 对于非正交情况
-			rc.ux = vec2(pl_dot(ux, c.ux, c.uy) / c.s.x, pl_dot(ux, c.uy, c.ux) / c.s.y);
-			rc.uy = vec2(pl_dot(uy, c.ux, c.uy) / c.s.x, pl_dot(uy, c.uy, c.ux) / c.s.y);
-		}
+#ifdef	NON_UNIFORM_SCALE
+		vec2 vx = VX();
+		vec2 vy = VY();
+
+		vec2 cvx = c.ux / c.s.x;
+		vec2 cvy = c.uy / c.s.y;
+
+		rc.ux = vec2(vx.dot(cvx), vx.dot(cvy));
+		rc.uy = vec2(vy.dot(cvx), vy.dot(cvy));
+
+		rc.norm();
 #else
-		rc.ux = vec2(ux.dot(c.ux) / c.s.x, ux.dot(c.uy) / c.s.y);
-		rc.uy = vec2(uy.dot(c.ux) / c.s.x, uy.dot(c.uy) / c.s.y);
-#endif
+		rc = ucoord2::operator/(c);
 		rc.s = s / c.s;
+#endif
 		rc.o = o - c.o;
 		rc.o = vec2(rc.o.dot(c.ux) / c.s.x, rc.o.dot(c.uy) / c.s.y);
 		return rc;
@@ -343,7 +381,6 @@ struct coord2 : ucoord2
 	}
 	void norm(bool bscl = true)
 	{
-#define ISZERO(a) (fabs(a) < 1e-10)
 		s.x = ux.len(); if (!ISZERO(s.x)) ux /= s.x;
 		s.y = uy.len(); if (!ISZERO(s.y)) uy /= s.y;
 
@@ -369,33 +406,9 @@ struct coord2 : ucoord2
 		return c1.reversed() * c2 - ONE;
 	}
 	// 位置
-	inline vec2 pos() const
+	vec2 pos() const
 	{
 		return o;
-	}
-	// 角度
-	inline real angle() const
-	{
-		return ux.angle();
-	}
-	// 旋转
-	void rot(real angle)
-	{
-		vec2 z = vector2::ang_len(angle, 1);
-		ux = complex_mul(ux, z);
-		uy = complex_mul(uy, z);
-	}
-	coord2 rotcopy(real angle) const
-	{
-		coord2 c = (*this);
-		vec2 z = vector2::ang_len(angle, 1);
-		c.ux = complex_mul(c.ux, z);
-		c.uy = complex_mul(c.uy, z);
-		return c;
-	}
-	void rot2dir(crvec2 _dir)
-	{
-		ux = _dir; uy = _dir.rotcopy(PI / 2);
 	}
 	std::string serialise() const
 	{
@@ -410,7 +423,7 @@ struct coord2 : ucoord2
 		PRINTVEC2(o);
 	}
 };
-#ifdef PMDLL
+#if defined(PMDLL) || !defined(PM_IMPLEMENTED)
 const coord2 coord2::ZERO = { ucoord2::ZERO, vec2::ZERO };
 const coord2 coord2::ONE = coord2();
 #endif
