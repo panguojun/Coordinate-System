@@ -1,18 +1,20 @@
-/**************************************************************************
-				【四元数】
+/***********************************************************************************************************
+					【Quaternion】
 
-	四元数是在复数基础上的扩展,单位四元数用于旋转操作，向量是源自于四元数，
-	不过二者有差别。目前四元数跟向量之间的关系以及应用存在着争议。
+Quaternions are an extension of complex numbers, and unit quaternions are used for rotation operations. 
+Vectors are derived from quaternions, but there are differences between the two. 
+Currently, there are debates regarding the relationship and applications of quaternions and vectors.
 
-	*  *  *  *  *  *  *  *  *  详解  *  *  *  *  *  *  *  *  *  *  *  *  * 
-	类似于复数，四元数也拥有指数形式：e^q，结果也是一个四元数： q = e^q,
-	在底层物理里应了规范变换，跟坐标系变换有一些不同，规范变换更加
-	侧重相位拥有时间属性，坐标系变换偏向于空间的变换以及曲率等特征提取。
+*  *  *  *  *  *  *  *  *  Detailed Explanation  *  *  *  *  *  *  *  *  *  *  *  *  * 
+Similar to complex numbers, quaternions also possess an exponential form: e^q, resulting in another quaternion: 
+q = e^q. In fundamental physics, gauge transformations differ from coordinate transformations, 
+with gauge transformations emphasizing phase with time attributes, while coordinate transformations focus 
+on spatial transformations and curvature feature extraction.
 
-	四元数存在归一化(normalise)，共轭(conj)，求逆(invert)，乘除法等操作，
-	还规定了单位一（ONE).
+Quaternions support operations such as normalization, conjugation, inversion, multiplication, and division, 
+and also define the unity quaternion (ONE).
 
-**************************************************************************/
+***********************************************************************************************************/
 struct  quaternion
 {
 	real w = 1, x = 0, y = 0, z = 0;
