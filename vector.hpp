@@ -1,11 +1,10 @@
 /**
-*			【向量】
-* 
-*		向量的定义是来自于四元数
-*		向量不是完整的数，
-*		向量跟空间结构有关系，
-*		如果在时空中建议使用四元数
-*/
+ *                          【Vector】
+ *
+ *      The definition of a vector comes from quaternions.
+ *      A vector is not a complete number; it is inherently tied to spatial structure.
+ *      When dealing with spacetime, it is recommended to use quaternions.
+ */
 // **********************************************************************
 // 2D
 // **********************************************************************
