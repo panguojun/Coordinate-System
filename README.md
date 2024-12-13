@@ -153,10 +153,13 @@ The text discusses the need for a more suitable language in the computer era to 
 
 ## Installation
 
-To use the **Coord** system in Python, you can easily install it via pip:
+To use the coordinate_system in Python, you can easily install it via pip:
 
 ```bash
 pip install coordinate_system
-``` 
+```
 
-This will allow you to leverage the powerful features of the **Coord** class in Python for your mathematical and computational needs.
+```python
+from coordinate_system import vec3,quat,coord3
+```
+This will allow you to leverage the powerful features of the coord3 class in Python for your mathematical and computational needs.
