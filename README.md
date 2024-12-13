@@ -150,3 +150,13 @@ By using coordinate system objects to achieve a unified formal representation of
 ## Summary
 
 The text discusses the need for a more suitable language in the computer era to express mathematical problems in a way that is acceptable to both humans and computers. The solution proposed is to overload algebraic operations and redefine them in a coordinate system object, with the aim of achieving a more concise and computer-friendly mathematical language by extending algebraic expression.
+
+## Installation
+
+To use the **Coord** system in Python, you can easily install it via pip:
+
+```bash
+pip install coordinate_system
+``` 
+
+This will allow you to leverage the powerful features of the **Coord** class in Python for your mathematical and computational needs.
