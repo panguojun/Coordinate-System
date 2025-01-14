@@ -201,16 +201,16 @@ struct ucoord3
 		uz = q * uz;
 	}
 	// 除法：向量向坐标系投影
-    DEVICE_CALLABLE friend vec3 operator/(const vec3& v, const ucoord3& c)
+        friend vec3 operator/(const vec3& v, const ucoord3& c)
 	{
 		return vec3(v.dot(c.ux), v.dot(c.uy), v.dot(c.uz));
 	}
-    DEVICE_CALLABLE friend void operator/=(vec3& v, const ucoord3& c)
+    friend void operator/=(vec3& v, const ucoord3& c)
 	{
 		v = v / c;
 	}
 	// oper(/) = C1 * C2^-1
-    DEVICE_CALLABLE ucoord3 operator/(const ucoord3& c) const
+    ucoord3 operator/(const ucoord3& c) const
 	{
 		ucoord3 rc;
 		rc.ux = vec3(ux.dot(c.ux), ux.dot(c.uy), ux.dot(c.uz));
@@ -218,7 +218,7 @@ struct ucoord3
 		rc.uz = vec3(uz.dot(c.ux), uz.dot(c.uy), uz.dot(c.uz));
 		return rc;
 	}
-    DEVICE_CALLABLE void operator/=(const ucoord3& c)
+    void operator/=(const ucoord3& c)
 	{
 		*this = (*this) / c;
 	}
@@ -461,7 +461,7 @@ struct ucoord3
 		return (*this) * quat(uz, _uz);
 	}
 };
-#if defined(PMDLL) || !defined(PM_IMPLEMENTED)
+#ifndef(PM_IMPLEMENTED)
 const ucoord3 ucoord3::ONE = {};
 #endif
 
@@ -674,7 +674,7 @@ struct vcoord3 : ucoord3
 		PRINTVEC3(s);
 	}
 };
-#if  defined(PMDLL) || !defined(PM_IMPLEMENTED)
+#ifndef(PM_IMPLEMENTED)
 const vcoord3 vcoord3::ONE	= { };
 #endif
 
@@ -689,23 +689,23 @@ struct coord3 : vcoord3
 
 	vec3 o;		// 原点
 
-	DEVICE_CALLABLE coord3() {}
-	DEVICE_CALLABLE coord3(const ucoord3& uc) : vcoord3(uc){}
-	DEVICE_CALLABLE coord3(const vcoord3& vc) : vcoord3(vc) {}
-	DEVICE_CALLABLE coord3(const vec3& _o,  const vec3& _s, const vec3& _ux, const vec3& _uy, const vec3& _uz) : vcoord3(_ux, _uy, _uz, _s), o(_o){}
-	DEVICE_CALLABLE coord3(const vec3& _o,  const vec3& _ux, const vec3& _uy, const vec3& _uz) : vcoord3(_ux, _uy, _uz), o(_o){ }
-	DEVICE_CALLABLE coord3(const vec3& _ux, const vec3& _uy, const vec3& _uz) : vcoord3(_ux, _uy, _uz){}
-	DEVICE_CALLABLE coord3(const vec3& _ux, const vec3& _uy) : vcoord3(_ux, _uy, ux.cross(uy)){}
-	DEVICE_CALLABLE coord3(const vec3& _p) : o(_p){}
-	DEVICE_CALLABLE coord3(const ucoord3& c,const vec3& _o) : vcoord3(c), o(_o){}
-	DEVICE_CALLABLE coord3(const vec3& _o,  const ucoord3& c) : vcoord3(c), o(_o){}
-	DEVICE_CALLABLE coord3(const ucoord3& c,const vec3& _s, const vec3& _o) : vcoord3(c, _s), o(_o){}
-	DEVICE_CALLABLE coord3(const vec3& _o,  const vec3& _s, const ucoord3& c) : vcoord3(c, _s), o(_o) {}
-	DEVICE_CALLABLE coord3(real ang, const vec3& ax) : vcoord3(quaternion(ang, ax)) {}
-    DEVICE_CALLABLE coord3(real x, real y, real z) : o(x, y, z) {}
-    DEVICE_CALLABLE coord3(const quaternion& q) : vcoord3(q) {}
-    DEVICE_CALLABLE coord3(const vec3& p, const quaternion& q, const vec3& _s = vec3::ONE) : vcoord3(q, _s), o(p) {}
-	DEVICE_CALLABLE coord3(real x, real y, real z, real rx, real ry, real rz)
+	coord3() {}
+	coord3(const ucoord3& uc) : vcoord3(uc){}
+	coord3(const vcoord3& vc) : vcoord3(vc) {}
+	coord3(const vec3& _o,  const vec3& _s, const vec3& _ux, const vec3& _uy, const vec3& _uz) : vcoord3(_ux, _uy, _uz, _s), o(_o){}
+	coord3(const vec3& _o,  const vec3& _ux, const vec3& _uy, const vec3& _uz) : vcoord3(_ux, _uy, _uz), o(_o){ }
+	coord3(const vec3& _ux, const vec3& _uy, const vec3& _uz) : vcoord3(_ux, _uy, _uz){}
+	coord3(const vec3& _ux, const vec3& _uy) : vcoord3(_ux, _uy, ux.cross(uy)){}
+	coord3(const vec3& _p) : o(_p){}
+	coord3(const ucoord3& c,const vec3& _o) : vcoord3(c), o(_o){}
+	coord3(const vec3& _o,  const ucoord3& c) : vcoord3(c), o(_o){}
+	coord3(const ucoord3& c,const vec3& _s, const vec3& _o) : vcoord3(c, _s), o(_o){}
+	coord3(const vec3& _o,  const vec3& _s, const ucoord3& c) : vcoord3(c, _s), o(_o) {}
+	coord3(real ang, const vec3& ax) : vcoord3(quaternion(ang, ax)) {}
+    coord3(real x, real y, real z) : o(x, y, z) {}
+    coord3(const quaternion& q) : vcoord3(q) {}
+    coord3(const vec3& p, const quaternion& q, const vec3& _s = vec3::ONE) : vcoord3(q, _s), o(p) {}
+	coord3(real x, real y, real z, real rx, real ry, real rz)
 	{
 		quaternion q(rx, ry, rz);
 		ux = q * vec3::UX;
@@ -713,111 +713,111 @@ struct coord3 : vcoord3
 		uz = q * vec3::UZ;
 		o = vec3(x, y, z);
 	}
-	DEVICE_CALLABLE operator quat() const
+	operator quat() const
 	{
 		return toquat();
 	}
-    DEVICE_CALLABLE operator vec3() const
+    operator vec3() const
 	{
 		return o;
 	}
-    DEVICE_CALLABLE vec3 VX() const { return ux * s.x; }
-	DEVICE_CALLABLE vec3 VY() const { return uy * s.y; }
-	DEVICE_CALLABLE vec3 VZ() const { return uz * s.z; }
+    vec3 VX() const { return ux * s.x; }
+	vec3 VY() const { return uy * s.y; }
+	vec3 VZ() const { return uz * s.z; }
 
-	DEVICE_CALLABLE vec3 X() const { return ux * s.x + vec3::UX * o.x; }
-	DEVICE_CALLABLE vec3 Y() const { return uy * s.y + vec3::UY * o.y; }
-	DEVICE_CALLABLE vec3 Z() const { return uz * s.z + vec3::UZ * o.z; }
+	vec3 X() const { return ux * s.x + vec3::UX * o.x; }
+	vec3 Y() const { return uy * s.y + vec3::UY * o.y; }
+	vec3 Z() const { return uz * s.z + vec3::UZ * o.z; }
 
 	// 旋转坐标系
-    DEVICE_CALLABLE const ucoord3& ucoord() const
+    const ucoord3& ucoord() const
 	{
 		return static_cast<const ucoord3&>(*this);
 	}
-    DEVICE_CALLABLE void ucoord(const ucoord3& ucd)
+    void ucoord(const ucoord3& ucd)
 	{
 		ux = ucd.ux; uy = ucd.uy; uz = ucd.uz;
 	}
-    DEVICE_CALLABLE void ucoord(vec3 _ux, vec3 _uy, vec3 _uz)
+    void ucoord(vec3 _ux, vec3 _uy, vec3 _uz)
 	{
 		ux = _ux; uy = _uy; uz = _uz;
 	}
-	DEVICE_CALLABLE const ucoord3& R() const
+	const ucoord3& R() const
 	{
 		return static_cast<const ucoord3&>(*this);
 	}
-    DEVICE_CALLABLE const ucoord3& UC() const
+    const ucoord3& UC() const
 	{
 		return static_cast<const ucoord3&>(*this);
 	}
-    DEVICE_CALLABLE void UC(const ucoord3& ucd)
+    void UC(const ucoord3& ucd)
 	{
 		ux = ucd.ux; uy = ucd.uy; uz = ucd.uz;
 	}
-    DEVICE_CALLABLE void UC(vec3 _ux, vec3 _uy, vec3 _uz)
+    void UC(vec3 _ux, vec3 _uy, vec3 _uz)
 	{
 		ux = _ux; uy = _uy; uz = _uz;
 	}
 	// 向量坐标系 = 方向 X 缩放
-    DEVICE_CALLABLE const vcoord3& vcoord() const
+    const vcoord3& vcoord() const
 	{
 		return static_cast<const vcoord3&>(*this);
 	}
-    DEVICE_CALLABLE const vcoord3& VC() const
+    const vcoord3& VC() const
 	{
 		return static_cast<const vcoord3&>(*this);
 	}
 	// 姿态
-    DEVICE_CALLABLE coord3 pose()
+    coord3 pose()
 	{
 		return { ucoord(), vec3::ONE, o };
 	}
 	// 位置
-    DEVICE_CALLABLE vec3 pos() const
+    vec3 pos() const
 	{
 		return o;
 	}
 	// 总向量
-    DEVICE_CALLABLE vec3 sumvec() const
+    vec3 sumvec() const
 	{
 		return o + VX() + VY() + VZ();
 	}
 	// 向量
-    DEVICE_CALLABLE vec3 tovec() const
+    vec3 tovec() const
 	{
 		return ux * s.x + uy * s.y + uz * s.z;
 	}
-    DEVICE_CALLABLE quaternion Q() const
+    quaternion Q() const
 	{
 		return toquat();
 	}
-    DEVICE_CALLABLE void Q(const quaternion& q)
+    void Q(const quaternion& q)
 	{
 		ux = q * vec3::UX;
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;
 	}
-    DEVICE_CALLABLE coord3 operator=(const coord3& c)
+    coord3 operator=(const coord3& c)
 	{
 		o = c.o;
 		s = c.s;
 		ux = c.ux; uy = c.uy; uz = c.uz;
 		return (*this);
 	}
-    DEVICE_CALLABLE bool equal_dirs(const coord3& c) const
+    bool equal_dirs(const coord3& c) const
 	{
 		return ux == c.ux && uy == c.uy && uz == c.uz;
 	}
-    DEVICE_CALLABLE bool operator==(const coord3& c) const
+    bool operator==(const coord3& c) const
 	{
 		return o == c.o && s == c.s && equal_dirs(c);
 	}
-    DEVICE_CALLABLE bool operator!=(const coord3& c) const
+    bool operator!=(const coord3& c) const
 	{
 		return o != c.o || s != c.s || !equal_dirs(c);
 	}
 	// +/- 运算
-    DEVICE_CALLABLE coord3 operator+(const coord3& c) const
+    coord3 operator+(const coord3& c) const
 	{
 		coord3 rc;
 		vec3 _ux = VX() + c.VX();
@@ -846,36 +846,36 @@ struct coord3 : vcoord3
 		rc.o = o + c.o;
 		return rc;
 	}
-    DEVICE_CALLABLE void operator+=(const coord3& c)
+    void operator+=(const coord3& c)
 	{
 		*this = (*this) + c;
 	}
-    DEVICE_CALLABLE coord3 operator+(const vec3& v) const
+    coord3 operator+(const vec3& v) const
 	{
 		coord3 c = (*this); c.o += v;
 		return c;
 	}
-    DEVICE_CALLABLE void operator+=(const vec3& v)
+    void operator+=(const vec3& v)
 	{
 		*this = *this + v;
 	}
-    DEVICE_CALLABLE friend vec3 operator+(const vec3& p, const coord3& c)
+    friend vec3 operator+(const vec3& p, const coord3& c)
 	{
 		return p + c.o;
 	}
-    DEVICE_CALLABLE friend void operator+=(vec3& p, const coord3& c)
+    friend void operator+=(vec3& p, const coord3& c)
 	{
 		p = p + c;
 	}
-    DEVICE_CALLABLE friend vec3 operator-(const vec3& p, const coord3& c)
+    friend vec3 operator-(const vec3& p, const coord3& c)
 	{
 		return p - c.o;
 	}
-    DEVICE_CALLABLE friend void operator-=(vec3& p, const coord3& c)
+    friend void operator-=(vec3& p, const coord3& c)
 	{
 		p = p - c;
 	}
-    DEVICE_CALLABLE coord3 operator-(const coord3& c) const
+    coord3 operator-(const coord3& c) const
 	{
 		coord3 rc;
 		vec3 _ux = VX() - c.VX();
@@ -904,38 +904,38 @@ struct coord3 : vcoord3
 		rc.o = o - c.o;
 		return rc;
 	}
-    DEVICE_CALLABLE coord3 operator-(const vec3& v) const
+    coord3 operator-(const vec3& v) const
 	{
 		coord3 c = (*this); c.o -= v;
 		return c;
 	}
-    DEVICE_CALLABLE void operator-=(const vec3& v)
+    void operator-=(const vec3& v)
 	{
 		*this = *this - v;
 	}
 
 	// 乘法：在坐标系下定义一个向量
-    DEVICE_CALLABLE friend vec3 operator*(const vec3& p, const coord3& c)
+    friend vec3 operator*(const vec3& p, const coord3& c)
 	{
 		return c.ux * (c.s.x * p.x) + c.uy * (c.s.y * p.y) + c.uz * (c.s.z * p.z) + c.o;
 	}
-    DEVICE_CALLABLE friend void operator*=(vec3& p, const coord3& c)
+    friend void operator*=(vec3& p, const coord3& c)
 	{
 		p = p * c;
 	}
-    DEVICE_CALLABLE coord3 operator*(const vec3& v) const
+    coord3 operator*(const vec3& v) const
 	{
 		return (*this) * coord3(vec3::UX * v.x, vec3::UY * v.y, vec3::UZ * v.z);
 	}
-    DEVICE_CALLABLE void operator*=(const vec3& v)
+    void operator*=(const vec3& v)
 	{
 		*this = (*this) * v;
 	}
-    DEVICE_CALLABLE friend real operator*(const real& s, const coord3& c)
+    friend real operator*(const real& s, const coord3& c)
 	{
 		return s * ((c.s.x + c.s.y + c.s.z) / 3.0);
 	}
-    DEVICE_CALLABLE coord3 operator*(real s) const
+    coord3 operator*(real s) const
 	{
 		coord3 c = *this;
 		{// C*S 缩放乘法
@@ -943,21 +943,21 @@ struct coord3 : vcoord3
 		}
 		return c;
 	}
-    DEVICE_CALLABLE void operator*=(real s)
+    void operator*=(real s)
 	{
 		*this = (*this) * s;
 	}
-    DEVICE_CALLABLE coord3 operator*(const coord3& c) const
+    coord3 operator*(const coord3& c) const
 	{// Cchild * Cparent * ...
 		coord3 rc = vcoord3::operator*(c);
 		rc.o = c.o + (o.x * c.s.x) * c.ux + (o.y * c.s.y) * c.uy + (o.z * c.s.z) * c.uz;
 		return rc;
 	}
-    DEVICE_CALLABLE void operator*=(const coord3& c)
+    void operator*=(const coord3& c)
 	{
 		*this = (*this) * c;
 	}
-    DEVICE_CALLABLE coord3 operator*(const quaternion& q) const
+    coord3 operator*(const quaternion& q) const
 	{
 		coord3 rc = *this;
 		rc.ux = q * ux;
@@ -966,68 +966,68 @@ struct coord3 : vcoord3
 		rc.o = q * rc.o;
 		return rc;
 	}
-    DEVICE_CALLABLE void operator*=(const quaternion& q)
+    void operator*=(const quaternion& q)
 	{
 		*this = (*this) * q;
 	}
 
 	// 除法：向量向坐标系投影 注意：要保证ux,uy,uz是单位向量！
-    DEVICE_CALLABLE friend vec3 operator/(const vec3& p, const coord3& c)
+    friend vec3 operator/(const vec3& p, const coord3& c)
 	{
 		vec3 v = p - c.o;
 		v = v / c.s;
 		return vec3(v.dot(c.ux), v.dot(c.uy), v.dot(c.uz));
 	}
-    DEVICE_CALLABLE friend void operator/=(vec3& p, const coord3& c)
+    friend void operator/=(vec3& p, const coord3& c)
 	{
 		p = p / c;
 	}
-    DEVICE_CALLABLE coord3 operator/(const vec3& v) const
+    coord3 operator/(const vec3& v) const
 	{
 		return (*this) / coord3(vec3::UX * v.x, vec3::UY * v.y, vec3::UZ * v.z);
 	}
-    DEVICE_CALLABLE void operator/=(const vec3& v)
+    void operator/=(const vec3& v)
 	{
 		*this = (*this) / v;
 	}
 
-	DEVICE_CALLABLE coord3 operator/(real s) const
+	coord3 operator/(real s) const
 	{// C/S 缩放除法
 		coord3 c = *this;
 		c.s /= s;
 		c.o /= s;
 		return c;
 	}
-    DEVICE_CALLABLE void operator/=(real s)
+    void operator/=(real s)
 	{
 		*this = (*this) / s;
 	}
 	// oper(/) = C1 * C2^ - 1
-    DEVICE_CALLABLE coord3 operator/(const coord3& c) const
+    coord3 operator/(const coord3& c) const
 	{
 		coord3 rc = vcoord3::operator/(c);
 		rc.o = o - c.o;
 		rc.o = vec3(rc.o.dot(c.ux) / c.s.x, rc.o.dot(c.uy) / c.s.y, rc.o.dot(c.uz) / c.s.z);
 		return rc;
 	}
-    DEVICE_CALLABLE void operator/=(const coord3& c)
+    void operator/=(const coord3& c)
 	{
 		*this = (*this) / c;
 	}
-    DEVICE_CALLABLE coord3 operator/(const quaternion& q) const
+    coord3 operator/(const quaternion& q) const
 	{
 		return (*this) * q.conjcopy();
 	}
-    DEVICE_CALLABLE void operator/=(const quaternion& q)
+    void operator/=(const quaternion& q)
 	{
 		*this = (*this) / q;
 	}
 	// oper(\) = C1^-1 * C2
-    DEVICE_CALLABLE coord3 operator%(const coord3& c) const
+    coord3 operator%(const coord3& c) const
 	{
 		return (*this).reversed() * c;
 	}
-    DEVICE_CALLABLE coord3 operator^(const vec3& v) const
+    coord3 operator^(const vec3& v) const
 	{
 		coord3 c = *this;
 		c.ux = vec3::lerp(vec3::UX, c.ux, v.x); c.ux.norm();
@@ -1189,7 +1189,7 @@ struct coord3 : vcoord3
 		o = vec3::lerp(o, c.o, alpha);
 	}
 };
-#if defined(PMDLL) || !defined(PM_IMPLEMENTED)
+#ifndef(PM_IMPLEMENTED)
 const coord3 coord3::ZERO = {ucoord3::ONE, vec3::ZERO, vec3::ZERO };
 const coord3 coord3::ONE = {};
 #endif
