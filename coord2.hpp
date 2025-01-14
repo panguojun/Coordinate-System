@@ -410,11 +410,11 @@ struct coord2 : ucoord2
 	{
 		return o;
 	}
-	std::string serialise() const
+	string serialise() const
 	{
 		return o.serialise() + "," + std::to_string(angle());
 	}
-	void dump(const std::string& name = "") const
+	void dump(const string& name = "") const
 	{
 		PRINT("----" << name << "---");
 		PRINTVEC2(ux);
@@ -423,7 +423,7 @@ struct coord2 : ucoord2
 		PRINTVEC2(o);
 	}
 };
-#if defined(PMDLL) || !defined(PM_IMPLEMENTED)
+#ifndef(PM_IMPLEMENTED)
 const coord2 coord2::ZERO = { ucoord2::ZERO, vec2::ZERO };
 const coord2 coord2::ONE = coord2();
 #endif
