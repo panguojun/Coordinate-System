@@ -120,8 +120,8 @@ struct ucoord3
 	void from_vecs_R(const vec3& v1, const vec3& v2)
 	{
 		vec3  v = v1.cross(v2);
-		float c = v1.dot(v2);
-		float k = 1.0 / (1.0 + c);
+		real c = v1.dot(v2);
+		real k = 1.0 / (1.0 + c);
 		
 		ux = { v.x * v.x * k + c,      v.y * v.x * k - v.z,    v.z * v.x * k + v.y };
 		uy = { v.x * v.y * k + v.z,    v.y * v.y * k + c,      v.z * v.y * k - v.x };
@@ -358,10 +358,10 @@ struct ucoord3
 		real c_eps = 1e-5;
 
 		const ucoord3& rm = *this;
-		float sy = sqrt(rm.ux.x * rm.ux.x + rm.uy.x * rm.uy.x);
+		real sy = sqrt(rm.ux.x * rm.ux.x + rm.uy.x * rm.uy.x);
 		bool singular = sy < c_eps;
 
-		float x, y, z;
+		real x, y, z;
 		if (!singular)
 		{
 			x = atan2(rm.uz.y, rm.uz.z);
@@ -380,16 +380,16 @@ struct ucoord3
 	}
 	ucoord3 eulers2coord(const vec3& eulers)
 	{
-		float x = eulers.x;
-		float y = eulers.y;
-		float z = eulers.z;
+		real x = eulers.x;
+		real y = eulers.y;
+		real z = eulers.z;
 
-		float cx = cos(x);
-		float sx = sin(x);
-		float cy = cos(y);
-		float sy = sin(y);
-		float cz = cos(z);
-		float sz = sin(z);
+		real cx = cos(x);
+		real sx = sin(x);
+		real cy = cos(y);
+		real sy = sin(y);
+		real cz = cos(z);
+		real sz = sin(z);
 
 		ucoord3 result;
 		result.ux.x = cy * cz;
@@ -1120,7 +1120,7 @@ struct coord3 : vcoord3
 	std::size_t hash() const
 	{
 		std::size_t hash = 0;
-		if (sizeof(real) == sizeof(float))
+		if (sizeof(real) == sizeof(real))
 		{
 			// 哈希原点坐标
 			hash_combine(hash, o.x);
