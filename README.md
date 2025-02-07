@@ -163,3 +163,6 @@ pip install coordinate_system
 from coordinate_system import vec3,quat,coord3
 ```
 This will allow you to leverage the powerful features of the coord3 class in Python for your mathematical and computational needs.
+
+## Paper online
+https://zenodo.org/records/14435614
