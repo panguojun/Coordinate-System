@@ -161,6 +161,10 @@ pip install coordinate_system
 
 ```python
 from coordinate_system import vec3,quat,coord3
+a = coord3(0,0,1,0,45,0);
+b = coord3(1,0,0,45,0,0);
+a*=b;
+print(a);
 ```
 This will allow you to leverage the powerful features of the coord3 class in Python for your mathematical and computational needs.
 
