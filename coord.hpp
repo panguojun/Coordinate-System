@@ -57,26 +57,26 @@ struct ucoord3
 	{
 		ux = vec3::UX; uy = vec3::UY; uz = vec3::UZ;
 	}
-    ucoord3(const ucoord3& c)
+    	ucoord3(const ucoord3& c)
 	{
 		ux = c.ux; uy = c.uy; uz = c.uz;
 	}
-    ucoord3(const vec3& _ux, const vec3& _uy, const vec3& _uz)
+    	ucoord3(const vec3& _ux, const vec3& _uy, const vec3& _uz)
 	{
 		ux = _ux; uy = _uy; uz = _uz;
 	}
-    ucoord3(const vec3& _ux, const vec3& _uy)
+    	ucoord3(const vec3& _ux, const vec3& _uy)
 	{
 		ux = _ux; uy = _uy; uz = ux.cross(uy);
 	}
-    ucoord3(real ang, const vec3& ax)
+    	ucoord3(real ang, const vec3& ax)
 	{
 		quaternion q(ang, ax);
 		ux = q * vec3::UX;
 		uy = q * vec3::UY;
 		uz = q * vec3::UZ;
 	}
-    ucoord3(real pit, real yaw, real rol)
+    	ucoord3(real pit, real yaw, real rol)
 	{
 		quaternion q(pit, yaw, rol);
 		ux = q * vec3::UX;
@@ -205,16 +205,16 @@ struct ucoord3
 		uz = q * uz;
 	}
 	// 除法：向量向坐标系投影（对于非正交坐标系，建议再扩展）
-    friend vec3 operator/(const vec3& v, const ucoord3& c)
+    	friend vec3 operator/(const vec3& v, const ucoord3& c)
 	{
 		return vec3(v.dot(c.ux), v.dot(c.uy), v.dot(c.uz));
 	}
-    friend void operator/=(vec3& v, const ucoord3& c)
+    	friend void operator/=(vec3& v, const ucoord3& c)
 	{
 		v = v / c;
 	}
 	// oper(/) = C1 * C2^-1
-    ucoord3 operator/(const ucoord3& c) const
+    	ucoord3 operator/(const ucoord3& c) const
 	{
 		ucoord3 rc;
 		rc.ux = vec3(ux.dot(c.ux), ux.dot(c.uy), ux.dot(c.uz));
@@ -222,7 +222,7 @@ struct ucoord3
 		rc.uz = vec3(uz.dot(c.ux), uz.dot(c.uy), uz.dot(c.uz));
 		return rc;
 	}
-    void operator/=(const ucoord3& c)
+    	void operator/=(const ucoord3& c)
 	{
 		*this = (*this) / c;
 	}
@@ -770,8 +770,8 @@ struct coord3 : vcoord3
 	coord3(const ucoord3& c,const vec3& _o) : vcoord3(c), o(_o) {}
 
 	coord3(real ang, const vec3& ax) : vcoord3(quaternion(ang, ax)) {}
-    coord3(const quaternion& q) : vcoord3(q) {}
-    coord3(const vec3& p, const quaternion& q, const vec3& _s = vec3::ONE) : vcoord3(q, _s), o(p) {}
+    	coord3(const quaternion& q) : vcoord3(q) {}
+    	coord3(const vec3& p, const quaternion& q, const vec3& _s = vec3::ONE) : vcoord3(q, _s), o(p) {}
 	coord3(real x, real y, real z, real qw, real qx, real qy, real qz, real sx, real sy, real sz) : vcoord3(quaternion(qw, qx, qy, qz), vec3(sx, sy, sz)), o(x, y, z) {}
 	coord3(real x, real y, real z, real qw, real qx, real qy, real qz) : vcoord3(quaternion(qw, qx, qy, qz), s), o(x, y, z) {}
 	coord3(real x, real y, real z, real rx, real ry, real rz)
@@ -796,12 +796,12 @@ struct coord3 : vcoord3
 	{
 		return toquat();
 	}
-    operator vec3() const
+    	operator vec3() const
 	{
 		return o;
 	}
 
-    vec3 VX()	const { return ux * s.x; }
+    	vec3 VX()	const { return ux * s.x; }
 	vec3 VY()	const { return uy * s.y; }
 	vec3 VZ()	const { return uz * s.z; }
 
@@ -814,15 +814,15 @@ struct coord3 : vcoord3
 	vec3 Z()	const { return uz * s.z + vec3::UZ * o.z; }
 
 	// 旋转坐标系
-    const ucoord3& ucoord() const
+    	const ucoord3& ucoord() const
 	{
 		return static_cast<const ucoord3&>(*this);
 	}
-    void ucoord(const ucoord3& ucd)
+    	void ucoord(const ucoord3& ucd)
 	{
 		ux = ucd.ux; uy = ucd.uy; uz = ucd.uz;
 	}
-    void ucoord(vec3 _ux, vec3 _uy, vec3 _uz)
+    	void ucoord(vec3 _ux, vec3 _uy, vec3 _uz)
 	{
 		ux = _ux; uy = _uy; uz = _uz;
 	}
@@ -830,63 +830,63 @@ struct coord3 : vcoord3
 	{
 		return static_cast<const ucoord3&>(*this);
 	}
-    const ucoord3& UC() const
+    	const ucoord3& UC() const
 	{
 		return static_cast<const ucoord3&>(*this);
 	}
-    void UC(const ucoord3& ucd)
+    	void UC(const ucoord3& ucd)
 	{
 		ux = ucd.ux; uy = ucd.uy; uz = ucd.uz;
 	}
-    void UC(vec3 _ux, vec3 _uy, vec3 _uz)
+    	void UC(vec3 _ux, vec3 _uy, vec3 _uz)
 	{
 		ux = _ux; uy = _uy; uz = _uz;
 	}
 	// 向量坐标系 = 方向 X 缩放
-    const vcoord3& vcoord() const
+    	const vcoord3& vcoord() const
 	{
 		return static_cast<const vcoord3&>(*this);
 	}
-    const vcoord3& VC() const
+    	const vcoord3& VC() const
 	{
 		return static_cast<const vcoord3&>(*this);
 	}
 	// 姿态
-    coord3 pose()
+    	coord3 pose()
 	{
 		return { ucoord(), vec3::ONE, o };
 	}
 	// 位置
-    vec3 pos() const
+    	vec3 pos() const
 	{
 		return o;
 	}
 	// 向量
-    vec3 tovec() const
+    	vec3 tovec() const
 	{
 		return ux * s.x + uy * s.y + uz * s.z;
 	}
-    coord3 operator=(const coord3& c)
+    	coord3 operator=(const coord3& c)
 	{
 		o = c.o;
 		s = c.s;
 		ux = c.ux; uy = c.uy; uz = c.uz;
 		return (*this);
 	}
-    bool equal_dirs(const coord3& c) const
+    	bool equal_dirs(const coord3& c) const
 	{
 		return ux == c.ux && uy == c.uy && uz == c.uz;
 	}
-    bool operator==(const coord3& c) const
+    	bool operator==(const coord3& c) const
 	{
 		return o == c.o && s == c.s && equal_dirs(c);
 	}
-    bool operator!=(const coord3& c) const
+    	bool operator!=(const coord3& c) const
 	{
 		return o != c.o || s != c.s || !equal_dirs(c);
 	}
 	// +/- 运算
-    coord3 operator+(const coord3& c) const
+    	coord3 operator+(const coord3& c) const
 	{
 		coord3 rc;
 		vec3 _ux = VX() + c.VX();
@@ -915,38 +915,38 @@ struct coord3 : vcoord3
 		rc.o = o + c.o;
 		return rc;
 	}
-    coord3 operator+=(const coord3& c)
+    	coord3 operator+=(const coord3& c)
 	{
 		*this = (*this) + c;
 		return *this;
 	}
-    coord3 operator+(const vec3& v) const
+    	coord3 operator+(const vec3& v) const
 	{
 		coord3 c = (*this); c.o += v;
 		return c;
 	}
-    coord3 operator+=(const vec3& v)
+    	coord3 operator+=(const vec3& v)
 	{
 		*this = *this + v;
 		return *this;
 	}
-    friend vec3 operator+(const vec3& p, const coord3& c)
+    	friend vec3 operator+(const vec3& p, const coord3& c)
 	{
 		return p + c.o;
 	}
-    friend void operator+=(vec3& p, const coord3& c)
+    	friend void operator+=(vec3& p, const coord3& c)
 	{
 		p = p + c;
 	}
-    friend vec3 operator-(const vec3& p, const coord3& c)
+    	friend vec3 operator-(const vec3& p, const coord3& c)
 	{
 		return p - c.o;
 	}
-    friend void operator-=(vec3& p, const coord3& c)
+    	friend void operator-=(vec3& p, const coord3& c)
 	{
 		p = p - c;
 	}
-    coord3 operator-(const coord3& c) const
+    	coord3 operator-(const coord3& c) const
 	{
 		coord3 rc;
 		vec3 _ux = VX() - c.VX();
@@ -981,35 +981,35 @@ struct coord3 : vcoord3
 		c.o = -c.o;
 		return c;
 	}
-    coord3 operator-(const vec3& v) const
+    	coord3 operator-(const vec3& v) const
 	{
 		coord3 c = (*this); c.o -= v;
 		return c;
 	}
-    coord3 operator-=(const vec3& v)
+    	coord3 operator-=(const vec3& v)
 	{
 		*this = *this - v;
 		return *this;
 	}
 
 	// 乘法：在坐标系下定义一个向量
-    friend vec3 operator*(const vec3& p, const coord3& c)
+    	friend vec3 operator*(const vec3& p, const coord3& c)
 	{
 		return c.ux * (c.s.x * p.x) + c.uy * (c.s.y * p.y) + c.uz * (c.s.z * p.z) + c.o;
 	}
-    friend void operator*=(vec3& p, const coord3& c)
+    	friend void operator*=(vec3& p, const coord3& c)
 	{
 		p = p * c;
 	}
-    coord3 operator*(const vec3& v) const
+    	coord3 operator*(const vec3& v) const
 	{
 		return (*this) * coord3(vec3::UX * v.x, vec3::UY * v.y, vec3::UZ * v.z);
 	}
-    void operator*=(const vec3& v)
+    	void operator*=(const vec3& v)
 	{
 		*this = (*this) * v;
 	}
-    coord3 operator*(real _s) const
+    	coord3 operator*(real _s) const
 	{
 		coord3 c = *this;
 		{// C*S 缩放乘法
@@ -1017,17 +1017,17 @@ struct coord3 : vcoord3
 		}
 		return c;
 	}
-    void operator*=(real _s)
+    	void operator*=(real _s)
 	{
 		*this = (*this) * _s;
 	}
-    coord3 operator*(const coord3& c) const
+    	coord3 operator*(const coord3& c) const
 	{// Cchild * Cparent * ...
 		coord3 rc = vcoord3::operator*(c);
 		rc.o = c.o + (o.x * c.s.x) * c.ux + (o.y * c.s.y) * c.uy + (o.z * c.s.z) * c.uz;
 		return rc;
 	}
-    coord3 operator*=(const coord3& c)
+    	coord3 operator*=(const coord3& c)
 	{
 		*this = (*this) * c;
 		return *this;
@@ -1054,7 +1054,7 @@ struct coord3 : vcoord3
 		*this = (*this) * c;
 		return *this;
 	}
-    coord3 operator*(const quaternion& q) const
+    	coord3 operator*(const quaternion& q) const
 	{
 		coord3 rc = *this;
 		rc.ux = q * ux;
@@ -1063,28 +1063,28 @@ struct coord3 : vcoord3
 		rc.o = q * rc.o;
 		return rc;
 	}
-    coord3 operator*=(const quaternion& q)
+    	coord3 operator*=(const quaternion& q)
 	{
 		*this = (*this) * q;
 		return *this;
 	}
 
 	// 除法：向量向坐标系投影（对于非正交坐标系，建议再扩展）
-    friend vec3 operator/(const vec3& p, const coord3& c)
+    	friend vec3 operator/(const vec3& p, const coord3& c)
 	{
 		vec3 v = p - c.o;
 		v = v / c.s;
 		return vec3(v.dot(c.ux), v.dot(c.uy), v.dot(c.uz));
 	}
-    friend void operator/=(vec3& p, const coord3& c)
+    	friend void operator/=(vec3& p, const coord3& c)
 	{
 		p = p / c;
 	}
-    coord3 operator/(const vec3& v) const
+    	coord3 operator/(const vec3& v) const
 	{
 		return (*this) / coord3(vec3::UX * v.x, vec3::UY * v.y, vec3::UZ * v.z);
 	}
-    void operator/=(const vec3& v)
+    	void operator/=(const vec3& v)
 	{
 		*this = (*this) / v;
 	}
@@ -1096,19 +1096,19 @@ struct coord3 : vcoord3
 		c.o /= _s;
 		return c;
 	}
-    void operator/=(real _s)
+    	void operator/=(real _s)
 	{
 		*this = (*this) / _s;
 	}
 	// oper(/) = C1 * C2^ - 1
-    coord3 operator/(const coord3& c) const
+    	coord3 operator/(const coord3& c) const
 	{
 		coord3 rc = vcoord3::operator/(c);
 		rc.o = o - c.o;
 		rc.o = vec3(rc.o.dot(c.ux) / c.s.x, rc.o.dot(c.uy) / c.s.y, rc.o.dot(c.uz) / c.s.z);
 		return rc;
 	}
-    coord3 operator/=(const coord3& c)
+    	coord3 operator/=(const coord3& c)
 	{
 		*this = (*this) / c;
 		return *this;
@@ -1137,20 +1137,20 @@ struct coord3 : vcoord3
 		*this = (*this) / c;
 		return *this;
 	}
-    coord3 operator/(const quaternion& q) const
+    	coord3 operator/(const quaternion& q) const
 	{
 		return (*this) * q.conjcopy();
 	}
-    void operator/=(const quaternion& q)
+    	void operator/=(const quaternion& q)
 	{
 		*this = (*this) / q;
 	}
 	// oper(\) = C1^-1 * C2
-    coord3 operator%(const coord3& c) const
+    	coord3 operator%(const coord3& c) const
 	{
 		return (*this).reversed() * c;
 	}
-    coord3 operator^(const vec3& v) const
+    	coord3 operator^(const vec3& v) const
 	{
 		coord3 c = *this;
 		c.ux = vec3::lerp(vec3::UX, c.ux, v.x); c.ux.norm();
