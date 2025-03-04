@@ -1,3 +1,5 @@
+![image](https://github.com/user-attachments/assets/066f8e50-1146-4ebb-b319-cabc8b3f7add)
+
 # The Coordinate System
 The Coord System is a mathematical object based on group theory, which defines a coordinate system in three-dimensional space. It includes an origin, three directional axes, and three scaling components that correspond to translation, rotation, and scaling transformations. Coord provides methods to construct coordinate systems, such as constructing them from three axes or Euler angles. Additionally, it offers multiplication and division operations to transform vectors from one coordinate system to another and to project vectors from a parent coordinate system to a local one. This document describes how Coord can be applied in common scenarios, such as converting between world and local coordinate systems and using it in multi-node hierarchies.
 
