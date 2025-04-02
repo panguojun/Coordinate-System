@@ -553,7 +553,6 @@ struct vcoord3 : ucoord3
 		vcoord3 c = *this;
 		{// C*S 缩放乘法
 			c.s *= _s;
-			c.o *= _s;
 		}
 		return c;
 	}
@@ -1012,7 +1011,8 @@ struct coord3 : vcoord3
 	{
 		coord3 c = *this;
 		{// C*S 缩放乘法
-			c.s.x *= _s; c.s.y *= _s; c.s.z *= _s;
+			c.s *= _s;
+			c.o *= _s;
 		}
 		return c;
 	}
