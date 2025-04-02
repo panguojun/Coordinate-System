@@ -2,8 +2,6 @@
 *                       Common Header File
 * 
 **********************************************************************/
-#pragma once
-
 #if defined(WINDOWS) 
     #if defined(_MSC_VER) && (defined(PMDLL) || defined(DGE_CORE))
     #define EXPORT_API __declspec(dllexport)
@@ -173,25 +171,6 @@
 #define mat3                        matrix
 #define mat2                        mat2x2
 
-#define ver_pair                    std::pair<vertex, vertex>
-#define ver_seg                     segment
-#define segment3                    segment
-#define ver_segs                    std::vector<segment>
-
-#define SUBMESH_PTR                 std::shared_ptr<submesh>
-#define SM_PTR                      std::shared_ptr<submesh>
-#define SM_PTRS                     std::vector<std::shared_ptr<submesh>>
-
-#define aabb3                       boundingbox
-#define AABB                        boundingbox
-#define AABBI                       boundingboxi
-#define BOUND                       val_bound<real>
-
-#define topoe                       TOPO_TREE::tedge
-#define topoE                       TOPO_TREE::tedge
-#define topoF                       TOPO_TREE::tsurface
-#define topoG                       TOPO_TREE::tshape
-
 #define GVAR                        
 #define GFUN                        
 #define INVALID                     -1
@@ -218,7 +197,7 @@ inline unsigned int _RGB(unsigned char r, unsigned char g, unsigned char b) { re
 
 #define GETHIGH(v)                 ((int)((v) >> 32))
 #define GETLOW(v)                  ((int)(v))
-#define HIGHT_LOW(h, l)           (((long long)h << 32) | l)    
+#define HIGHT_LOW(h, l)            (((long long)h << 32) | l)    
 #define EPSILON                     1e-3 // Precision
 
 #define ISZERO(a)                  (fabs(a) < 1e-8)
@@ -236,7 +215,6 @@ inline int  _MAXi(int a, int b)    { return ((a) > (b) ? (a) : (b)); }
 // Candy
 #define DEFAULTVEC3                vec3::ZERO
 #define itovec2(ix, iy)            vector2((ix / FIMAGESCALE - 0.5f) * 2.0f, (iy / FIMAGESCALE - 0.5f) * 2.0f)
-#define pixel2d(p, cor)            pixel(int((p.x / 2 + 0.5) * FIMAGESCALE), int((p.y / 2 + 0.5) * FIMAGESCALE), cor)
 #define mix                        lerp
 
 #define RNDCOR                     RGB(rrnd(0, 255), rrnd(0, 255), rrnd(0, 255))
@@ -259,17 +237,7 @@ inline int  _MAXi(int a, int b)    { return ((a) > (b) ? (a) : (b)); }
 #define EPOLY2                    std::vector<vertex2>
 #define EPOLY2S                   std::vector<EPOLY2>
 
-#define BORDER2                   border2
-#define BORDER2S                  std::vector<border2>
-
-#define SEGMENTS                  std::vector<segment3>
-#define SEGMENT_MAP               std::vector<SEGMENTS>
-
 #define IPAIR                     std::pair<int, int>
-
-#define MAP_FIND(_map, _key, _it) auto _it = _map.find(_key); if(_it != _map.end())
-
-#define iWALK(s, e, step, dosomething) for(int i = s; i < e; i++){ dosomething; }
 
 #define PUSH                      push_back
 #define EPUSH                     emplace_back
@@ -277,7 +245,7 @@ inline int  _MAXi(int a, int b)    { return ((a) > (b) ? (a) : (b)); }
 #define ONE3                      vec3(1,1,1)
 #define ZERO3                     vec3::ZERO
 #define UNITX                     vec3::UX
-#define UNITY                      vec3::UY
+#define UNITY                     vec3::UY
 #define UNITZ                     vec3::UZ
 #define UNIT_X                    vec3::UX
 #define UNIT_Y                    vec3::UY
