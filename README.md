@@ -172,6 +172,3 @@ This will allow you to leverage the powerful features of the coord3 class in Pyt
 
 ## Code Compilation and Usage
 Regarding the compilation and usage of these codes, due to some codes being related to the company's confidentiality policy, I can only release a part of the codes. However, the key points are transparent. You can combine these coordinate system codes with your own vector library for use, or directly use the Python version (currently, it only supports the Windows version). I hope this can be helpful and inspiring to you.
-
-## Paper online
-https://zenodo.org/records/14435614
