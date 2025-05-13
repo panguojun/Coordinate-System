@@ -136,11 +136,13 @@ Coord can transport vectors from a natural coordinate system to a curved coordin
 ```
 Ruv = Gu*Gv - Gv*Gu - G[u,v]
 
-where:  Gu = C2 / C1 - I
+where:  Gu = C2 / C1 - I, 
         Connection vector: [u, v] (Lie bracket operation)
         W = Wu + Wv = [u, v]
         G[u,v] = Gu*Wu + Gv*Wv
 ```
+If you have some knowledge of differential geometry and you've read up to this point, you might have some questions. Due to the complexity and abstract nature of the problem, I'm unable to explain it clearly. To put it simply in one sentence: it is a universal pattern to reasonably select the coordinate system object and then calculate its rate of change. 
+
 ## Combination with Lie Groups and Lie Algebras
 
 Coord can be combined with Lie groups and Lie algebras. The rotation matrix R is an element of the Lie group, and the multiplication operation of the coordinate system is equivalent to the rotation matrix. Therefore, the coordinate system C is an element of the Lie group, with multiplication as the operation and the identity element as ONE. The cross product of two vectors can be expressed using the Lie algebra bracket:  
