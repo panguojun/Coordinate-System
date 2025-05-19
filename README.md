@@ -131,18 +131,7 @@ Curl:
 
 ## Applications in Differential Geometry
 
-Coord can transport vectors from a natural coordinate system to a curved coordinate system in a curved space. The curvature can be determined by comparing two paths projected onto the u and v curves, which is done using Gu and Gv. Gu and Gv represent the gradients of rotational changes of vectors along the u and v. By using a coordinate system, the spatial curvature can be calculated, and the Riemann curvature tensor in the u,v coordinate system is given by:
-
-```
-Ruv = Gu*Gv - Gv*Gu - G[u,v]
-
-where:  Gu = C2 / C1 - I, 
-        Connection vector: [u, v] (Lie bracket operation)
-        W = Wu + Wv = [u, v]
-        G[u,v] = Gu*Wu + Gv*Wv
-```
-
-## Connection Calculation Methods
+### Connection Calculation Methods
 
 The core computation of coordinate frame derivatives can be performed in two distinct ways:
 
@@ -166,6 +155,19 @@ In our cone example:
 This distinction allows proper separation of intrinsic surface geometry from its embedding in 3D space, where:
 - `G_out` captures the full 3D rate of change
 - `G_inside` extracts only the intrinsic surface connection
+
+### Calculate the space curvature.
+Coord can transport vectors from a natural coordinate system to a curved coordinate system in a curved space. The curvature can be determined by comparing two paths projected onto the u and v curves, which is done using Gu and Gv. Gu and Gv represent the gradients of rotational changes of vectors along the u and v. By using a coordinate system, the spatial curvature can be calculated, and the Riemann curvature tensor in the u,v coordinate system is given by:
+
+```
+Ruv = Gu*Gv - Gv*Gu - G[u,v]
+
+where:  Gu = C2 / C1 - I, 
+        For the traditional process of calculating the Riemann curvature, a more accurate form is: Gu = G_inside = C2 / C1 / c2 - I / c1
+        Connection vector: [u, v] (Lie bracket operation)
+        W = Wu + Wv = [u, v]
+        G[u,v] = Gu*Wu + Gv*Wv
+```
 
 ## Combination with Lie Groups and Lie Algebras
 
