@@ -141,7 +141,31 @@ where:  Gu = C2 / C1 - I,
         W = Wu + Wv = [u, v]
         G[u,v] = Gu*Wu + Gv*Wv
 ```
-If you have some knowledge of differential geometry and you've read up to this point, you might have some questions. Due to the complexity and abstract nature of the problem, I'm unable to explain it clearly. To put it simply in one sentence: it is a universal pattern to reasonably select the coordinate system object and then calculate its rate of change. 
+
+## Connection Calculation Methods
+
+The core computation of coordinate frame derivatives can be performed in two distinct ways:
+
+1. **Intrinsic Connection** (for embedded surfaces):
+```cpp
+G_inside = C2 / C1 / c2 - I / c1;
+```
+Where:
+- `C1,C2` are 3D coordinate frames along the surface
+- `c1,c2` are mappings from intrinsic to global coordinates (e.g., cone development coordinates)
+
+2. **Embedded Connection** (default 3D case):
+```cpp
+G_out = C2 / C1 - I;
+```
+
+In our cone example:
+- The uppercase `C` frames represent 3D coordinate systems along the circular base
+- The lowercase `c` frames come from the developed polar coordinates of the cone's flattened form
+
+This distinction allows proper separation of intrinsic surface geometry from its embedding in 3D space, where:
+- `G_out` captures the full 3D rate of change
+- `G_inside` extracts only the intrinsic surface connection
 
 ## Combination with Lie Groups and Lie Algebras
 
