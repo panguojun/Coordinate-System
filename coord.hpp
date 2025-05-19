@@ -628,9 +628,9 @@ struct vcoord3 : ucoord3
 		vec3 vy = VY();
 		vec3 vz = VZ();
 
-		vec3 cvx = c.ux / c.s.x;
-		vec3 cvy = c.uy / c.s.y;
-		vec3 cvz = c.uz / c.s.z;
+		vec3 cvx = c.ux.normcopy() / c.s.x;
+		vec3 cvy = c.uy.normcopy() / c.s.y;
+		vec3 cvz = c.uz.normcopy() / c.s.z;
 
 		rc.ux = vec3(vx.dot(cvx), vx.dot(cvy), vx.dot(cvz));
 		rc.uy = vec3(vy.dot(cvx), vy.dot(cvy), vy.dot(cvz));
