@@ -156,7 +156,7 @@ This distinction allows proper separation of intrinsic surface geometry from its
 - `G_out` captures the full 3D rate of change
 - `G_inside` extracts only the intrinsic surface connection
 
-### Calculate the space curvature.
+### Calculate the Space Curvature
 Coord can transport vectors from a natural coordinate system to a curved coordinate system in a curved space. The curvature can be determined by comparing two paths projected onto the u and v curves, which is done using Gu and Gv. Gu and Gv represent the gradients of rotational changes of vectors along the u and v. By using a coordinate system, the spatial curvature can be calculated, and the Riemann curvature tensor in the u,v coordinate system is given by:
 
 ```
