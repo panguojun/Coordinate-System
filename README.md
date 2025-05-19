@@ -163,7 +163,8 @@ Coord can transport vectors from a natural coordinate system to a curved coordin
 Ruv = Gu*Gv - Gv*Gu - G[u,v]
 
 where:  Gu = C2 / C1 - I, 
-        For the traditional process of calculating the Riemann curvature, a more accurate form is: Gu = G_inside = C2 / C1 / c2 - I / c1
+        For the traditional process of calculating the Riemann curvature, a more accurate form is: 
+        Gu = G_inside = C2 / C1 / c2 - I / c1
         Connection vector: [u, v] (Lie bracket operation)
         W = Wu + Wv = [u, v]
         G[u,v] = Gu*Wu + Gv*Wv
