@@ -133,20 +133,17 @@ Curl:
 
 ### Connection Calculation Methods
 
-The core computation of coordinate frame derivatives can be performed in two distinct ways:
+```cpp
+G = C2 / C1 - I;
+```
 
-1. **Intrinsic Connection** (for embedded surfaces):
+**Intrinsic Connection** (for embedded surfaces):
 ```cpp
 G_inside = C2 / C1 / c2 - I / c1;
 ```
 Where:
 - `C1,C2` are 3D coordinate frames along the surface
 - `c1,c2` are mappings from intrinsic to global coordinates (e.g., cone development coordinates)
-
-2. **Embedded Connection** (default 3D case):
-```cpp
-G_out = C2 / C1 - I;
-```
 
 In our cone example:
 - The uppercase `C` frames represent 3D coordinate systems along the circular base
@@ -162,9 +159,7 @@ Coord can transport vectors from a natural coordinate system to a curved coordin
 ```
 Ruv = Gu*Gv - Gv*Gu - G[u,v]
 
-where:  Gu = C2 / C1 - I, 
-        For the traditional process of calculating the Riemann curvature, a more accurate form is: 
-        Gu = G_inside = C2 / C1 / c2 - I / c1
+where:  Gu = C2 / C1 - I
         Connection vector: [u, v] (Lie bracket operation)
         W = Wu + Wv = [u, v]
         G[u,v] = Gu*Wu + Gv*Wv
