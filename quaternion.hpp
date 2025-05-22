@@ -1,17 +1,9 @@
 /**************************************************************************
-						 【四元数】
-
-	四元数是在复数基础上的扩展,单位四元数用于旋转操作，向量是源自于四元数，
-	不过二者有差别。目前四元数跟向量之间的关系以及应用存在着争议。
-
-	*  *  *  *  *  *  *  *  *  详解  *  *  *  *  *  *  *  *  *  *  *  *  * 
-	类似于复数，四元数也拥有指数形式：e^q，结果也是一个四元数： q = e^q,
-	在底层物理里应了规范变换，跟坐标系变换有一些不同，规范变换更加
-	侧重相位拥有时间属性，坐标系变换偏向于空间的变换以及曲率等特征提取。
-
-	四元数存在归一化(normalise)，共轭(conj)，求逆(inverse)，乘除法等操作，
-	还规定了单位一（ONE).
-
+				[Quaternion]
+Quaternions are an extension of complex numbers. Unit quaternions are used 
+for rotation operations. Vectors are derived from quaternions, but there are 
+differences between the two. Currently, the relationship and application 
+between quaternions and vectors are still under debate.
 **************************************************************************/
 struct EXPORT_API quaternion
 {
