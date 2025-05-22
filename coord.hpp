@@ -34,7 +34,7 @@
 *                   	Connection vector: W = [U, V] (Lie bracket operation)
 *                   	G[u,v] = Gu*Wu + Gv*Wv
 */
-//#define	NON_UNIFORM_SCALE
+//#define	NON_UNIFORM_SCALE	// For Differential Geometry
 // ********************************************************************************************
 //  |/_
 // UC     3d Rotation Coordinate System（Base Coordinate System）
@@ -1188,11 +1188,9 @@ struct coord3 : vcoord3
 	{
 		return (*this) * c - c * (*this);
 	}
-	// 梯度坐标系 = 梯度 X 切空间
-	// 相当于一阶坐标系的导数
-	// C2 = UG * C1
-	// V2 - V1 = G * V1 = (UG - ONE) * V1
-	// G = UG - ONE
+	// 梯度坐标系
+	// V2 = V1 * (C2 / C1 - I)
+	// G = C2 / C1 - I
 	static coord3 grad(const coord3& c1, const coord3& c2)
 	{
 		return c2 / c1 - ONE;
@@ -1210,38 +1208,6 @@ struct coord3 : vcoord3
 		PRINTVEC3(uz);
 		PRINTVEC3(s);
 		PRINTVEC3(o);
-		PRINT("");
-	}
-	// GUID
-	std::size_t hash() const
-	{
-		std::size_t hash = 0;
-		if constexpr (sizeof(real) == sizeof(float))
-		{
-			// 哈希原点坐标
-			hash_combine(hash, o.x);
-			hash_combine(hash, o.y);
-			hash_combine(hash, o.z);
-
-			// 哈希缩放因子
-			hash_combine(hash, s.x);
-			hash_combine(hash, s.y);
-			hash_combine(hash, s.z);
-
-			// 哈希基向量
-			hash_combine(hash, ux.x);
-			hash_combine(hash, ux.y);
-			hash_combine(hash, ux.z);
-
-			hash_combine(hash, uy.x);
-			hash_combine(hash, uy.y);
-			hash_combine(hash, uy.z);
-
-			hash_combine(hash, uz.x);
-			hash_combine(hash, uz.y);
-			hash_combine(hash, uz.z);
-		}
-		return hash;
 	}
 };
 #if !defined(PM_IMPLEMENTED)
