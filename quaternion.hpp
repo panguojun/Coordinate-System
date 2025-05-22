@@ -5,7 +5,7 @@ for rotation operations. Vectors are derived from quaternions, but there are
 differences between the two. Currently, the relationship and application 
 between quaternions and vectors are still under debate.
 ********************************************************************************/
-struct EXPORT_API quaternion
+struct quaternion
 {
 	static const quaternion ONE;
 	static const quaternion UX;
