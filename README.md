@@ -1,6 +1,9 @@
 ![image](https://github.com/user-attachments/assets/066f8e50-1146-4ebb-b319-cabc8b3f7add)
 
-# The Coordinate System (or Frame)
+# The Coordinate System (Coord) Framework
+
+## Mathematical Foundation
+
 The Coordinate System (or Frame), referred to here as the Coord object, is a mathematical construct rooted in group theory that defines a coordinate system in three-dimensional space. In physics, such a structure is commonly known as a reference frame, while in differential geometry, it is often called a frame field or moving frame, borrowing terminology from classical mechanics.
 
 From a group-theoretic perspective, a coordinate system (or its simplified form, a coordinate) can be treated as an algebraic object capable of participating in group operations. The Coord object unifies these concepts, allowing both coordinate systems and individual coordinates to serve as elements in algebraic operations, such as multiplication and division.
@@ -33,10 +36,9 @@ struct coord {
 A coordinate system can be constructed using three axes or Euler angles as follows:
 
 ```
-coord C1(vec3 ux, vec3 uy, vec3 uz);
-coord C2(float angle, vec3 axis); 
-coord C3(float pitch, float yaw, float roll);
-coord C4(vec3 o, vec3 s, quat q); 
+coord C1(vec3 o);
+coord C2(vec3 ux, vec3 uy, vec3 uz);
+coord C3(vec3 o, vec3 s, quat q); 
 ```
 
 ## Multiplication and Division Operations
@@ -142,28 +144,22 @@ Curl:
 ▽ x F = dF / Dxyz x Ic
 ```
 
-## Applications in Differential Geometry
+## Differential Geometry Framework
 
-### Connection Calculation Methods
-
+### Connection Calculus
 ```cpp
+// Finite connection between frames
 G = C2 / C1 - I;
-```
 
-**Intrinsic Connection** (for embedded surfaces):
-```cpp
-G_inside = C2 / C1 / c2 - I / c1;
+// Intrinsic connection (embedded surfaces)
+G_intrinsic = C2 / C1 / c2 - I / c1;
 ```
 Where:
 - `C1,C2` are 3D coordinate frames along the surface
 - `c1,c2` are mappings from intrinsic to global coordinates (e.g., cone development coordinates)
 
-In our cone example:
-- The uppercase `C` frames represent 3D coordinate systems along the circular base
-- The lowercase `c` frames come from the developed polar coordinates of the cone's flattened form
-
 ### Calculate the Space Curvature
-Coord can transport vectors from a natural coordinate system to a curved coordinate system in a curved space. The curvature can be determined by comparing two paths projected onto the u and v curves, which is done using Gu and Gv. Gu and Gv represent the gradients of rotational changes of vectors along the u and v. By using a coordinate system, the spatial curvature can be calculated, and the Riemann curvature tensor in the u,v coordinate system is given by:
+Coord can transport vectors from a natural coordinate system to a curved coordinate system in a curved space. The curvature can be determined by comparing two paths projected onto the u and v curves, which is done using Gu and Gv. Gu and Gv represent the gradients of rotational changes of vectors along the u and v. By using a coordinate system, the spatial curvature can be calculated, and the curvature tensor in the u,v coordinate system is given by:
 
 ```
 Ruv = Gu*Gv - Gv*Gu - G[u,v]
@@ -174,19 +170,25 @@ where:  Gu = C2 / C1 - I
         G[u,v] = Gu*Wu + Gv*Wv
 ```
 
-## Combination with Lie Groups and Lie Algebras
+## Lie-Theoretic Interpretation
 
-Coord can be combined with Lie groups and Lie algebras. The rotation matrix R is an element of the Lie group, and the multiplication operation of the coordinate system is equivalent to the rotation matrix. Therefore, the coordinate system C is an element of the Lie group, with multiplication as the operation and the identity element as ONE. The cross product of two vectors can be expressed using the Lie algebra bracket:  
-```
-[C1, C2] = C1 * C2 – C2 * C1
-```
-By using coordinate system objects to achieve a unified formal representation of operations such as rotation, translation, scaling, and differential gradients, Lie groups and Lie algebras can be operated on in a unified manner.
+The Coord framework naturally embeds Lie theory:
+- **Group Multiplication**: Represents SE(3) action
+- **Lie Algebra**: The tangent space at identity
+- **Bracket Operation**: 
+  ```cpp
+  [C1, C2] = C1*C2 - C2*C1
+  ```
+- **Exponential Map**: From algebra to group
 
-## Summary
+This provides a unified representation for:
+- Rigid transformations (SE(3))
+- Conformal transformations
+- Gauge transformations
 
-The text discusses the need for a more suitable language in the computer era to express mathematical problems in a way that is acceptable to both humans and computers. The solution proposed is to overload algebraic operations and redefine them in a coordinate system object, with the aim of achieving a more concise and computer-friendly mathematical language by extending algebraic expression.
+## Implementation and Usage
 
-## Installation
+## Python Installation
 
 To use the coordinate_system in Python(3.11), you can easily install it via pip:
 
@@ -203,8 +205,25 @@ print(a);
 ```
 This will allow you to leverage the powerful features of the coord3 class in Python for your mathematical and computational needs.
 
-## Code Compilation and Usage
-Regarding the compilation and usage of these codes, due to some codes being related to the company's confidentiality policy, I can only release a part of the codes. However, the key points are transparent. You can combine these coordinate system codes with your own vector library for use, or directly use the Python version (currently, it only supports the Windows version). I hope this can be helpful and inspiring to you.
+## Computational Advantages
+
+1. **Symbolic Clarity**: Matches mathematical notation in code
+2. **Automatic Differentiation**: Built-in differential operations
+3. **Metric Awareness**: Natural handling of scaled/curved spaces
+4. **Type Safety**: Prevents invalid operations at compile time
+
+## Conclusion
+
+The Coord framework provides a unified language for:
+- Geometric transformations
+- Differential geometry
+- Physical reference frames
+- Lie-theoretic operations
+
+By overloading algebraic operations, it creates a computational syntax that mirrors mathematical intuition while remaining efficient for computer implementation. This approach bridges the gap between abstract mathematics and practical computation, particularly in fields requiring rigorous treatment of coordinate systems and their transformations.
 
 ##  Paper online
 https://zenodo.org/records/14435614
+  
+## Code Compilation and Usage
+Regarding the compilation and usage of these codes, due to some codes being related to the company's confidentiality policy, I can only release a part of the codes. However, the key points are transparent. You can combine these coordinate system codes with your own vector library for use, or directly use the Python version (currently, it only supports the Windows version). I hope this can be helpful and inspiring to you.
