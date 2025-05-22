@@ -1,7 +1,20 @@
 ![image](https://github.com/user-attachments/assets/066f8e50-1146-4ebb-b319-cabc8b3f7add)
 
 # The Coordinate System (or Frame)
-The Coordinate System(or Frame) is a mathematical object based on group theory, which defines a coordinate system in three-dimensional space. It includes an origin, three directional axes, and three scaling components that correspond to translation, rotation, and scaling transformations. Coord provides methods to construct coordinate systems, such as constructing them from three axes or Euler angles. Additionally, it offers multiplication and division operations to transform vectors from one coordinate system to another and to project vectors from a parent coordinate system to a local one. This document describes how Coord can be applied in common scenarios, such as converting between world and local coordinate systems and using it in multi-node hierarchies.
+The Coordinate System (or Frame), referred to here as the Coord object, is a mathematical construct rooted in group theory that defines a coordinate system in three-dimensional space. In physics, such a structure is commonly known as a reference frame, while in differential geometry, it is often called a frame field or moving frame, borrowing terminology from classical mechanics.
+
+From a group-theoretic perspective, a coordinate system (or its simplified form, a coordinate) can be treated as an algebraic object capable of participating in group operations. The Coord object unifies these concepts, allowing both coordinate systems and individual coordinates to serve as elements in algebraic operations, such as multiplication and division.
+
+By extending coordinate systems with arithmetic operations (addition, subtraction, multiplication, and division), the Coord object enables direct differential calculus, eliminating the need for cumbersome exterior calculus formulations. This approach provides an intuitive geometric interpretation of operations like vector division, which traditionally require complex tensor algebra. Moreover, it simplifies advanced differential geometry concepts such as connections (affine or Levi-Civita) and curvature tensors, offering a unified and geometrically intuitive framework for computations involving coordinate systems.
+
+## Applications
+World ↔ Local Coordinate Transformations: Seamlessly convert between global and local reference frames.
+
+Multi-Node Hierarchies: Efficiently manage transformations in complex systems (e.g., robotics, computer graphics).
+
+Differential Geometry & Physics: Streamline computations involving curvature, parallel transport, and dynamic reference frames.
+
+The Coord object thus serves as a powerful abstraction, bridging algebraic operations, differential calculus, and geometric intuition in a computationally elegant manner.
 
 ## Structure of the Coordinate System
 
