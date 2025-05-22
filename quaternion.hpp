@@ -340,7 +340,6 @@ struct EXPORT_API quaternion
 	}
 	//-----------------------------------------------------------------------
 	// roll, pitch, yaw
-	#define toeulers	to_eulers // 别名
 	vec3 to_eulers() const
 	{
 		vec3 v;
@@ -477,56 +476,9 @@ struct EXPORT_API quaternion
 		result.normalize();
 		return result;
 	}
-	//-----------------------------------------------------------------------
-	quaternion spherical_cubic_interpolate(const quaternion& p_b, const quaternion& p_pre_a, const quaternion& p_post_b, const real& p_weight) const {
-
-		quaternion from_q = *this;
-		quaternion pre_q = p_pre_a;
-		quaternion to_q = p_b;
-		quaternion post_q = p_post_b;
-
-		// Align flip phases.
-		from_q = from_q.normalized();
-		pre_q = pre_q.normalized();
-		to_q = to_q.normalized();
-		post_q = post_q.normalized();
-
-		// Flip quaternions to shortest path if necessary.
-		bool flip1 = sign(from_q.dot(pre_q));
-		pre_q = flip1 ? -pre_q : pre_q;
-		bool flip2 = sign(from_q.dot(to_q));
-		to_q = flip2 ? -to_q : to_q;
-		bool flip3 = flip2 ? to_q.dot(post_q) <= 0 : sign(to_q.dot(post_q));
-		post_q = flip3 ? -post_q : post_q;
-
-		// Calc by Expmap in from_q space.
-		quaternion ln_from = quaternion(0, 0, 0, 0);
-		quaternion ln_to = (from_q.conjcopy() * to_q).log();
-		quaternion ln_pre = (from_q.conjcopy() * pre_q).log();
-		quaternion ln_post = (from_q.conjcopy() * post_q).log();
-		quaternion ln = quaternion(0, 0, 0, 0);
-		ln.x = cubic_interpolate(ln_from.x, ln_to.x, ln_pre.x, ln_post.x, p_weight);
-		ln.y = cubic_interpolate(ln_from.y, ln_to.y, ln_pre.y, ln_post.y, p_weight);
-		ln.z = cubic_interpolate(ln_from.z, ln_to.z, ln_pre.z, ln_post.z, p_weight);
-		quaternion q1 = from_q * ln.exp();
-
-		// Calc by Expmap in to_q space.
-		ln_from = (to_q.conjcopy() * from_q).log();
-		ln_to = quaternion(0, 0, 0, 0);
-		ln_pre = (to_q.conjcopy() * pre_q).log();
-		ln_post = (to_q.conjcopy() * post_q).log();
-		ln = quaternion(0, 0, 0, 0);
-		ln.x = cubic_interpolate(ln_from.x, ln_to.x, ln_pre.x, ln_post.x, p_weight);
-		ln.y = cubic_interpolate(ln_from.y, ln_to.y, ln_pre.y, ln_post.y, p_weight);
-		ln.z = cubic_interpolate(ln_from.z, ln_to.z, ln_pre.z, ln_post.z, p_weight);
-		quaternion q2 = to_q * ln.exp();
-
-		// To cancel error made by Expmap ambiguity, do blends.
-		return quaternion::slerp(q1, q2, p_weight);
-	}
 };
 // **********************************************************************
-#if  defined(PMDLL) || !defined(PM_IMPLEMENTED)
+#if  !defined(PM_IMPLEMENTED)
 const quaternion quaternion::ONE = quaternion(1, 0, 0, 0);
 const quaternion quaternion::UX = quaternion(1, vec3::UX);
 const quaternion quaternion::UY = quaternion(1, vec3::UY);
