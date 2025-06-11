@@ -31,6 +31,7 @@
 *                   	Connection vector: W = [U, V] (Lie bracket operation)
 *                   	G[u,v] = Gu*Wu + Gv*Wv
 */
+
 //#define	NON_UNIFORM_SCALE	// For Differential Geometry
 // ********************************************************************************************
 //  |/_
