@@ -2,7 +2,7 @@
 
 # The Coordinate System (Coord) Framework
 
-## History of Coordinate System
+## History of Coordinate Systems
 The concept of coordinate systems traces back to René Descartes, who sought to use geometry to describe celestial motion. However, his methods lacked the precision required for exact calculations. Long before Descartes, early civilizations already had notions of coordinate-like references—particularly the idea of a "world center."
 
 During the Hellenistic period, Ptolemaic cosmology placed Earth at the center of the universe, while Copernicus later shifted this central reference to the Sun. The key difference between these models was not just the choice of origin but the mathematical framework they enabled. By repositioning the center at the Sun, scientists recognized the need for a dynamic, motion-based mathematical-physical system. This realization paved the way for calculus, equations of motion, and Newton's laws of inertia—cornerstones of modern science.
