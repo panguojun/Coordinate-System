@@ -18,9 +18,6 @@
 *           		oper(\)  =  C1^-1 * C2
 *
 *   Specifically:
-*   Define an intrinsic coordinate system (assuming it is a flat space, and the vector can move freely
-*   without changing) under V. Observing V in a curved coordinate system, V is different at points.
-*   Therefore, the coordinate system is related to the position.
 *   Take vectors V1 and V2 at adjacent points (1) and (2) respectively,
 *   corresponding to coordinate systems C1 and C2. Then:
 *           		V  = V1 / C1 = V2 / C2 =>
