@@ -1,5 +1,3 @@
-using UnityEngine;
-
 /// <summary>
 /// ***************************************************************************************
 /// Represents a three-dimensional coordinate system in Unity.
