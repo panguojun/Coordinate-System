@@ -18,17 +18,14 @@
 *           		oper(\)  =  C1^-1 * C2
 *
 *   Specifically:
-*   Define an intrinsic coordinate system (assuming it is a flat space, and the vector can move freely
-*   without changing) under V. Observing V in a curved coordinate system, V is different at different points.
-*   Therefore, the coordinate system is related to the position.
 *   Take vectors V1 and V2 at adjacent points (1) and (2) respectively,
 *   corresponding to coordinate systems C1 and C2. Then:
-*           		V  = V1 * C1 = V2 * C2 =>
-*           		V2 = V1 * C1 / C2, let R12 = C1 / C2 =>
+*           		V  = V1 / C1 = V2 / C2 =>
+*           		V2 = V1 * C2 / C1, let R12 = C2 / C1 =>
 *           		V2 = V1 * R12
 *
 *   The coordinate system can be used to calculate spatial curvature. In the u,v coordinate system,
-*   the Riemann curvature tensor is:
+*   the Curvature tensor is:
 *           	Ruv  = 	Gu*Gv - Gv*Gu - G[u,v]
 *           	where:  Gu = C2 / C1 - I
 *                   	Connection vector: W = [U, V] (Lie bracket operation)
