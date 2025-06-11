@@ -32,7 +32,7 @@
 *                   	G[u,v] = Gu*Wu + Gv*Wv
 */
 
-//#define	NON_UNIFORM_SCALE		 // 非均匀缩放
+//#define	NON_UNIFORM_SCALE
 // *******************************************************************
 //  |_
 // UC     2d Rotation Coordinate System
