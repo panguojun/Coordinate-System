@@ -882,7 +882,7 @@ struct coord3 : vcoord3
 		vec3 _ux = VX() + c.VX();
 		vec3 _uy = VY() + c.VY();
 		vec3 _uz = VZ() + c.VZ();
-
+		/*
 		rc.s.x = _ux.len();
 		if (!ISZERO(rc.s.x))
 		{
@@ -900,7 +900,7 @@ struct coord3 : vcoord3
 		{
 			_uz /= rc.s.z;
 			rc.uz = _uz;
-		}
+		}*/
 
 		rc.o = o + c.o;
 		return rc;
@@ -942,7 +942,7 @@ struct coord3 : vcoord3
 		vec3 _ux = VX() - c.VX();
 		vec3 _uy = VY() - c.VY();
 		vec3 _uz = VZ() - c.VZ();
-
+		/*
 		rc.s.x = _ux.len();
 		if (!ISZERO(rc.s.x))
 		{
@@ -960,7 +960,7 @@ struct coord3 : vcoord3
 		{
 			_uz /= rc.s.z;
 			rc.uz = _uz;
-		}
+		}*/
 
 		rc.o = o - c.o;
 		return rc;
