@@ -42,12 +42,12 @@ struct ucoord3
 	static const ucoord3 ONE;
 	union {
 		struct {
-			// basis 基向量
+			// basis
 			vec3 ux;
 			vec3 uy;
 			vec3 uz;
 		};
-		real m[9]; // 矩阵用法
+		real m[9]; // matrix
 	};
 	ucoord3()
 	{
@@ -98,7 +98,6 @@ struct ucoord3
 		quat q; q.fromvectors(uy, _uy);
 		fromquat(q);
 	}
-	// 引用四元数的欧拉角转化
 	void frompyr(real pit, real yaw, real rol)
 	{
 		fromquat({ pit, yaw, rol });
@@ -111,12 +110,10 @@ struct ucoord3
 	{
 		return Q().toeulers();
 	}
-	// 坐标系的欧拉角转化
 	vec3 toeulers() const
 	{
 		return coord2eulers();
 	}
-	// 旋转差
 	void from_vecs_R(const vec3& v1, const vec3& v2)
 	{
 		vec3  v = v1.cross(v2);
@@ -127,7 +124,6 @@ struct ucoord3
 		uy = { v.x * v.y * k + v.z,    v.y * v.y * k + c,      v.z * v.y * k - v.x };
 		uz = { v.x * v.z * k - v.y,    v.y * v.z * k + v.x,    v.z * v.z * k + c   };
 	}
-	// 轴，向量1，2
 	void from_ax_vecs(const vec3& ax, const vec3& v1, const vec3& v2)
 	{
 		vec3 pv1 = v1.crossdot(ax);
@@ -160,7 +156,7 @@ struct ucoord3
 		return vec3::ZERO;
 	}
 
-	// 乘法：在坐标系下定义一个向量，或者向量向父空间还原
+	// Multiplication: Define a vector in the coordinate system or restore the vector to the parent space
 	friend vec3 operator * (const vec3& v, const ucoord3& c)
 	{
 		return c.ux * (v.x) + c.uy * (v.y) + c.uz * (v.z);
@@ -200,7 +196,7 @@ struct ucoord3
 		uy = q * uy;
 		uz = q * uz;
 	}
-	// 除法：向量向坐标系投影（对于非正交坐标系，建议再扩展）
+	// Division: Project the vector onto the coordinate system (for non - orthogonal coordinate systems, further expansion is recommended).
     	friend vec3 operator/(const vec3& v, const ucoord3& c)
 	{
 		return vec3(v.dot(c.ux), v.dot(c.uy), v.dot(c.uz));
@@ -239,10 +235,10 @@ struct ucoord3
 	{
 		return (*this).reversed() * c;
 	}
-	// oper(^)
-	// 相空间的乘法运算,Ce^(th*v)
-	// 如C表示某向量A在两点间的旋转，
-	// 融合向量0<v<1,c=C^v; v=0时c=ONE,v=1时c=C
+	// Operation (^)
+	// Multiplication operation in phase space, C^v = C·e^(th·v)
+	// For example, if C represents the rotation of a vector A between two points,
+	// when fusing with a scalar 0 < v < 1, the result is c = C^v; when v=0, c=ONE; when v=1, c=C
 	ucoord3 operator ^ (const vec3& v) const
 	{
 		ucoord3 c = *this;
@@ -258,14 +254,13 @@ struct ucoord3
 	}
 	ucoord3 operator ^ (real f) const
 	{
-		// 四元数法
 		return ucoord3((*this).toquat() ^ f);
 	}
 	void operator ^= (real f)
 	{
 		(*this) = (*this) ^ f;
 	}
-	// 转置(坐标轴交换）
+	// Transpose (swap coordinate axes)
 	void transpose()
 	{
 		vec3 _ux = vec3(ux.x, uy.x, uz.x);
@@ -281,7 +276,7 @@ struct ucoord3
 		c.uz = vec3(ux.z, uy.z, uz.z);
 		return c;
 	}
-	// 倒置
+	// Inversion
 	void reverse()
 	{
 		(*this) = ONE / (*this);
@@ -290,7 +285,7 @@ struct ucoord3
 	{
 		return ONE / (*this);
 	}
-	// 翻转
+	// Flip
 	void flipX()
 	{
 		ux = -ux;
@@ -334,7 +329,7 @@ struct ucoord3
 	{
 		return c.ux.dot(ux) + c.uy.dot(uy) + c.uz.dot(uz);
 	}
-	// 由电磁场计算引出的叉乘
+	// Cross product derived from electromagnetic field calculations
 	ucoord3 cross(const ucoord3& c) const
 	{
 		return ucoord3(
@@ -352,7 +347,7 @@ struct ucoord3
 			uz.cross(v)
 		);
 	}
-	// 坐标系到欧拉角
+	// Coordinate system to Euler angles
 	vec3 coord2eulers() const
 	{
 		real c_eps = 1e-5;
@@ -406,8 +401,7 @@ struct ucoord3
 
 		return result;
 	}
-
-	// 转化为四元数, 注意四元数的乘法顺序
+	// Convert to quaternion (note quaternion multiplication order)
 	quaternion toquat() const
 	{
 		return quat(coord2eulers());
@@ -430,8 +424,8 @@ struct ucoord3
 		uz = q * vec3::UZ;
 	}
 
-	// 梯度坐标系 = 梯度 X 切空间
-	// 相当于一阶坐标系的导数
+	// Gradient coordinate system = Gradient X Tangent space
+	// Equivalent to the derivative of the first-order coordinate system
 	// C2 = UG * C1
 	static ucoord3 ugrad(const ucoord3& c1, const ucoord3& c2)
 	{
@@ -449,7 +443,7 @@ struct ucoord3
 		PRINTVEC3(uz);
 	}
 
-	// 方便函数, 注意 angle(u,_u) != +/-PI
+	// Convenience function (note: angle(u, _u) != +/-PI)
 	void uxto(const vec3& _ux)
 	{
 		*this *= quat(ux, _ux);
