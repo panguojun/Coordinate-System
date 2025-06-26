@@ -10,6 +10,7 @@ During the Hellenistic period, Ptolemaic cosmology placed Earth at the center of
 Thus, the choice of coordinate system profoundly influences both worldview and computational paradigms. Einstein’s relativity theory, for instance, can be viewed as a consequence of extending coordinates from flat Euclidean space to curved manifolds. Moreover, it appears that all precisely calculable problems ultimately reduce to coordinate transformations. Approximate methods—such as statistical approaches in quantum mechanics and thermodynamics—remain necessary where exact solutions are intractable (though modern techniques like Density Functional Theory (DFT) have achieved notable, if still imperfect, success).
 
 ## Mathematical Foundation
+If we study differential geometry, at the level of differential elements, the coordinate system can be linearized. In this way, a concept of a certain universal coordinate system object can be formed, serving as a ruler or, alternatively, understood as the dimension of space.
 
 The Coordinate System (or Frame), referred to here as the Coord object, is a mathematical construct rooted in group theory that defines a coordinate system in three-dimensional space. In physics, such a structure is commonly known as a reference frame, while in differential geometry, it is often called a frame field or moving frame, borrowing terminology from classical mechanics.
 
@@ -211,13 +212,6 @@ a*=b;
 print(a);
 ```
 This will allow you to leverage the powerful features of the coord3 class in Python for your mathematical and computational needs.
-
-## Computational Advantages
-
-1. **Symbolic Clarity**: Matches mathematical notation in code
-2. **Automatic Differentiation**: Built-in differential operations
-3. **Metric Awareness**: Natural handling of scaled/curved spaces
-4. **Type Safety**: Prevents invalid operations at compile time
 
 ## Conclusion
 
