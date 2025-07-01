@@ -244,7 +244,7 @@ struct coord2 : ucoord2
 		coord2 rc;
 		rc.ux = VX() + c.VX();
 		rc.uy = VY() + c.VY();
-		rc.norm();
+		// rc.norm();
 		rc.o = o + c.o;
 		return rc;
 	}
@@ -267,7 +267,7 @@ struct coord2 : ucoord2
 		coord2 rc;
 		rc.ux = VX() - c.VX();
 		rc.uy = VY() - c.VY();
-		rc.norm();
+		// rc.norm();
 		rc.o = o - c.o;
 		return rc;
 	}
@@ -319,9 +319,6 @@ struct coord2 : ucoord2
 	coord2 operator * (real s) const
 	{
 		coord2 c = *this;
-		//{// C*S 缩放乘法
-		//	c.s.x *= s; c.s.y *= s;
-		//}
 		{// C*S 移动乘法
 			c.o *= s;
 		}
