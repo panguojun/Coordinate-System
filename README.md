@@ -198,7 +198,7 @@ This provides a unified representation for:
 
 ## Python Installation
 
-To use the coordinate_system in Python(3.11), you can easily install it via pip:
+To use the coordinate_system in Python(3.13), you can easily install it via pip:
 
 ```bash
 pip install coordinate_system
