@@ -469,9 +469,7 @@ struct ucoord3
 		return (*this) * quat(uz, _uz);
 	}
 };
-#if !defined(PM_IMPLEMENTED)
 const ucoord3 ucoord3::ONE = {};
-#endif
 
 // ******************************************************************
 //  |/_
@@ -720,9 +718,7 @@ struct vcoord3 : ucoord3
 		PRINTVEC3(s);
 	}
 };
-#if  !defined(PM_IMPLEMENTED)
 const vcoord3 vcoord3::ONE	= { };
-#endif
 
 // ******************************************************************
 //  |/_
@@ -1202,7 +1198,5 @@ struct coord3 : vcoord3
 		PRINTVEC3(o);
 	}
 };
-#if !defined(PM_IMPLEMENTED)
 const coord3 coord3::ZERO = {ucoord3::ONE, vec3::ZERO, vec3::ZERO };
 const coord3 coord3::ONE = {};
-#endif
