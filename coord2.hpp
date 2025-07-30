@@ -146,10 +146,8 @@ struct ucoord2
 		PRINTVEC2(uy);
 	}
 };
-#if defined(PMDLL) || !defined(PM_IMPLEMENTED)
 const ucoord2 ucoord2::ZERO = { 0 };
 const ucoord2 ucoord2::ONE = ucoord2();
-#endif
 
 // *******************************************************************
 //  |_
@@ -417,7 +415,5 @@ struct coord2 : ucoord2
 		PRINTVEC2(o);
 	}
 };
-#ifndef(PM_IMPLEMENTED)
 const coord2 coord2::ZERO = { ucoord2::ZERO, vec2::ZERO };
 const coord2 coord2::ONE = coord2();
-#endif
