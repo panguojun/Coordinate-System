@@ -1,19 +1,7 @@
 /****************************************************
-*               PYTHON CC接口
+*               PYTHON CC
 * 
 ****************************************************/
-#undef real
-#include "include\\Python.h"
-#include "pybind11\\pybind11.h"
-#include "pybind11\\stl.h"
-
-#pragma comment(lib, "python311.lib")
-
-#define real real_type
-#define _PRINT(msg)     PRINT(msg)
-
-namespace py = pybind11;
-
 namespace python_interface
 {
     static PyObject* pModule = nullptr;
@@ -355,4 +343,5 @@ PYBIND11_MODULE(coordinate_system, m) {
     m.def("slerp", [](const coord3& a, const coord3& b, real t) {
         return blender::slerp(a, b, t);
         }, "Spherical linear interpolation between two coord3");
+
 }
