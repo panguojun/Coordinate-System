@@ -1,5 +1,5 @@
 /****************************************************
-*             Coord Python API
+*           Coordinate-System Python API
 * 
 ****************************************************/
 namespace python_interface
@@ -345,4 +345,5 @@ PYBIND11_MODULE(coordinate_system, m) {
         }, "Spherical linear interpolation between two coord3");
 
 }
+
 
