@@ -1,6 +1,6 @@
 /************************************************************************************************
-*				[Coordinate System]
-*				   by Guojun Pan
+*								[Coordinate System]
+*				   					by Guojun Pan
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 *   The coordinate system class is separately encapsulated by me for
 *   simplifying coordinate transformation and deriving many algorithms,
@@ -417,3 +417,4 @@ struct coord2 : ucoord2
 };
 const coord2 coord2::ZERO = { ucoord2::ZERO, vec2::ZERO };
 const coord2 coord2::ONE = coord2();
+
