@@ -409,12 +409,13 @@ struct coord2 : ucoord2
 	void dump(const string& name = "") const
 	{
 		PRINT("----" << name << "---");
+		PRINTVEC2(o);
+		PRINTVEC2(s);
 		PRINTVEC2(ux);
 		PRINTVEC2(uy);
-		PRINTVEC2(s);
-		PRINTVEC2(o);
 	}
 };
 const coord2 coord2::ZERO = { ucoord2::ZERO, vec2::ZERO };
 const coord2 coord2::ONE = coord2();
+
 
