@@ -333,3 +333,29 @@ namespace curvature
         std::cout << "\n=== Test Completed ===" << std::endl;
     }
 }
+
+/** output:
+=== Calculation of Differential Geometry Quantities Based on Frame Fields ===
+Theoretical Framework Verification Test
+
+========== Frame Operator Verification ==========
+Frame operator result: 0.000019, 0.249975, 0.999918
+Theoretical inverse metric: g^{rr} = 0.25, g^{φφ} = 1
+Operator component ratio: 0.249975 / 0.999918 ≈ 0.249995
+Theoretical ratio: g^{rr} / g^{φφ} = 0.25
+
+========== Connection Coefficient Calculation Test ==========
+Cone parameters: r = 1, θ = 30°
+Γ^r_φφ: Calculated value = -0.249975, Theoretical value = -0.25, Error = 2.53838e-05 ✓ Pass
+Γ^φ_rφ: Calculated value = 1, Theoretical value = 1, Error = 0 ✓ Pass
+
+========== Riemann Curvature Calculation Test ==========
+R^r_{φrφ}: Calculated value = -0.249975, Theoretical value = -0.25, Error = 2.53838e-05 ✓ Pass
+Scalar curvature: Calculated value = 0, Theoretical value = 0, Error = 0 ✓ Pass
+
+========== Multi-Angle Verification ==========
+φ = 0°: Frame variation rate = 0.999918, 0.250051, 2.999753
+φ = 30°: Frame variation rate = 0.999918, 0.250051, 2.999753
+φ = 60°: Frame variation rate = 0.999918, 0.250051, 2.999753
+φ = 90°: Frame variation rate = 0.999918, 0.250051, 2.999753
+**/
