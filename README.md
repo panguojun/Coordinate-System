@@ -216,7 +216,7 @@ int main() {
     // Create coordinate systems
     coord3 world;                    // World coordinate system
     coord3 robot(0, 0, 1);          // Robot at position (0,0,1)
-    coord3 arm(45, 0, 0);           // Arm rotated 45° around X
+    coord3 arm = coord3::from_eulers(45, 0, 0); // Arm rotated 45° around X
 
     // Create transformation chain
     coord3 arm_in_world = robot * arm;
