@@ -136,16 +136,6 @@ R_uv = G_u · G_v - G_v · G_u - G[u,v]
 - **SLAM系统**：定位精度提升80%，建图速度提升3倍
 - **路径规划**：基于几何约束的实时优化
 
-### 🔬 理论物理
-- **广义相对论**：时空曲率计算精度提升2个数量级
-- **格点QCD**：相变研究计算效率提升4倍
-- **引力波**：增强数值相对论模拟
-
-### 🏥 生物医学工程
-- **医学影像**：诊断精度提升40%
-- **蛋白质折叠**：分子模拟加速10倍
-- **手术规划**：实时组织变形分析
-
 ## 🚀 快速开始
 
 ### 环境要求
@@ -180,97 +170,40 @@ coord3 G = coord3::grad(c1, c2);
 vec3 curvature_components = G.metric();
 ```
 
-### 高级功能
-```cpp
-// 多尺度标架场分析
-auto multi_scale_analysis = [](const std::vector<coord3>& frames) {
-    std::vector<coord3> gradients;
-    for (size_t i = 1; i < frames.size(); ++i) {
-        gradients.push_back(coord3::grad(frames[i-1], frames[i]));
-    }
-    return gradients;
-};
+## 🐍 Python Installation & Usage
 
-// 并行计算
-#pragma omp parallel for
-for (int i = 0; i < grid_size; ++i) {
-    // 标架场计算...
-}
-```
+To use the coordinate_system in Python(3.13+), you can easily install it via pip:
 
-## 📚 文档
-
-- **[理论指南](docs/theory_zh.md)**：数学基础和推导
-- **[API参考](docs/api_zh.md)**：完整函数文档
-- **[示例](examples/)**：实际使用案例
-- **[性能指南](docs/performance_zh.md)**：优化技巧
-- **[研究论文](paper/坐标系理论与计算.pdf)**：完整学术论文
-
-## 🤝 贡献
-
-欢迎贡献！请查看我们的[贡献指南](CONTRIBUTING_zh.md)。
-
-### 开发环境设置
 ```bash
-# 安装开发依赖
-sudo apt-get install catch2 benchmark doxygen
-
-# 运行测试
-make test
-
-# 生成文档
-make docs
-
-# 运行基准测试
-make benchmark
+pip install coordinate_system
 ```
 
-## 📈 路线图
+```python
+from coordinate_system import vec3, quat, coord3
 
-### 🎯 短期目标（2024-2025）
-- [ ] GPU加速（CUDA/OpenCL）
-- [ ] Python绑定
-- [ ] 自适应精度控制
-- [ ] 实时可视化工具
+# Create coordinate systems
+a = coord3(0, 0, 1, 0, 45, 0)   # Position (0,0,1), rotation (0,45,0)
+b = coord3(1, 0, 0, 45, 0, 0)   # Position (1,0,0), rotation (45,0,0)
 
-### 🚀 中期愿景（2025-2027）
-- [ ] 量子几何算法
-- [ ] 机器学习集成
-- [ ] 高维优化
-- [ ] 云计算平台
+# Combine transformations
+a *= b
+print("Combined coordinate system:", a)
 
-### 🌟 长期展望（2027+）
-- [ ] 量子计算适配
-- [ ] AI辅助几何设计
-- [ ] 下一代CAD集成
-- [ ] 元宇宙几何引擎
+# Transform vectors
+point_local = vec3(1, 0, 0)
+point_world = point_local * a
+print("Local to world:", point_world)
+
+# Inverse transform
+point_back = point_world / a  
+print("World to local:", point_back)
+```
 
 ## 📄 许可证
 
 本项目采用MIT许可证 - 详见[LICENSE](LICENSE)文件。
 
-## 🎓 引用
-
-如果您在研究中使用此工作，请引用：
-
-```bibtex
-@article{coordinate_system_2024,
-  title={坐标系理论与计算：从历史演化到现代实现},
-  author={您的姓名},
-  journal={计算几何学报},
-  year={2024},
-  volume={XX},
-  pages={XX-XX}
-}
-```
-
-## 🙏 致谢
-
-- 历史几何学先驱：笛卡尔、高斯、黎曼
-- 现代微分几何学社区
-- 开源计算几何项目
-- 所有贡献者和合作伙伴
-
 ---
+
 
 **🌟 如果觉得有用，请为此仓库加星！**
