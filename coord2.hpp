@@ -1,42 +1,55 @@
-/************************************************************************************************
-*								[Coordinate System]
-*				   					by Guojun Pan
+/****************************************************************************************************
+*						[Coordinate System (Coordinate Frame)]
+*
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
-*   The coordinate system class is separately encapsulated by me for
-*   simplifying coordinate transformation and deriving many algorithms,
-*   which can solve some problems related to coordinate system transformation.
-*   The operation of the coordinate system is similar to Lie group.
-*   The coordinate system consists of three parts: C = M (position) + S (scaling) * R (rotation).
+*   The Coordinate System class is specifically encapsulated to simplify coordinate transformations
+*   and derive geometric algorithms, capable of solving various problems related to coordinate system
+*   transformations. The coordinate system operations exhibit a Lie group-like structure.
+*   The coordinate system consists of three components: C = M (position) + S (scaling) * R (rotation).
 *
 *  *  *  *  *  *  *  *  *  *  *  *  Detailed Explanation  *  *  *  *  *  *  *  *  *  *  *  *  *  *
-*   The coordinate system transformation is divided into three steps:
-*   			projection (/), translation (^), and restoration (*).
+*   Coordinate system transformation is divided into three steps:
+*					projection (/), translation (^), and restoration (*).
 *
-*   The symbol of the coordinate system itself is C. The transformation between coordinate systems
-*   can be written as G = C2 / C1 - I, where G means gradient.
-*           		oper(/)  =  C1 * C2^-1
-*           		oper(\)  =  C1^-1 * C2
+*   The coordinate system itself is denoted as C. Transformations between coordinate systems
+*   can be expressed as G = C2 / C1 - I, where G represents the geometric gradient.
+*					oper(/)  =  C1 * C2^-1
+*					oper(\)  =  C1^-1 * C2
 *
 *   Specifically:
+*   Define a vector V in an intrinsic coordinate system (assuming a flat space where vectors can
+*   move freely without change). When observing V in a curved coordinate system, V appears different
+*   at different points. Therefore, the coordinate system is position-dependent.
+*
 *   Take vectors V1 and V2 at adjacent points (1) and (2) respectively,
 *   corresponding to coordinate systems C1 and C2. Then:
-*           		V  = V1 / C1 = V2 / C2 =>
-*           		V2 = V1 * C2 / C1, let R12 = C2 / C1 =>
-*           		V2 = V1 * R12
+*					V  = V1 * C1 = V2 * C2 =>
+*					V2 = V1 * C1 / C2, let R12 = C1 / C2 =>
+*					V2 = V1 * R12
 *
-*   The coordinate system can be used to calculate spatial curvature. In the u,v coordinate system,
-*   the Curvature tensor is:
-*           	Ruv  = 	Gu*Gv - Gv*Gu - G[u,v]
-*           	where:  Gu = C2 / C1 - I
-*                   	Connection vector: W = [U, V] (Lie bracket operation)
-*                   	G[u,v] = Gu*Wu + Gv*Wv
+*   Based on the frame field combination operator theory proposed in this paper,
+*   the direct geometric information extraction formula is:
+*           G = (c₂·c₁⁻¹)/C₂ - I/C₁
+*   where c is the intrinsic frame field and C is the embedding frame field.
+*
+*   The coordinate system can be used to compute spatial curvature. In the u,v coordinate system,
+*   the curvature tensor is:
+*					Ruv  =  Gu·Gv - Gv·Gu - G[u,v]
+*   where:
+*				 Gu = (c(u+du,v)·c⁻¹(u,v))/C(u+du,v) - I/C(u,v)
+*				 Gv = (c(u,v+dv)·c⁻¹(u,v))/C(u,v+dv) - I/C(u,v)
+*				 Connection vector: W = [U, V] (Lie bracket operation)
+*				 G[u,v] = Gu·Wu + Gv·Wv
+*
+*   Compared with traditional methods, this framework avoids the complex Christoffel symbol
+*   computation chain and directly extracts geometric invariants through frame field combinations,
+*   offering higher computational efficiency and geometric intuitiveness.
 */
 
-//#define	NON_UNIFORM_SCALE
-// *******************************************************************
+// **************************************************************************************************
 //  |_
 // UC     2d Rotation Coordinate System
-// *******************************************************************
+// **************************************************************************************************
 struct ucoord2
 {
 	static const ucoord2 ZERO;
@@ -417,5 +430,6 @@ struct coord2 : ucoord2
 };
 const coord2 coord2::ZERO = { ucoord2::ZERO, vec2::ZERO };
 const coord2 coord2::ONE = coord2();
+
 
 
