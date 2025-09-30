@@ -148,22 +148,6 @@ We validated our method using cone surface geometry with analytical solutions:
 
 ## 🚀 Quick Start
 
-### Prerequisites
-```bash
-# C++17 or later
-# CMake 3.12+
-# OpenMP (optional, for parallel computing)
-```
-
-### Installation
-```bash
-git clone https://github.com/yourusername/coordinate-system.git
-cd coordinate-system
-mkdir build && cd build
-cmake ..
-make -j$(nproc)
-```
-
 ### Basic Usage
 ```cpp
 #include "coord.hpp"
@@ -180,24 +164,6 @@ coord3 G = coord3::grad(c1, c2);
 vec3 curvature_components = G.metric();
 ```
 
-### Advanced Features
-```cpp
-// Multi-scale frame field analysis
-auto multi_scale_analysis = [](const std::vector<coord3>& frames) {
-    std::vector<coord3> gradients;
-    for (size_t i = 1; i < frames.size(); ++i) {
-        gradients.push_back(coord3::grad(frames[i-1], frames[i]));
-    }
-    return gradients;
-};
-
-// Parallel computation
-#pragma omp parallel for
-for (int i = 0; i < grid_size; ++i) {
-    // Frame field calculations...
-}
-```
-
 ## 📚 Documentation
 
 - **[Theory Guide](docs/theory.md)**: Mathematical foundations and derivations
@@ -206,63 +172,9 @@ for (int i = 0; i < grid_size; ++i) {
 - **[Performance Guide](docs/performance.md)**: Optimization techniques
 - **[Research Paper](paper/coordinate-system-theory.pdf)**: Full academic paper
 
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md).
-
-### Development Setup
-```bash
-# Install development dependencies
-sudo apt-get install catch2 benchmark doxygen
-
-# Run tests
-make test
-
-# Generate documentation
-make docs
-
-# Run benchmarks
-make benchmark
-```
-
-## 📈 Roadmap
-
-### 🎯 Short Term (2024-2025)
-- [ ] GPU acceleration with CUDA/OpenCL
-- [ ] Python bindings
-- [ ] Adaptive precision control
-- [ ] Real-time visualization tools
-
-### 🚀 Medium Term (2025-2027)
-- [ ] Quantum geometry algorithms
-- [ ] Machine learning integration
-- [ ] High-dimensional optimization
-- [ ] Cloud computing platform
-
-### 🌟 Long Term (2027+)
-- [ ] Quantum computing adaptation
-- [ ] AI-assisted geometric design
-- [ ] Next-generation CAD integration
-- [ ] Metaverse geometry engine
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🎓 Citation
-
-If you use this work in your research, please cite:
-
-```bibtex
-@article{coordinate_system_2024,
-  title={The Coordinate System Theory and Implementation: From Historical Evolution to Modern Computing},
-  author={Your Name},
-  journal={Journal of Computational Geometry},
-  year={2024},
-  volume={XX},
-  pages={XX-XX}
-}
-```
 
 ## 🙏 Acknowledgments
 
