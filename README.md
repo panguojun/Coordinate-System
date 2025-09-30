@@ -154,8 +154,8 @@ We validated our method using cone surface geometry with analytical solutions:
 
 // Create coordinate systems
 coord3 c1, c2;
-c1 = coord3::from_eulers({0.1, 0.2, 0.3});  // Euler angles
-c2 = coord3::from_eulers({0.15, 0.25, 0.35});
+c1 = coord3(90, 0, 0);  // Euler angles
+c2 = coord3((0, 90, 0);
 
 // Calculate geometric gradient
 coord3 G = coord3::grad(c1, c2);
