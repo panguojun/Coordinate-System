@@ -1,6 +1,6 @@
 # The Coordinate System Theory and Implementation
 
-<div align="center">
+<pre style="font-family: 'Courier New', monospace; font-weight: bold; line-height: 1.1;">
 
 ```
   _______ _            _____                     _ _             _         _____           _
