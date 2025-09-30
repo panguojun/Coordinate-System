@@ -138,22 +138,6 @@ R_uv = G_u · G_v - G_v · G_u - G[u,v]
 
 ## 🚀 快速开始
 
-### 环境要求
-```bash
-# C++17 或更高版本
-# CMake 3.12+
-# OpenMP（可选，用于并行计算）
-```
-
-### 安装
-```bash
-git clone https://github.com/yourusername/coordinate-system.git
-cd coordinate-system
-mkdir build && cd build
-cmake ..
-make -j$(nproc)
-```
-
 ### 基本用法
 ```cpp
 #include "coord.hpp"
@@ -207,5 +191,6 @@ print("World to local:", point_back)
 
 
 **🌟 如果觉得有用，请为此仓库加星！**
+
 
 
