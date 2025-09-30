@@ -164,14 +164,6 @@ coord3 G = coord3::grad(c1, c2);
 vec3 curvature_components = G.metric();
 ```
 
-## 📚 Documentation
-
-- **[Theory Guide](docs/theory.md)**: Mathematical foundations and derivations
-- **[API Reference](docs/api.md)**: Complete function documentation
-- **[Examples](examples/)**: Practical usage examples
-- **[Performance Guide](docs/performance.md)**: Optimization techniques
-- **[Research Paper](paper/coordinate-system-theory.pdf)**: Full academic paper
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
