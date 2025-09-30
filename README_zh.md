@@ -160,8 +160,8 @@ make -j$(nproc)
 
 // 创建坐标系
 coord3 c1, c2;
-c1 = coord3::from_eulers({0.1, 0.2, 0.3});  // 欧拉角
-c2 = coord3::from_eulers({0.15, 0.25, 0.35});
+c1 = coord3(90, 0, 0);  // 欧拉角
+c2 = coord3(0, 90, 0);
 
 // 计算几何梯度
 coord3 G = coord3::grad(c1, c2);
@@ -207,4 +207,5 @@ print("World to local:", point_back)
 
 
 **🌟 如果觉得有用，请为此仓库加星！**
+
 
