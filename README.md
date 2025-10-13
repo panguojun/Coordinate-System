@@ -210,6 +210,9 @@ Where C2 = {C1.o + o, C1.v}, C1.v = {C1.ux*C1.s.x, C1.uy*C1.s.y, C1.uz*C1.s.z}
 ### Basic Usage Example
 
 ```cpp
+#include "com.hpp"
+#include "vector.hpp"
+#include "quaternion.hpp"
 #include "coord.hpp"
 
 int main() {
