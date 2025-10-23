@@ -384,7 +384,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📚 Academic Reference
 
 ### Paper online
-https://zenodo.org/records/14435614
+[https://zenodo.org/records/14435614](https://zenodo.org/records/17421182)
 
 ## 🙏 Acknowledgments
 
