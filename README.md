@@ -275,7 +275,7 @@ g++ -std=c++17 -O3 -I src -o optimized_program your_program.cpp
 
 ### Python Installation
 
-To use the coordinate_system in Python(3.13), you can easily install it via pip:
+To use the coordinate_system in Python, you can easily install it via pip:
 
 ```bash
 pip install coordinate_system
