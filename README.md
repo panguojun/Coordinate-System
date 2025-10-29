@@ -302,7 +302,7 @@ print(a)
 The framework introduces revolutionary **Frame Field Composite Operators** for differential geometry:
 
 ```
-G = (c₂ · c₁⁻¹)/C₂ - I/C₁
+G_μ = (c(u+h)·c⁻¹(u))/C(u+h) - I/C(u)
 ```
 
 Where:
