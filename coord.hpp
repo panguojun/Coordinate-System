@@ -27,21 +27,25 @@
 *						V2 = V1 * C1 / C2, let R12 = C1 / C2 =>
 *						V2 = V1 * R12
 *
-*   Based on the intrinsic gradient operator theory proposed in this paper,
-*   the direct geometric information extraction formula is:
-*           			G_μ = (c(u+h_μ) - c(u))/h_μ
-*   where c is the intrinsic frame field.
+*   Based on the dual-frame normalization theory proposed in this paper,
+*   the geometric connection operator is:
+*           			G_μ = (c(u+h)·c⁻¹(u))/C(u+h) - I/C(u)
+*   where c is the intrinsic frame field and C is the embedding frame field.
 *
 *   The coordinate system can be used to compute spatial curvature. In the u,v coordinate system,
 *   the curvature tensor is:
-*						R_uv = G_u·G_v - G_v·G_u
+*						R_uv = G_u·G_v - G_v·G_u - G_[u,v]
 *   where:
-*				 	G_u = (c(u+du,v) - c(u,v))/du   (intrinsic gradient operator)
-*				 	G_v = (c(u,v+dv) - c(u,v))/dv   (intrinsic gradient operator)
+*				 	G_u = (c(u+du,v)·c⁻¹(u,v))/C(u+du,v) - I/C(u,v)
+*				 	G_v = (c(u,v+dv)·c⁻¹(u,v))/C(u,v+dv) - I/C(u,v)
+*				 	G_[u,v] = connection operator for coordinate commutator [∂_u, ∂_v]
 *
-*   For orthogonal coordinate systems (spherical, toroidal, etc.), the simplified formula is:
+*   For holonomic coordinate systems (spherical, toroidal, etc.), coordinate basis vectors commute:
+*           			[∂_u, ∂_v] = 0  ⇒  G_[u,v] = 0
+*   Thus the formula simplifies to: R_uv = G_u·G_v - G_v·G_u
+*
+*   Gaussian curvature extraction (verified implementation):
 *           			K = (R_01 - R_10)/2 / det(g)
-*   where R_01, R_10 are matrix elements of R_uv, and det(g) is metric determinant.
 *
 *   Compared with traditional methods, this framework:
 *     - Eliminates Christoffel symbols (O(n⁶) → O(n³) complexity)
@@ -1253,4 +1257,5 @@ struct coord3 : vcoord3
 };
 const coord3 coord3::ZERO = {ucoord3::ONE, vec3::ZERO, vec3::ZERO };
 const coord3 coord3::ONE = {};
+
 
