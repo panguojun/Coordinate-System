@@ -29,17 +29,16 @@
 *
 *   Based on the frame field combination operator theory proposed in this paper,
 *   the direct geometric information extraction formula is:
-*           			G = (c₂·c₁⁻¹)/C₂ - I/C₁
+*           			G_μ = (c(u+h_μ) - c(u))/h_μ
 *   where c is the intrinsic frame field and C is the embedding frame field.
 *
 *   The coordinate system can be used to compute spatial curvature. In the u,v coordinate system,
 *   the curvature tensor is:
 *						Ruv  =  Gu·Gv - Gv·Gu - G[u,v]
 *   where:
-*				 	Gu = (c(u+du,v)·c⁻¹(u,v))/C(u+du,v) - I/C(u,v)
-*				 	Gv = (c(u,v+dv)·c⁻¹(u,v))/C(u,v+dv) - I/C(u,v)
-*				 	Connection vector: W = [U, V] (Lie bracket operation)
-*				 	G[u,v] = Gu·Wu + Gv·Wv
+*				 	G_u = (c(u+du,v)·c⁻¹(u,v))/C(u+du,v) - I/C(u,v)
+*				 	G_v = (c(u,v+dv)·c⁻¹(u,v))/C(u,v+dv) - I/C(u,v)
+*				 	G_[u,v] = G_u·W_u + G_v·W_v  (Lie bracket correction)
 *
 *   Compared with traditional methods, this framework avoids the complex Christoffel symbol
 *   computation chain and directly extracts geometric invariants through frame field combinations,
@@ -720,7 +719,41 @@ struct vcoord3 : ucoord3
 	{
 		return c.VX().dot(VX()) + c.VY().dot(VY()) + c.VZ().dot(VZ());
 	}
+    vec3 metric() const
+	{
+		vec3 vx = VX();  // ∂r/∂u
+		vec3 vy = VY();  // ∂r/∂v
 
+		real E = vx.dot(vx);  // g_uu = ∂r/∂u · ∂r/∂u
+		real F = vx.dot(vy);  // g_uv = ∂r/∂u · ∂r/∂v  
+		real G = vy.dot(vy);  // g_vv = ∂r/∂v · ∂r/∂v
+
+		return vec3(E, F, G);
+	}
+	real metric_determinant() const 
+	{
+		vec3 vx = VX();
+		vec3 vy = VY();
+		vec3 vz = VZ(); 
+
+		real E = vx.dot(vx);
+		real F = vx.dot(vy);
+		real G = vy.dot(vy);
+
+		return E * G - F * F;
+	}
+	vcoord3 metric_tensor() const
+	{
+		vec3 vx = VX();
+		vec3 vy = VY();
+		vec3 vz = VZ();
+
+		return vcoord3(
+			vec3(vx.dot(vx), vx.dot(vy), vx.dot(vz)),
+			vec3(vy.dot(vx), vy.dot(vy), vy.dot(vz)),
+			vec3(vz.dot(vx), vz.dot(vy), vz.dot(vz))
+		);
+	}
 	void dump(const std::string& name = "") const
 	{
 		PRINT("----" << name << "---");
@@ -1212,5 +1245,6 @@ struct coord3 : vcoord3
 };
 const coord3 coord3::ZERO = {ucoord3::ONE, vec3::ZERO, vec3::ZERO };
 const coord3 coord3::ONE = {};
+
 
 
