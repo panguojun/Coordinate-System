@@ -52,9 +52,6 @@
 *     - Achieves <2% error on sphere (vs 1390% with traditional methods)
 *     - Provides geometric intuition through frame field operations
 *     - Automatically handles coordinate singularities
-*
-*   Verified implementations: sphere_corrected.cc, verify_sphere_analytical.py
-*   Numerical validation: 24 test points, machine precision accuracy achieved
 */
 
 // ********************************************************************************************
@@ -1257,5 +1254,6 @@ struct coord3 : vcoord3
 };
 const coord3 coord3::ZERO = {ucoord3::ONE, vec3::ZERO, vec3::ZERO };
 const coord3 coord3::ONE = {};
+
 
 
