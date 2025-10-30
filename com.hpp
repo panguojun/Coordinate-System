@@ -1,8 +1,8 @@
-/*********************************************************************
+/*******************************************************************************************************
 *                  Common Header for Coordinate System Computing
 *             Foundation definitions designed for coordinate system theory and computation
 *               Contains necessary type aliases, constants and utility functions
-**********************************************************************/
+********************************************************************************************************/
 #pragma once
 
 // Required system headers
@@ -113,4 +113,5 @@ inline void hash_combine(std::size_t& seed, const T& v)
 inline void hash_combine(std::size_t& seed, const real& v)
 {
     seed ^= std::hash<real>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+
 }
