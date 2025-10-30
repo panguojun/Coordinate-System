@@ -29,15 +29,15 @@
 *
 *   Based on the dual-frame normalization theory proposed in this paper,
 *   the geometric connection operator is:
-*           			G_μ = (c(u+h)·c⁻¹(u))/C(u+h) - I/C(u)
-*   where c is the intrinsic frame field and C is the embedding frame field.
+*           			G_μ = (c(u+h_μ) - c(u))/h_μ
+*   where c is the intrinsic frame field.
 *
 *   The coordinate system can be used to compute spatial curvature. In the u,v coordinate system,
 *   the curvature tensor is:
-*						R_uv = G_u·G_v - G_v·G_u - G_[u,v]
+*						R_uv = [G_u, G_v] - G_[u,v]
 *   where:
-*				 	G_u = (c(u+du,v)·c⁻¹(u,v))/C(u+du,v) - I/C(u,v)
-*				 	G_v = (c(u,v+dv)·c⁻¹(u,v))/C(u,v+dv) - I/C(u,v)
+*				 	G_u = (c(u+Δ,v) - c(u,v)) / Δ
+*				 	G_v = (c(u,v+Δ) - c(u,v)) / Δ
 *				 	G_[u,v] = connection operator for coordinate commutator [∂_u, ∂_v]
 *
 *   For holonomic coordinate systems (spherical, toroidal, etc.), coordinate basis vectors commute:
@@ -438,6 +438,7 @@ struct coord2 : ucoord2
 };
 const coord2 coord2::ZERO = { ucoord2::ZERO, vec2::ZERO };
 const coord2 coord2::ONE = coord2();
+
 
 
 
