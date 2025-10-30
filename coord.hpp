@@ -29,7 +29,7 @@
 *
 *   Based on the dual-frame normalization theory proposed in this paper,
 *   the geometric connection operator is:
-*           			G_μ = G_μ = (c(u+h_μ) - c(u))/h_μ
+*           			G_μ = (c(u+h_μ) - c(u))/h_μ
 *   where c is the intrinsic frame field.
 *
 *   The coordinate system can be used to compute spatial curvature. In the u,v coordinate system,
@@ -1254,6 +1254,7 @@ struct coord3 : vcoord3
 };
 const coord3 coord3::ZERO = {ucoord3::ONE, vec3::ZERO, vec3::ZERO };
 const coord3 coord3::ONE = {};
+
 
 
 
