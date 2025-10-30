@@ -1,5 +1,5 @@
-/**************************************************************************
-                         Quaternion
+/**********************************************************************************************************
+                         			Quaternion
 
 	Quaternions are extensions of complex numbers, with unit quaternions used for rotation operations,
 	specifically designed for rotation transformations in coordinate system theory.
@@ -7,7 +7,7 @@
 	Quaternions support normalization, conjugation, inverse, and arithmetic operations,
 	and are an important component of frame field composite operator theory.
 
-**************************************************************************/
+***********************************************************************************************************/
 
 // Forward declarations for real and vector3
 #ifndef REAL_DEFINED
@@ -368,4 +368,5 @@ struct quaternion
 };
 
 // Constant definition - declared first, avoid circular dependency initialization issues
+
 inline const quaternion quaternion::ONE = quaternion(1, 0, 0, 0);
