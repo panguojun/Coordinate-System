@@ -34,7 +34,7 @@
 *
 *   The coordinate system can be used to compute spatial curvature. In the u,v coordinate system,
 *   the curvature tensor is:
-*						R_uv = G_u·G_v - G_v·G_u - G_[u,v]
+*						R_uv = [G_u, G_v] - G_[u,v]
 *   where:
 *				 	G_u = (c(u+du,v)·c⁻¹(u,v))/C(u+du,v) - I/C(u,v)
 *				 	G_v = (c(u,v+dv)·c⁻¹(u,v))/C(u,v+dv) - I/C(u,v)
@@ -1254,6 +1254,7 @@ struct coord3 : vcoord3
 };
 const coord3 coord3::ZERO = {ucoord3::ONE, vec3::ZERO, vec3::ZERO };
 const coord3 coord3::ONE = {};
+
 
 
 
