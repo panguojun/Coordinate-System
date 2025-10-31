@@ -929,29 +929,11 @@ struct coord3 : vcoord3
     coord3 operator+(const coord3& c) const
 	{
 		coord3 rc;
-		vec3 _ux = VX() + c.VX();
-		vec3 _uy = VY() + c.VY();
-		vec3 _uz = VZ() + c.VZ();
-		/*
-		rc.s.x = _ux.len();
-		if (!ISZERO(rc.s.x))
-		{
-			_ux /= rc.s.x;
-			rc.ux = _ux;
-		}
-		rc.s.y = _uy.len();
-		if (!ISZERO(rc.s.y))
-		{
-			_uy /= rc.s.y;
-			rc.uy = _uy;
-		}
-		rc.s.z = _uz.len();
-		if (!ISZERO(rc.s.z))
-		{
-			_uz /= rc.s.z;
-			rc.uz = _uz;
-		}*/
+		ux = VX() + c.VX();
+		uy = VY() + c.VY();
+		uz = VZ() + c.VZ();
 
+		rc.s = vec3::ONE;
 		rc.o = o + c.o;
 		return rc;
 	}
@@ -989,29 +971,11 @@ struct coord3 : vcoord3
     coord3 operator-(const coord3& c) const
 	{
 		coord3 rc;
-		vec3 _ux = VX() - c.VX();
-		vec3 _uy = VY() - c.VY();
-		vec3 _uz = VZ() - c.VZ();
-		/*
-		rc.s.x = _ux.len();
-		if (!ISZERO(rc.s.x))
-		{
-			_ux /= rc.s.x;
-			rc.ux = _ux;
-		}
-		rc.s.y = _uy.len();
-		if (!ISZERO(rc.s.y))
-		{
-			_uy /= rc.s.y;
-			rc.uy = _uy;
-		}
-		rc.s.z = _uz.len();
-		if (!ISZERO(rc.s.z))
-		{
-			_uz /= rc.s.z;
-			rc.uz = _uz;
-		}*/
+		ux = VX() - c.VX();
+		uy = VY() - c.VY();
+		uz = VZ() - c.VZ();
 
+		rc.s = vec3::ONE;
 		rc.o = o - c.o;
 		return rc;
 	}
@@ -1254,6 +1218,7 @@ struct coord3 : vcoord3
 };
 const coord3 coord3::ZERO = {ucoord3::ONE, vec3::ZERO, vec3::ZERO };
 const coord3 coord3::ONE = {};
+
 
 
 
