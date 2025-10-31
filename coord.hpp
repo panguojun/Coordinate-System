@@ -1151,11 +1151,11 @@ struct coord3 : vcoord3
 		*this = (*this) / q;
 	}
 	// oper(\) = C1^-1 * C2
-    	coord3 operator%(const coord3& c) const
+    coord3 operator%(const coord3& c) const
 	{
 		return (*this).reversed() * c;
 	}
-    	coord3 operator^(const vec3& v) const
+    coord3 operator^(const vec3& v) const
 	{
 		coord3 c = *this;
 		c.ux = vec3::lerp(vec3::UX, c.ux, v.x); c.ux.norm();
@@ -1218,6 +1218,7 @@ struct coord3 : vcoord3
 };
 const coord3 coord3::ZERO = {ucoord3::ONE, vec3::ZERO, vec3::ZERO };
 const coord3 coord3::ONE = {};
+
 
 
 
