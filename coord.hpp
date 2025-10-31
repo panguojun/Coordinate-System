@@ -929,9 +929,9 @@ struct coord3 : vcoord3
     coord3 operator+(const coord3& c) const
 	{
 		coord3 rc;
-		ux = VX() + c.VX();
-		uy = VY() + c.VY();
-		uz = VZ() + c.VZ();
+		rc.ux = VX() + c.VX();
+		rc.uy = VY() + c.VY();
+		rc.uz = VZ() + c.VZ();
 
 		rc.s = vec3::ONE;
 		rc.o = o + c.o;
@@ -971,10 +971,10 @@ struct coord3 : vcoord3
     coord3 operator-(const coord3& c) const
 	{
 		coord3 rc;
-		ux = VX() - c.VX();
-		uy = VY() - c.VY();
-		uz = VZ() - c.VZ();
-
+		rc.ux = VX() - c.VX();
+		rc.uy = VY() - c.VY();
+		rc.uz = VZ() - c.VZ();
+		
 		rc.s = vec3::ONE;
 		rc.o = o - c.o;
 		return rc;
@@ -1218,6 +1218,7 @@ struct coord3 : vcoord3
 };
 const coord3 coord3::ZERO = {ucoord3::ONE, vec3::ZERO, vec3::ZERO };
 const coord3 coord3::ONE = {};
+
 
 
 
