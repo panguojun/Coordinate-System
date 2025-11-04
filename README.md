@@ -311,7 +311,7 @@ print(f"Gaussian curvature: {K:.8f}")  # Output: 0.99999641 (error < 0.001%)
 The framework introduces the revolutionary **Intrinsic Gradient Operator** for differential geometry:
 
 ```
-G_μ = (c(u+h) - c(u)) / h
+G_μ = (c(u+h) - c(u)) / h / c(u)
 ```
 
 Where:
