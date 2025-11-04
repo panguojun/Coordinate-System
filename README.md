@@ -361,38 +361,14 @@ R_uv = [
 ]
 ```
 
-### Complete Curvature Extraction
+### Gaussian Curvature Extraction
 
-From the Riemann curvature tensor, we can extract all curvature quantities:
+From the Riemann curvature tensor, we can extract Gaussian Curvature:
 
-**Gaussian Curvature:**
 ```
 K = (R_01 - R_10) / (2 × det(g))
 ```
 
-**Ricci Curvature:**
-```
-R_ij = R^k_ikj
-```
-
-**Scalar Curvature:**
-```
-R = g^ij R_ij
-```
-
-### Bianchi Identities Verification
-
-The framework automatically verifies fundamental curvature properties:
-
-1. **First Bianchi Identity:**
-   ```
-   R(X,Y)Z + R(Y,Z)X + R(Z,X)Y = 0
-   ```
-
-2. **Second Bianchi Identity:**
-   ```
-   ∇_X R(Y,Z) + ∇_Y R(Z,X) + ∇_Z R(X,Y) = 0
-   ```
 
 ### Performance Advantages
 
