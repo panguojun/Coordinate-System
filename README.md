@@ -302,141 +302,99 @@ K = calc.compute_gaussian_curvature(math.pi/4, math.pi/6)
 print(f"Gaussian curvature: {K:.8f}")  # Output: 0.99999641 (error < 0.001%)
 ```
 
-**🧮 Advanced Features: Differential Geometry**  
+## 🧮 Advanced Features: Differential Geometry
 
-*The following sections describe advanced mathematical capabilities for research and specialized applications.*  
+*The following sections describe advanced mathematical capabilities for research and specialized applications.*
 
----
+### Intrinsic Gradient Operator
 
-### **Intrinsic Gradient Operator**  
+The framework introduces the revolutionary **Intrinsic Gradient Operator** for differential geometry:
 
-The framework introduces the revolutionary **Intrinsic Gradient Operator** for differential geometry:  
-
-**Definition 1** (Intrinsic Gradient Operator):  
-\[
-G_\mu = \frac{c(u + h_\mu) - c(u)}{h_\mu}
-\]  
-
-**Where**:  
-- \( c(u, v) \): Intrinsic frame field at point \( (u, v) \)  
-- \( h_\mu \): Finite difference step size in direction \( \mu \in \{u, v\} \)  
-- \( G_\mu \): Intrinsic gradient operator in direction \( \mu \)  
-
-**Geometric Interpretation**:  
-- \( G_\mu \cdot e_u, G_\mu \cdot e_v \): Rotation and deformation of the tangent space  
-- \( G_\mu \cdot n \): Rate of change of the normal vector (\( \partial n / \partial \mu \))  
-- \( G_\mu \cdot s \): Variation of metric scaling factors  
-
----
-
-### **Direct Curvature Calculation**  
-
-Using the intrinsic gradient operator, the **second fundamental form** is computed as:  
-
-\[
-\begin{aligned}
-L &= -\frac{\partial n}{\partial u} \cdot f_u = - (G_u \cdot n) \cdot f_u \\
-M &= -\frac{1}{2} \left( \frac{\partial n}{\partial u} \cdot f_v + \frac{\partial n}{\partial v} \cdot f_u \right) = -\frac{1}{2} \left( (G_u \cdot n) \cdot f_v + (G_v \cdot n) \cdot f_u \right) \\
-N &= -\frac{\partial n}{\partial v} \cdot f_v = - (G_v \cdot n) \cdot f_v
-\end{aligned}
-\]  
-
-The **Gaussian curvature** is then derived as:  
-\[
-K = \frac{LN - M^2}{\det(g)}
-\]  
-
----
-
-### **Riemann Curvature Tensor**  
-
-The framework provides **complete Riemann curvature tensor** computation via intrinsic gradient operators:  
-
-**Theorem 1**:  
-\[
-R(\partial_u, \partial_v) = [G_u, G_v] - G_{[\partial_u, \partial_v]}
-\]  
-
-**Where**:  
-- \( [G_u, G_v] = G_u \circ G_v - G_v \circ G_u \) (Lie bracket/commutator)  
-- \( G_{[\partial_u, \partial_v]} \): Lie derivative term for non-coordinate bases  
-
-**Matrix Representation**:  
-\[
-R_{uv} = 
-\begin{bmatrix}
-R^1_{112} & R^1_{122} & R^1_{132} \\
-R^2_{112} & R^2_{122} & R^2_{132} \\
-R^3_{112} & R^3_{122} & R^3_{132}
-\end{bmatrix}
-\]  
-
-**Component Interpretation**:  
-- \( R^1_{122}, R^2_{122} \): Components related to Gaussian curvature  
-- \( R^3_{112}, R^3_{122} \): Extrinsic curvature components  
-- Other components: Complete curvature tensor information  
-
----
-
-### **Gaussian Curvature Extraction**  
-
-From the Riemann curvature tensor, Gaussian curvature is extracted as:  
-
-**Theorem 2**:  
-\[
-K = \frac{R_{1212}}{\det(g)} = \frac{R^1_{212}}{\det(g)}
-\]  
-
-In matrix component form:  
-\[
-K = \frac{R_{01} - R_{10}}{2 \times \det(g)}
-\]  
-
----
-
-### **Performance Advantages**  
-
-| Curvature Type           | Traditional Method | Intrinsic Gradient Method | Speedup |
-|--------------------------|--------------------|----------------------------|---------|
-| Gaussian Curvature       | \( O(n^4) \)       | \( O(n^3) \)               | ~8×     |
-| Riemann Tensor           | \( O(n^6) \)       | \( O(n^3) \)               | ~27×    |
-| Full Curvature Analysis  | \( O(n^6) \)       | \( O(n^3) \)               | ~27×    |
-
----
-
-### **Algorithm Implementation**  
-
-```python
-class IntrinsicGradientCurvature:
-    def compute_second_fundamental_form(self, u, v, delta=1e-6):
-        """Compute second fundamental form using intrinsic gradients"""
-        G_u = self.compute_intrinsic_gradient(u, v, 'u', delta)
-        G_v = self.compute_intrinsic_gradient(u, v, 'v', delta)
-        
-        f_u, f_v, n = self.get_tangent_normal_vectors(u, v)
-        
-        L = -np.dot(G_u.dot(n), f_u)
-        M = -0.5 * (np.dot(G_u.dot(n), f_v) + np.dot(G_v.dot(n), f_u))
-        N = -np.dot(G_v.dot(n), f_v)
-        
-        return L, M, N
-    
-    def compute_riemann_curvature(self, u, v, delta=1e-6):
-        """Compute Riemann curvature tensor"""
-        G_u = self.compute_intrinsic_gradient(u, v, 'u', delta)
-        G_v = self.compute_intrinsic_gradient(u, v, 'v', delta)
-        
-        # Lie bracket term
-        commutator = G_u @ G_v - G_v @ G_u
-        
-        # Lie derivative term
-        G_uv = self.compute_lie_derivative(G_u, G_v, delta)
-        
-        # Riemann curvature tensor
-        R_uv = commutator - G_uv
-        
-        return R_uv
 ```
+G_μ = (c(u+h) - c(u)) / h / c(u)
+```
+
+Where:
+- `c(u,v)`: Intrinsic frame field at point (u,v)
+- `h`: Finite difference step size
+- `G_μ`: Intrinsic gradient operator in direction μ ∈ {u,v}
+
+**Geometric Interpretation:**
+- `G_μ.ux, G_μ.uy`: Rotation and deformation of tangent space
+- `G_μ.uz`: Rate of change of normal vector (∂n/∂μ)
+- `G_μ.s`: Variation of metric scaling factors
+
+### Direct Curvature Calculation
+
+Using the intrinsic gradient operator, we can directly compute the second fundamental form:
+
+```
+L = -G_u.uz · f_u
+M = -½(G_u.uz · f_v + G_v.uz · f_u)
+N = -G_v.uz · f_v
+```
+
+And the Gaussian curvature:
+
+```
+K = (LN - M²) / det(g)
+```
+
+### Riemann Curvature Tensor
+
+The framework provides **complete Riemann curvature tensor** computation through intrinsic gradient operators:
+
+```
+R(∂_u, ∂_v) = [G_u, G_v] - G_[∂_u,∂_v]
+```
+
+Where:
+- `[G_u, G_v] = G_u ∘ G_v - G_v ∘ G_u` (Lie bracket/commutator)
+- `G_[∂_u,∂_v]` (Lie derivative term for non-coordinate bases)
+
+**Riemann Curvature Tensor Coord (Matrix Representation):**
+```
+R_uv = [
+    [R¹₁₁₂  R¹₁₂₂  R¹₁₃₂],   # Tangent space curvature
+    [R²₁₁₂  R²₁₂₂  R²₁₃₂],   # Tangent space curvature  
+    [R³₁₁₂  R³₁₂₂  R³₁₃₂]    # Normal curvature
+]
+```
+
+### Measurement Function for Curvature Extraction
+
+**Measurement Function Definition**:
+```
+M_{ijkl} = √det(g) · ⟨X e_l, e_k⟩
+```
+
+Where:
+- `X = [G_μ, G_ν]`: Curvature operator from Lie bracket
+- `e_k, e_l`: Tangent basis vectors
+- `det(g)`: Determinant of metric tensor
+- `⟨·,·⟩`: Inner product in embedding space
+
+**Riemann Curvature Extraction**:
+```
+R_{ijkl} = M_{ijkl} / √det(g)
+```
+
+### Gaussian Curvature Extraction
+
+From the Riemann curvature tensor, we can extract Gaussian Curvature:
+
+```
+K = R_{1212} / det(g)
+```
+
+
+### Performance Advantages
+
+| Curvature Type | Traditional Method | Intrinsic Gradient Method | Speedup |
+|----------------|-------------------|---------------------------|---------|
+| Gaussian Curvature | O(n⁴) | O(n³) | ~8× |
+| Riemann Tensor | O(n⁶) | O(n³) | ~27× |
+| Full Curvature Analysis | O(n⁶) | O(n³) | ~27× |
 
 ### Coordinate System Differentiation
 
@@ -498,7 +456,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📚 Academic Reference
 
 ### Paper online
-https://zenodo.org/records/17515034
+https://zenodo.org/records/17480005
 
 ## 🙏 Acknowledgments
 
