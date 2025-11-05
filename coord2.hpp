@@ -1,5 +1,13 @@
-/****************************************************************************************************
-*						[Coordinate System (Coordinate Frame)]
+/**************************************************************************************************************\ 
+*  _______ _            _____                     _ _             _         _____           _                  *  
+* |__   __| |          / ____|                   | (_)           | |       / ____|         | |                 *  
+*    | |  | |__   ___ | |     ___   ___  _ __ __| |_ _ __   __ _| |_ ___ | (___  _   _ ___| |_ ___ _ __ ___    *  
+*    | |  | '_ \ / _ \| |    / _ \ / _ \| '__/ _` | | '_ \ / _` | __/ _ \ \___ \| | | / __| __/ _ \ '_ ` _ \   *  
+*    | |  | | | |  __/| |___| (_) | (_) | | | (_| | | | | | (_| | ||  __/ ____) | |_| \__ \ ||  __/ | | | | |  *  
+*    |_|  |_| |_|\___| \_____\___/ \___/|_|  \__,_|_|_| |_|\__,_|\__\___||_____/ \__, |___/\__\___|_| |_| |_|  *  
+*                                                                                 __/ |                        *  
+*                                                                                |___/                         *
+**								[Coordinate System (Coordinate Frame)]										  **
 *
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 *   The Coordinate System class is specifically encapsulated to simplify coordinate transformations
@@ -30,28 +38,40 @@
 *   Based on the dual-frame normalization theory proposed in this paper,
 *   the geometric connection operator is:
 *           			G_μ = (c(u+h_μ) - c(u))/h_μ
-*   where c is the intrinsic frame field.
+*   where c is the intrinsic frame field and C is the embedding frame field.
 *
 *   The coordinate system can be used to compute spatial curvature. In the u,v coordinate system,
 *   the curvature tensor is:
-*						R_uv = [G_u, G_v] - G_[u,v]
+*						R_uv = G_u·G_v - G_v·G_u - G_[u,v]
 *   where:
-*				 	G_u = (c(u+Δ,v) - c(u,v)) / Δ
-*				 	G_v = (c(u,v+Δ) - c(u,v)) / Δ
-*				 	G_[u,v] = connection operator for coordinate commutator [∂_u, ∂_v]
+*			 	G_u = (c(u+Δ,v) - c(u,v)) / Δ
+*			 	G_v = (c(u,v+Δ) - c(u,v)) / Δ
+*			 	G_[u,v] = connection operator for coordinate commutator [∂_u, ∂_v]
 *
 *   For holonomic coordinate systems (spherical, toroidal, etc.), coordinate basis vectors commute:
 *           			[∂_u, ∂_v] = 0  ⇒  G_[u,v] = 0
 *   Thus the formula simplifies to: R_uv = G_u·G_v - G_v·G_u
 *
-*   Gaussian curvature extraction (verified implementation):
-*           			K = (R_01 - R_10)/2 / det(g)
+*   **Measurement Function for Curvature Extraction:**
+*   
+*   The measurement function bridges frame bundle curvature to Riemannian geometry:
+*           			M_{ijkl} = √det(g) · ⟨X e_l, e_k⟩
+*   where:
+*      			X = [G_u, G_v]              (Lie bracket curvature operator)
+*      			e_k, e_l                    (tangent basis vectors)
+*      			det(g)                      (determinant of metric tensor)
+*      			⟨·,·⟩                       (inner product in embedding space)
 *
-*   Compared with traditional methods, this framework:
-*     - Eliminates Christoffel symbols (O(n⁶) → O(n³) complexity)
-*     - Achieves <2% error on sphere (vs 1390% with traditional methods)
-*     - Provides geometric intuition through frame field operations
-*     - Automatically handles coordinate singularities
+*   **Riemann Curvature Extraction:**
+*           			R_{ijkl} = M_{ijkl} / √det(g)
+*
+*   **Gaussian Curvature Calculation (verified implementation):**
+*           			K = R_{1212} / det(g)
+* 
+*
+*   This approach provides O(n³) computational complexity for full curvature analysis,
+*   significantly faster than traditional O(n⁶) methods.
+*
 */
 
 // **************************************************************************************************
@@ -438,6 +458,7 @@ struct coord2 : ucoord2
 };
 const coord2 coord2::ZERO = { ucoord2::ZERO, vec2::ZERO };
 const coord2 coord2::ONE = coord2();
+
 
 
 
