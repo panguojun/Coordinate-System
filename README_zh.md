@@ -384,7 +384,7 @@ Riemann curvature tensor = M(R_uv)
 ## 📚 学术参考
 
 ### 在线论文
-https://zenodo.org/records/17515034
+https://zenodo.org/records/17568072
 
 ## 🙏 致谢
 
@@ -406,6 +406,7 @@ Coord框架为以下提供了统一的计算语言：
 ---
 
 **🌟 如果您觉得有用，请为这个仓库点星！**
+
 
 
 
