@@ -9,13 +9,13 @@
 *                                                                                |___/                         *
 **								[Coordinate System (Coordinate Frame)]										  **
 *
-*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
+*  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 *   The Coordinate System class is specifically encapsulated to simplify coordinate transformations
 *   and derive geometric algorithms, capable of solving various problems related to coordinate system
 *   transformations. The coordinate system operations exhibit a Lie group-like structure.
 *   The coordinate system consists of three components: C = M (position) + S (scaling) * R (rotation).
 *
-*  *  *  *  *  *  *  *  *  *  *  *  Detailed Explanation  *  *  *  *  *  *  *  *  *  *  *  *  *  *
+*  *  *  *  *  *  *  *  *  *  *  *  Detailed Explanation *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 *   Coordinate system transformation is divided into three steps:
 *						projection (/), translation (^), and restoration (*).
 *
@@ -1238,3 +1238,4 @@ struct coord3 : vcoord3
 };
 const coord3 coord3::ZERO = {ucoord3::ONE, vec3::ZERO, vec3::ZERO };
 const coord3 coord3::ONE = {};
+
