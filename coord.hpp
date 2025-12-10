@@ -73,7 +73,6 @@
 *   significantly faster than traditional O(n⁶) methods.
 *
 */
-
 // ********************************************************************************************
 //  |/_
 // UC     3d Rotation Coordinate System（Base Coordinate System）
@@ -1238,4 +1237,5 @@ struct coord3 : vcoord3
 };
 const coord3 coord3::ZERO = {ucoord3::ONE, vec3::ZERO, vec3::ZERO };
 const coord3 coord3::ONE = {};
+
 
