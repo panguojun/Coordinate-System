@@ -1,0 +1,45 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "Coordinate System: A Unified Framework for Coordinate Transformations and Differential Geometry"
+abstract: >
+  A powerful framework for three-dimensional coordinate transformations that extends to differential geometry applications.
+  The core concept is to treat coordinate systems as first-class algebraic objects, supporting arithmetic operations
+  (multiplication, division) to simplify complex operations from basic coordinate transformations to advanced curvature calculations.
+  The framework provides intuitive coordinate transformations, hierarchical systems for robotics and graphics,
+  algebraic operations on coordinate systems, differential geometry capabilities with intrinsic gradient operators,
+  high performance (275% speed improvement over traditional methods), and multi-platform support (C++ library with Python bindings).
+authors:
+  - family-names: Pan
+    given-names: Guojun
+    email: 18858146@qq.com
+    orcid: https://orcid.org/0009-0002-5750-6523
+repository-code: "https://github.com/panguojun/Coordinate-System"
+url: "https://pypi.org/project/coordinate-system/"
+version: 1.0.0
+date-released: 2024-11-27
+license: MIT
+keywords:
+  - coordinate systems
+  - differential geometry
+  - curvature calculation
+  - robotics
+  - computer graphics
+  - frame field algebra
+  - SE(3) group
+  - Riemannian geometry
+  - computational geometry
+  - Python bindings
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.17908685
+    description: "Zenodo DOI"
+preferred-citation:
+  type: article
+  title: "Coordinate System Theory and Implementation: From Basic Concepts to Differential Geometry Applications"
+  authors:
+    - family-names: Pan
+      given-names: Guojun
+  year: 2024
+  journal: "Journal of Open Source Software"
+  doi: 10.5281/zenodo.17908685
