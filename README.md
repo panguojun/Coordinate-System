@@ -21,7 +21,7 @@
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/yourusername/coordinate-system)
 [![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://yourusername.github.io/coordinate-system/)
 [![Version](https://img.shields.io/badge/version-1.0.0-orange.svg)](https://github.com/yourusername/coordinate-system/releases)
-DOI: https://doi.org/10.5281/zenodo.14435613
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14435613.svg)](https://doi.org/10.5281/zenodo.14435613)
 </div>
 
 ---
