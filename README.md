@@ -311,7 +311,7 @@ print(f"Gaussian curvature: {K:.8f}")  # Output: 0.99999641 (error < 0.001%)
 The framework introduces the revolutionary **Intrinsic Gradient Operator** for differential geometry:
 
 ```
-G_μ = (c(u+h) - c(u)) / h / c(u)
+G_μ ≈ (c(u+h) - c(u)) / h / c(u)
 ```
 
 Where:
@@ -329,15 +329,15 @@ Where:
 Using the intrinsic gradient operator, we can directly compute the second fundamental form:
 
 ```
-L = -G_u.uz · f_u
-M = -½(G_u.uz · f_v + G_v.uz · f_u)
-N = -G_v.uz · f_v
+L = -⟨G_u·n, r_u⟩
+M = -½(⟨G_u·n, r_v⟩ + ⟨G_v·n, r_u⟩)
+N = -⟨G_v·n, r_v⟩
 ```
 
 And the Gaussian curvature:
 
 ```
-K = (LN - M²) / det(g)
+K = (L·N - M²) / det(g)
 ```
 
 ### Riemann Curvature Tensor
@@ -368,7 +368,6 @@ From the Riemann curvature tensor, we can extract Gaussian Curvature:
 ```
 K = R_{1212} / det(g) = -⟨Ω_uv e_v, e_u⟩ / √det(g)
 ```
-
 
 ### Performance Advantages
 
@@ -438,7 +437,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📚 Academic Reference
 
 ### Paper online
-https://zenodo.org/records/17576608
+https://zenodo.org/records/17908685
 
 ## 🙏 Acknowledgments
 
