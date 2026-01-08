@@ -345,7 +345,7 @@ K = (LN - M²) / det(g)
 The framework provides **complete Riemann curvature tensor** computation through intrinsic gradient operators:
 
 ```
-R(∂_u, ∂_v) = [G_u, G_v] - G_[∂_u,∂_v]
+Ω_uv = [G_u, G_v] - G_[∂_u,∂_v]
 ```
 
 Where:
@@ -354,29 +354,12 @@ Where:
 
 **Riemann Curvature Tensor Coord (Matrix Representation):**
 ```
-R_uv = [
-    [R¹₁₁₂  R¹₁₂₂  R¹₁₃₂],   # Tangent space curvature
-    [R²₁₁₂  R²₁₂₂  R²₁₃₂],   # Tangent space curvature  
-    [R³₁₁₂  R³₁₂₂  R³₁₃₂]    # Normal curvature
-]
+R_{ijkl} = ⟨Ω(e_k, e_l) e_j, e_i⟩
 ```
 
-### Measurement Function for Curvature Extraction
-
-**Measurement Function Definition**:
+For surfaces, the essential component is:
 ```
-M_{ijkl} = √det(g) · ⟨X e_l, e_k⟩
-```
-
-Where:
-- `X = [G_μ, G_ν]`: Curvature operator from Lie bracket
-- `e_k, e_l`: Tangent basis vectors
-- `det(g)`: Determinant of metric tensor
-- `⟨·,·⟩`: Inner product in embedding space
-
-**Riemann Curvature Extraction**:
-```
-R_{ijkl} = M_{ijkl} / √det(g)
+R_{1212} = -√det(g)·⟨Ω_uv e_v, e_u⟩
 ```
 
 ### Gaussian Curvature Extraction
@@ -384,7 +367,7 @@ R_{ijkl} = M_{ijkl} / √det(g)
 From the Riemann curvature tensor, we can extract Gaussian Curvature:
 
 ```
-K = R_{1212} / det(g)
+K = R_{1212} / det(g) = -⟨Ω_uv e_v, e_u⟩ / √det(g)
 ```
 
 
