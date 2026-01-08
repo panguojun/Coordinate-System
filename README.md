@@ -354,7 +354,7 @@ Where:
 
 **Riemann Curvature Tensor Coord (Matrix Representation):**
 ```
-R_{ijkl} = -√det(g)·⟨Ω(e_k, e_l) e_j, e_i⟩
+R_{ijkl} = ⟨Ω(e_k, e_l) e_j, e_i⟩
 ```
 
 For surfaces, the essential component is:
