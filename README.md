@@ -352,11 +352,10 @@ Where:
 - `[G_u, G_v] = G_u ∘ G_v - G_v ∘ G_u` (Lie bracket/commutator)
 - `G_[∂_u,∂_v]`: Lie derivative term (zero for coordinate bases)
 
-**Riemann Curvature Tensor Coord (Matrix Representation):**
+**Riemann Curvature Tensor Coord :**
 ```
-R_{ijkl} = ⟨Ω(e_k, e_l) e_j, e_i⟩
+R_{ijkl} = ⟨Ω(eₖ, eₗ) eⱼ, eᵢ⟩
 ```
-
 For surfaces, the essential component is:
 ```
 R_{1212} = -√det(g)·⟨Ω_uv r_v, r_u⟩
