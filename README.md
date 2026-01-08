@@ -350,16 +350,16 @@ The framework provides **complete Riemann curvature tensor** computation through
 
 Where:
 - `[G_u, G_v] = G_u ∘ G_v - G_v ∘ G_u` (Lie bracket/commutator)
-- `G_[∂_u,∂_v]` (Lie derivative term for non-coordinate bases)
+- `G_[∂_u,∂_v]`: Lie derivative term (zero for coordinate bases)
 
 **Riemann Curvature Tensor Coord (Matrix Representation):**
 ```
-R_{ijkl} = ⟨Ω(e_k, e_l) e_j, e_i⟩
+R_{ijkl} = -√det(g)·⟨Ω(e_k, e_l) e_j, e_i⟩
 ```
 
 For surfaces, the essential component is:
 ```
-R_{1212} = -√det(g)·⟨Ω_uv e_v, e_u⟩
+R_{1212} = -√det(g)·⟨Ω_uv r_v, r_u⟩
 ```
 
 ### Gaussian Curvature Extraction
