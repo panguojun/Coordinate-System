@@ -339,20 +339,28 @@ And the Gaussian curvature:
 ```
 K = (L·N - M²) / det(g)
 ```
+where det(g) is the determinant of the first fundamental form (metric tensor).
 
 ### Riemann Curvature Tensor
 
-The framework provides **complete Riemann curvature tensor** computation through intrinsic gradient operators:
+The framework computes the complete Riemann curvature tensor algebraically through intrinsic gradient operators:
+
+Curvature operator:
 
 ```
-Ω_uv = [G_u, G_v] - G_[∂_u,∂_v]
+Ω_uv = [G_u, G_v] - G_[u,v]
 ```
 
 Where:
 - `[G_u, G_v] = G_u ∘ G_v - G_v ∘ G_u` (Lie bracket/commutator)
-- `G_[∂_u,∂_v]`: Lie derivative term (zero for coordinate bases)
+- `G_[u,v]`: Connection component along the Lie bracket direction (zero for coordinate bases)
 
-**Riemann Curvature Tensor Coord :**
+For coordinate parameterizations (typical case):
+```
+Ω_uv = [G_u, G_v] = G_u ∘ G_v - G_v ∘ G_u
+```
+
+**Riemann curvature tensor components:**
 ```
 R_{ijkl} = ⟨Ω(eₖ, eₗ) eⱼ, eᵢ⟩
 ```
