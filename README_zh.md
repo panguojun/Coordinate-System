@@ -412,7 +412,7 @@ K = R_{1212} / det(g) = -⟨Ω_uv r_v, r_u⟩ / √det(g)
 ## 📚 学术参考
 
 ### 在线论文
-https://zenodo.org/records/17908685
+https://zenodo.org/records/14435613
 
 ## 🙏 致谢
 

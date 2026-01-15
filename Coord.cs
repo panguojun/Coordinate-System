@@ -1,6 +1,15 @@
 /// <summary>
 /// ***************************************************************************************
 /// Represents a three-dimensional coordinate system in Unity.
+///
+/// Author: Guojun Pan
+/// DOI: doi.org/10.5281/zenodo.14435613 (Concept DOI - all versions)
+///
+/// This implementation is based on the Computable Coordinate System theory,
+/// which treats coordinate systems as first-class algebraic objects.
+///
+/// Priority Protection: This code is part of the theoretical framework published under
+/// DOI: doi.org/10.5281/zenodo.14435613
 /// ***************************************************************************************
 /// </summary>
 [System.Serializable]

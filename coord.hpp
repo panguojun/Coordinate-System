@@ -1,13 +1,22 @@
-/**************************************************************************************************************\ 
-*  _______ _            _____                     _ _             _         _____           _                  *  
-* |__   __| |          / ____|                   | (_)           | |       / ____|         | |                 *  
-*    | |  | |__   ___ | |     ___   ___  _ __ __| |_ _ __   __ _| |_ ___ | (___  _   _ ___| |_ ___ _ __ ___    *  
-*    | |  | '_ \ / _ \| |    / _ \ / _ \| '__/ _` | | '_ \ / _` | __/ _ \ \___ \| | | / __| __/ _ \ '_ ` _ \   *  
-*    | |  | | | |  __/| |___| (_) | (_) | | | (_| | | | | | (_| | ||  __/ ____) | |_| \__ \ ||  __/ | | | | |  *  
-*    |_|  |_| |_|\___| \_____\___/ \___/|_|  \__,_|_|_| |_|\__,_|\__\___||_____/ \__, |___/\__\___|_| |_| |_|  *  
-*                                                                                 __/ |                        *  
+/**************************************************************************************************************\
+*  _______ _            _____                     _ _             _         _____           _                  *
+* |__   __| |          / ____|                   | (_)           | |       / ____|         | |                 *
+*    | |  | |__   ___ | |     ___   ___  _ __ __| |_ _ __   __ _| |_ ___ | (___  _   _ ___| |_ ___ _ __ ___    *
+*    | |  | '_ \ / _ \| |    / _ \ / _ \| '__/ _` | | '_ \ / _` | __/ _ \ \___ \| | | / __| __/ _ \ '_ ` _ \   *
+*    | |  | | | |  __/| |___| (_) | (_) | | | (_| | | | | | (_| | ||  __/ ____) | |_| \__ \ ||  __/ | | | | |  *
+*    |_|  |_| |_|\___| \_____\___/ \___/|_|  \__,_|_|_| |_|\__,_|\__\___||_____/ \__, |___/\__\___|_| |_| |_|  *
+*                                                                                 __/ |                        *
 *                                                                                |___/                         *
 **								[Coordinate System (Coordinate Frame)]										  **
+*
+*  Author: Guojun Pan
+*  DOI: doi.org/10.5281/zenodo.14435613 (Concept DOI - all versions)
+*
+*  This implementation is based on the Computable Coordinate System theory,
+*  which treats coordinate systems as first-class algebraic objects.
+*
+*  Priority Protection: This code is part of the theoretical framework published under
+*  DOI: doi.org/10.5281/zenodo.14435613
 *
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 *   The Coordinate System class is specifically encapsulated to simplify coordinate transformations
@@ -63,7 +72,7 @@
 *      			⟨·,·⟩                       (inner product in embedding space)
 *
 *   **Riemann Curvature Extraction:**
-*           			R_{ijkl} = M_{ijkl} / √det(g)
+*           			R_{ijkl} = -M_{ijkl} / √det(g)
 *
 *   **Gaussian Curvature Calculation (verified implementation):**
 *           			K = R_{1212} / det(g)
@@ -80,15 +89,11 @@
 struct ucoord3
 {
 	static const ucoord3 ONE;
-	union {
-		struct {
-			// basis
-			vec3 ux;
-			vec3 uy;
-			vec3 uz;
-		};
-		real m[9]; // matrix
-	};
+	// basis vectors
+	vec3 ux;
+	vec3 uy;
+	vec3 uz;
+
 	ucoord3()
 	{
 		ux = vec3::UX; uy = vec3::UY; uz = vec3::UZ;
@@ -135,7 +140,7 @@ struct ucoord3
 	}
 	void fromuy(const vec3& _uy)
 	{
-		quat q; q.fromvectors(uy, _uy);
+		quat q; q.from_vectors(uy, _uy);
 		fromquat(q);
 	}
 	void frompyr(real pit, real yaw, real rol)
@@ -148,7 +153,7 @@ struct ucoord3
 	}
 	vec3 topyr() const
 	{
-		return Q().toeulers();
+		return Q().to_eulers();
 	}
 	vec3 toeulers() const
 	{
@@ -282,9 +287,9 @@ struct ucoord3
 	ucoord3 operator ^ (const vec3& v) const
 	{
 		ucoord3 c = *this;
-		c.ux = vec3::lerp(vec3::UX, c.ux, v.x); c.ux.norm();
-		c.uy = vec3::lerp(vec3::UY, c.uy, v.y); c.uy.norm();
-		c.uz = vec3::lerp(vec3::UZ, c.uz, v.z); c.uz.norm();
+		c.ux = vec3::lerp(vec3::UX, c.ux, v.x); c.ux.normalize();
+		c.uy = vec3::lerp(vec3::UY, c.uy, v.y); c.uy.normalize();
+		c.uz = vec3::lerp(vec3::UZ, c.uz, v.z); c.uz.normalize();
 
 		return c;
 	}
@@ -597,7 +602,7 @@ struct vcoord3 : ucoord3
 		rc.ux = (ux.x * s.x) * (c.ux * c.s.x) + (ux.y * s.x) * (c.uy * c.s.y) + (ux.z * s.x) * (c.uz * c.s.z);
 		rc.uy = (uy.x * s.y) * (c.ux * c.s.x) + (uy.y * s.y) * (c.uy * c.s.y) + (uy.z * s.y) * (c.uz * c.s.z);
 		rc.uz = (uz.x * s.z) * (c.ux * c.s.x) + (uz.y * s.z) * (c.uy * c.s.y) + (uz.z * s.z) * (c.uz * c.s.z);
-		rc.norm();
+		rc.normalize();
 #else
 		rc = ucoord3::operator*(c);
 		rc.s = s * c.s;
@@ -665,7 +670,7 @@ struct vcoord3 : ucoord3
 		rc.uy = vec3(vy.dot(cvx), vy.dot(cvy), vy.dot(cvz));
 		rc.uz = vec3(vz.dot(cvx), vz.dot(cvy), vz.dot(cvz));
 
-		rc.norm();
+		rc.normalize();
 #else
 		rc = ucoord3::operator/(c);
 		rc.s = s / c.s;
@@ -1177,12 +1182,13 @@ struct coord3 : vcoord3
     coord3 operator^(const vec3& v) const
 	{
 		coord3 c = *this;
-		c.ux = vec3::lerp(vec3::UX, c.ux, v.x); c.ux.norm();
-		c.uy = vec3::lerp(vec3::UY, c.uy, v.y); c.uy.norm();
-		c.uz = vec3::lerp(vec3::UZ, c.uz, v.z); c.uz.norm();
+		c.ux = vec3::lerp(vec3::UX, c.ux, v.x); c.ux.normalize();
+		c.uy = vec3::lerp(vec3::UY, c.uy, v.y); c.uy.normalize();
+		c.uz = vec3::lerp(vec3::UZ, c.uz, v.z); c.uz.normalize();
 
-		c.s = vec3::lerp(vec3::ONE, c.s, v);
-		c.o = vec3::lerp(vec3::ZERO, c.o, v);
+		real t = v.mean();
+		c.s = vec3::lerp(vec3::ONE, c.s, t);
+		c.o = vec3::lerp(vec3::ZERO, c.o, t);
 
 		return c;
 	}
