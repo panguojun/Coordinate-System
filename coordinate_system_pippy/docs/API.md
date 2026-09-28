@@ -7,6 +7,17 @@ import coordinate_system as cs
 from coordinate_system import vec3, quat, coord3
 ```
 
+Four-dimensional CCS objects are available from the same package root:
+
+```python
+from coordinate_system import (
+    Coord4,
+    ETA,
+    four_acceleration_from_tetrad,
+    project_lorentz_algebra,
+)
+```
+
 Interactive discovery:
 
 ```python
@@ -119,6 +130,41 @@ world = C.to_world(cs.vec3(1, 0, 0))
 print(world)
 print(C.to_local(world))
 ```
+
+### `Coord4`
+
+`Coord4` is the four-dimensional CCS object for a contravariant Lorentz frame.
+The columns of `frame` are the tetrad vectors `e_I^mu`, and `origin` is the
+event origin in the surrounding coordinate chart.
+
+```python
+import numpy as np
+from coordinate_system import Coord4
+
+frame = Coord4.minkowski()
+boosted = Coord4.boost_x(0.8)
+rindler = Coord4.rindler(rho=4.0)
+
+local = np.array([1.0, 0.0, 0.0, 0.0])
+world = boosted.to_world(local)
+assert np.allclose(boosted.to_local(world), local)
+```
+
+Important methods and helpers include `compose`, `relative_to`, `homogeneous`,
+`log_relative`, `generator_to`, `to_world`, `to_local`,
+`four_acceleration_from_local`, `four_acceleration_from_coordinate`, and
+`proper_acceleration`.
+
+The Lorentz signature is:
+
+```python
+ETA = np.diag([-1.0, 1.0, 1.0, 1.0])
+```
+
+`project_lorentz_algebra(A)` returns the projection satisfying
+`A.T @ ETA + ETA @ A == 0` up to floating-point error. This is a numerical
+object-layer operation; a physical Levi-Civita spin connection still requires
+the tetrad postulate and the torsion-free condition.
 
 ## Constants and Utilities
 
