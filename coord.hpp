@@ -15,9 +15,6 @@
 *  This implementation is based on the Computable Coordinate System theory,
 *  which treats coordinate systems as first-class algebraic objects.
 *
-*  Priority Protection: This code is part of the theoretical framework published under
-*  DOI: doi.org/10.5281/zenodo.14435613
-*
 *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 *   The Coordinate System class is specifically encapsulated to simplify coordinate transformations
 *   and derive geometric algorithms, capable of solving various problems related to coordinate system
